@@ -27,7 +27,7 @@
 
 ---
 
-## 📋 Tentang
+## 📋 About
 
 Sistem informasi berbasis web untuk mendigitalisasi proses transaksi dan monitoring di Teaching Factory pengalengan ikan sarden. Mengadopsi model **Pre-Order Berbasis Batch** yang terintegrasi dengan event kampus.
 
@@ -58,34 +58,21 @@ Sistem ini dirancang sebagai implementasi langsung dari mata kuliah **Workshop P
 
 - Landing page :
 
-![Landing Page](public/images/landing_page.png)
+![Landing Page](assets/images/landing_page.png)
 
 - Customer dashboard :
 
-![Customer Dashboard](public/images/customer_dashboard.png)
+![Customer Dashboard](assets/images/customer_dashboard.png)
 
 - Admin dashboard :
 
-![Admin Dashboard](public/images/admin_dashboard.png)
+![Admin Dashboard](assets/images/admin_dashboard.png)
 
 ---
 
 ## 📄 Lisensi
 
 Proyek ini dilindungi di bawah lisensi **PolyForm Noncommercial License 1.0.0**.
-
-Anda diperbolehkan untuk:
-- ✅ Melihat dan mempelajari kode sumber (Source Available).
-- ✅ Mengubah kode untuk keperluan pribadi atau edukasi.
-- ✅ Membagikan ulang salinan proyek ini dengan menyertakan lisensi yang sama.
-
-Anda **DILARANG** untuk:
-- ❌ Menggunakan kode ini untuk tujuan komersial (dijual atau dijadikan layanan berbayar).
-- ❌ Menggunakan kode ini untuk kepentingan perusahaan tanpa izin tertulis.
-
-Lihat file [LICENSE](LICENSE) untuk detail lengkapnya.
-
-Dikembangkan untuk **Teaching Factory Pengalengan Ikan** — Politeknik Negeri Jember.
 
 ---
 
