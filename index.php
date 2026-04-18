@@ -263,16 +263,16 @@ require_once __DIR__ . '/config/database.php';
     </div>
 
     <!-- Disclaimer -->
-    <div class="py-10 bg-[#FFFBEB]">
-        <div class="max-w-[900px] mx-auto px-4">
-            <div class="flex flex-col sm:flex-row items-start gap-4 p-6 rounded-2xl bg-white border border-[#FEF3C7] shadow-sm">
-                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-500">
-                    <i class="ph-fill ph-lock-key text-lg"></i>
+    <div class="py-12 bg-[#FFFBEB]">
+        <div class="max-w-[900px] mx-auto px-6">
+            <div class="flex flex-col sm:flex-row items-start gap-4">
+                <div class="flex-shrink-0 w-12 h-12 rounded-[14px] bg-[#FDE68A]/60 flex items-center justify-center text-[#D97706]">
+                    <i class="ph ph-warning text-[26px]"></i>
                 </div>
-                <div>
-                    <h5 class="text-[13px] font-bold text-amber-900 mb-1">Disclaimer SNI</h5>
-                    <p class="text-[13px] text-amber-700/80 leading-relaxed">
-                        Produk TEFA Canning diproduksi di lingkungan pembelajaran Teaching Factory. Produk telah melalui proses quality control standar dan ditujukan komersial. Semua operasional diawasi ahli untuk menjamin keamanan mutu standar.
+                <div class="pt-1">
+                    <h5 class="text-[14px] font-bold text-[#92400E] mb-2">Disclaimer SNI</h5>
+                    <p class="text-[14px] text-[#B45309] leading-[1.8] font-medium max-w-[800px]">
+                        Produk TEFA Canning diproduksi dalam lingkungan pembelajaran Teaching Factory. Produk telah melalui proses quality control standar dan sterilisasi komersial, namun mungkin memiliki variasi minor yang tidak memengaruhi kualitas dan keamanan pangan.
                     </p>
                 </div>
             </div>
@@ -284,40 +284,51 @@ require_once __DIR__ . '/config/database.php';
         <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div>
-                    <h2 class="text-[10px] font-bold text-primary tracking-widest uppercase mb-2">Tentang Kami</h2>
-                    <h3 class="text-3xl font-bold text-navy leading-tight mb-6">
+                    <h2 class="text-[11px] font-bold text-primary tracking-widest uppercase mb-3">Tentang Kami</h2>
+                    <h3 class="text-4xl font-extrabold text-navy leading-tight mb-6">
                         Teaching Factory<br>
                         <span class="text-primary">Fish Canning Polije</span>
                     </h3>
-                    <p class="text-[14px] text-gray-500 leading-relaxed mb-8">
-                        Teaching Factory (TEFA) Canning adalah unit produksi di Politeknik Negeri Jember yang memproduksi sarden kaleng berkualitas. Seluruh proses diawasi ahli dengan standar operasional yang ketat.
+                    
+                    <p class="text-[15px] text-gray-500 leading-[1.8] mb-8 font-medium">
+                        Teaching Factory (TEFA) Canning adalah unit produksi pembelajaran Politeknik Negeri Jember yang memproduksi sarden kaleng berkualitas. Seluruh proses produksi dilakukan oleh mahasiswa di bawah bimbingan dosen ahli.
                     </p>
                     
-                    <ul class="space-y-4">
+                    <ul class="space-y-6">
                         <li class="flex items-start">
-                            <i class="ph-bold ph-check-circle text-primary text-xl mr-3 mt-0.5"></i>
-                            <span class="text-[13px] text-gray-600"><strong class="text-navy font-semibold">Mutu Standar</strong> — Menggunakan metode industri</span>
+                            <div class="flex-shrink-0 w-6 h-6 rounded-md bg-red-50 flex items-center justify-center mr-3 shadow-sm border border-red-50">
+                                <i class="ph ph-check text-primary text-[12px]"></i>
+                            </div>
+                            <span class="text-[14px] text-gray-500 font-medium pt-0.5">Diproduksi dengan proses <strong class="text-gray-600 font-bold">sterilisasi komersial</strong> sesuai standar industri</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="ph-bold ph-check-circle text-primary text-xl mr-3 mt-0.5"></i>
-                            <span class="text-[13px] text-gray-600"><strong class="text-navy font-semibold">Tanpa Bahan Pengawet</strong> — Murni pemanasan suhu tinggi</span>
+                            <div class="flex-shrink-0 w-6 h-6 rounded-md bg-red-50 flex items-center justify-center mr-3 shadow-sm border border-red-50">
+                                <i class="ph ph-check text-primary text-[12px]"></i>
+                            </div>
+                            <span class="text-[14px] text-gray-500 font-medium pt-0.5"><strong class="text-gray-600 font-bold">Tanpa bahan pengawet</strong> — hanya bahan alami pilihan</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="ph-bold ph-check-circle text-primary text-xl mr-3 mt-0.5"></i>
-                            <span class="text-[13px] text-gray-600"><strong class="text-navy font-semibold">Bahan Baku Segar</strong> — Ikan segar hasil tangkapan lokal</span>
+                            <div class="flex-shrink-0 w-6 h-6 rounded-md bg-red-50 flex items-center justify-center mr-3 shadow-sm border border-red-50">
+                                <i class="ph ph-check text-primary text-[12px]"></i>
+                            </div>
+                            <span class="text-[14px] text-gray-500 font-medium pt-0.5">Menggunakan <strong class="text-gray-600 font-bold">ikan lemuru segar</strong> berkualitas tinggi</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="ph-bold ph-check-circle text-primary text-xl mr-3 mt-0.5"></i>
-                            <span class="text-[13px] text-gray-600"><strong class="text-navy font-semibold">Sistem Pre-Order Berbasis Batch</strong> — Menjamin kesegaran produk</span>
+                            <div class="flex-shrink-0 w-6 h-6 rounded-md bg-red-50 flex items-center justify-center mr-3 shadow-sm border border-red-50">
+                                <i class="ph ph-check text-primary text-[12px]"></i>
+                            </div>
+                            <span class="text-[14px] text-gray-500 font-medium pt-0.5">Sistem <strong class="text-gray-600 font-bold">Pre-Order berbasis Batch</strong> menjamin kesegaran produk</span>
                         </li>
                     </ul>
                 </div>
                 
-                <div class="flex flex-col items-center justify-center">
-                    <!-- Politeknik Logo Container -->
-                    <div class="bg-white border border-gray-100 rounded-[20px] p-12 shadow-[0_4px_30px_rgb(0,0,0,0.04)] text-center w-full max-w-md">
-                        <img src="assets/images/politeknik_logo.png" alt="Politeknik Logo" class="w-full h-auto max-w-[280px] mx-auto mb-6">
-                        <div class="text-[11px] text-gray-400">Teaching Factory - Fish Canning - Politeknik Negeri Jember</div>
+                <div class="flex flex-col items-center justify-center gap-4">
+                    <!-- Logos Container -->
+                    <div class="bg-white border border-gray-100 rounded-[32px] p-10 sm:p-14 shadow-sm w-full max-w-lg flex items-center justify-center">
+                        <img src="assets/images/3_logo_in_1.png" alt="Logos" class="w-full h-auto object-contain">
+                    </div>
+                    <div class="text-[11px] font-medium text-gray-400 mt-2">
+                        Teaching Factory · Fish Canning · Politeknik Negeri Jember
                     </div>
                 </div>
             </div>
