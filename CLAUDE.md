@@ -45,6 +45,40 @@ navy:    #111827  (Gray-900, used for headings)
 
 Font: **Inter** (Google Fonts). Icons: **Phosphor Icons** (`@phosphor-icons/web`). Max content width: `1200px`.
 
+## Team Structure
+
+| Role | Name | Responsibility |
+|------|------|---------------|
+| **Backend** | Ivan | PHP logic, DB queries, auth flow, services, routing |
+| **Frontend** | Alif | HTML/Tailwind pages, UI layout, forms |
+
+### Development Workflow
+
+Every phase follows: **Plan → Execute → Verify → Show changes → Update docs → Next phase → Repeat**
+
+### Rules for Frontend Developer (Alif)
+
+1. **Use `$variables` for dynamic data.** Don't hardcode values in HTML body. Put data at top of file:
+   ```php
+   <?php
+   // Data section (Ivan will wire this to DB later)
+   $products = [
+       ['name' => 'Sarden Kaleng', 'price' => 25000],
+   ];
+   ?>
+   <!-- HTML section (Alif builds this) -->
+   ```
+2. **Don't build auth/login logic.** Build login forms only (HTML + Tailwind). Backend will handle session, validation, password check.
+3. **Include auth guard at top** of protected pages:
+   ```php
+   <?php require_once __DIR__ . '/../includes/auth.php'; requireAdmin(); ?>
+   ```
+4. **Follow existing file naming:** `admin/dashboard.php`, `admin/products.php`, `customer/orders.php`, etc.
+5. **Use shared layout system** when available (Phase 1.5). Don't duplicate `<head>`, navbar, footer in every page.
+6. **Same color theme:** primary `#E02424`, accent `#F05252`, dark `#9B1C1C`, navy `#111827`.
+7. **Don't modify files in:** `config/`, `includes/`, `services/`. Those are backend-only.
+8. **Commit message format:** `feat: [page/feature description]` or `fix: [what fixed]`.
+
 ## Current Implementation Status
 
 **What exists:** Landing page only (`index.php`). All other dirs are empty shells.
