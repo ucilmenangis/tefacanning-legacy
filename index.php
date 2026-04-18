@@ -1,7 +1,6 @@
 <?php
 // Tefa Canning SIP Legacy - Landing Page
-require_once __DIR__ . '/config/database.php';
-?>
+require_once __DIR__ . "/config/database.php"; ?>
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
@@ -12,7 +11,7 @@ require_once __DIR__ . '/config/database.php';
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Tailwind CSS (CDN for development) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -32,7 +31,7 @@ require_once __DIR__ . '/config/database.php';
             }
         }
     </script>
-    
+
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
@@ -50,7 +49,7 @@ require_once __DIR__ . '/config/database.php';
                         <span class="text-[12px] font-medium text-slate-400 leading-none">Politeknik Negeri Jember</span>
                     </div>
                 </div>
-                
+
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-12">
                     <a href="#katalog" class="text-[11px] font-semibold text-gray-500 hover:text-primary transition-colors tracking-widest uppercase">Produk</a>
@@ -68,27 +67,27 @@ require_once __DIR__ . '/config/database.php';
     <div class="relative pt-[140px] pb-24 overflow-hidden flex flex-col justify-center min-h-[90vh]">
         <!-- Full Hero Background Glow -->
         <div class="absolute inset-0 bg-gradient-to-tr from-rose-50/60 via-red-50/30 to-rose-50/60 blur-[100px] pointer-events-none -z-10 scale-110"></div>
-        
+
         <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex justify-center">
-            
+
             <div class="flex flex-col items-start text-left max-w-[750px] w-full">
                 <!-- Badge -->
                 <div class="inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-[#FFF5F5] border border-red-100 text-primary mb-6 shadow-sm">
                     <span class="w-1.5 h-1.5 rounded-full bg-primary mr-2"></span>
                     <span class="text-[11px] font-bold tracking-wide">Teaching Factory — Polije</span>
                 </div>
-                
+
                 <!-- Headline -->
                 <h1 class="text-4xl sm:text-5xl md:text-[60px] font-extrabold tracking-tight text-navy leading-[1.05] mb-6">
                     Canning SIP<br>
                     <span class="text-primary whitespace-nowrap">Sehat, Lezat & Bergizi</span>
                 </h1>
-                
+
                 <!-- Subhead -->
                 <p class="text-[16px] text-gray-500 max-w-[600px] leading-relaxed font-medium mb-10">
                     Sarden kaleng premium dari ikan lemuru segar, diproduksi oleh Teaching Factory Politeknik Negeri Jember dengan standar mutu terjamin.
                 </p>
-                
+
                 <!-- Buttons -->
                 <div class="flex flex-col sm:flex-row gap-4 items-center">
                     <a href="#katalog" class="inline-flex justify-center items-center px-6 py-3 rounded-lg text-[14px] font-bold text-white bg-[#E02424] hover:bg-dark transition-all shadow-md shadow-red-500/20">
@@ -100,7 +99,7 @@ require_once __DIR__ . '/config/database.php';
                         <span class="text-[14px] font-bold leading-tight whitespace-nowrap">Pre-Order Sekarang</span>
                     </a>
                 </div>
-                
+
                 <!-- Stats -->
                 <div class="mt-14 flex items-center gap-16 sm:gap-24">
                     <div>
@@ -117,7 +116,7 @@ require_once __DIR__ . '/config/database.php';
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 
@@ -150,12 +149,12 @@ require_once __DIR__ . '/config/database.php';
                         <p class="text-[13px] text-gray-500 mb-6 leading-relaxed">
                             Sarden kaleng premium dari perairan nusantara indonesia. Gurih dan sedap dengan balur saus tomat yang lezat.
                         </p>
-                        <div class="space-y-3">
+                        <div class="flex items-center gap-4 pt-2">
                             <div class="flex items-center text-[12px] text-gray-600 font-medium">
-                                <i class="ph-bold ph-check text-green-500 mr-2"></i> Halal
+                                <i class="ph-bold ph-check text-green-500 mr-1.5"></i> Halal
                             </div>
                             <div class="flex items-center text-[12px] text-gray-600 font-medium">
-                                <i class="ph-bold ph-check text-green-500 mr-2"></i> Sertifikat Karantina
+                                <i class="ph-bold ph-check text-green-500 mr-1.5"></i> Sertifikat Karantina
                             </div>
                         </div>
                     </div>
@@ -174,12 +173,12 @@ require_once __DIR__ . '/config/database.php';
                         <p class="text-[13px] text-gray-500 mb-6 leading-relaxed">
                             Varian pertama (awal) — dari lemuru dan bumbu garam. Cocok sebagai teman santapan utama keluarga setiap hari.
                         </p>
-                        <div class="space-y-3">
+                        <div class="flex items-center gap-4 pt-2">
                             <div class="flex items-center text-[12px] text-gray-600 font-medium">
-                                <i class="ph-bold ph-check text-green-500 mr-2"></i> Halal
+                                <i class="ph-bold ph-check text-green-500 mr-1.5"></i> Halal
                             </div>
                             <div class="flex items-center text-[12px] text-gray-600 font-medium">
-                                <i class="ph-bold ph-check text-green-500 mr-2"></i> Tanpa Pengawet
+                                <i class="ph-bold ph-check text-green-500 mr-1.5"></i> Tanpa Pengawet
                             </div>
                         </div>
                     </div>
@@ -198,12 +197,12 @@ require_once __DIR__ . '/config/database.php';
                         <p class="text-[13px] text-gray-500 mb-6 leading-relaxed">
                             Bagi yang suka dengan rasa pedas khas Nusantara. Pedas pas, tidak mengubah cita rasa dasar ikan.
                         </p>
-                        <div class="space-y-3">
+                        <div class="flex items-center gap-4 pt-2">
                             <div class="flex items-center text-[12px] text-gray-600 font-medium">
-                                <i class="ph-bold ph-check text-green-500 mr-2"></i> Halal
+                                <i class="ph-bold ph-check text-green-500 mr-1.5"></i> Halal
                             </div>
                             <div class="flex items-center text-[12px] text-gray-600 font-medium">
-                                <i class="ph-bold ph-check text-green-500 mr-2"></i> Ekstra Cabai Segar
+                                <i class="ph-bold ph-check text-green-500 mr-1.5"></i> Ekstra Cabai Segar
                             </div>
                         </div>
                     </div>
@@ -225,7 +224,7 @@ require_once __DIR__ . '/config/database.php';
 
             <!-- Dynamic grid container -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
+
                 <!-- Card 1 -->
                 <div class="bg-white rounded-2xl border border-red-100 p-6 flex flex-col hover:shadow-lg hover:shadow-red-500/5 transition-all">
                     <div class="flex items-center justify-between mb-5">
@@ -237,11 +236,11 @@ require_once __DIR__ . '/config/database.php';
                             DIBUKA
                         </div>
                     </div>
-                    
+
                     <h4 class="text-lg font-bold text-navy mb-1">Batch 1</h4>
                     <p class="text-[13px] text-primary font-semibold mb-2">Dies Natalies Polije</p>
                     <p class="text-[12px] text-gray-400 mb-6 font-medium">Tidak ada</p>
-                    
+
                     <div class="flex items-center gap-6 mb-8 text-[12px] font-medium text-gray-500">
                         <div class="flex items-center">
                             <i class="ph-bold ph-calendar text-gray-400 text-sm mr-2"></i>
@@ -252,12 +251,12 @@ require_once __DIR__ . '/config/database.php';
                             2 pesanan
                         </div>
                     </div>
-                    
+
                     <a href="customer/preorder.php" class="mt-auto w-full flex items-center justify-center py-3.5 rounded-xl text-[13px] font-bold text-primary bg-[#FFF5F5] hover:bg-red-50 transition-colors">
                         Pre-Order Batch Ini <i class="ph-bold ph-arrow-right ml-1.5 text-sm"></i>
                     </a>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -289,11 +288,11 @@ require_once __DIR__ . '/config/database.php';
                         Teaching Factory<br>
                         <span class="text-primary">Fish Canning Polije</span>
                     </h3>
-                    
+
                     <p class="text-[15px] text-gray-500 leading-[1.8] mb-8 font-medium">
                         Teaching Factory (TEFA) Canning adalah unit produksi pembelajaran Politeknik Negeri Jember yang memproduksi sarden kaleng berkualitas. Seluruh proses produksi dilakukan oleh mahasiswa di bawah bimbingan dosen ahli.
                     </p>
-                    
+
                     <ul class="space-y-6">
                         <li class="flex items-start">
                             <div class="flex-shrink-0 w-6 h-6 rounded-md bg-red-50 flex items-center justify-center mr-3 shadow-sm border border-red-50">
@@ -321,7 +320,7 @@ require_once __DIR__ . '/config/database.php';
                         </li>
                     </ul>
                 </div>
-                
+
                 <div class="flex flex-col items-center justify-center gap-4">
                     <!-- Logos Container -->
                     <div class="bg-white border border-gray-100 rounded-[32px] p-10 sm:p-14 shadow-sm w-full max-w-lg flex items-center justify-center">
@@ -340,8 +339,14 @@ require_once __DIR__ . '/config/database.php';
         <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-16">
                 <!-- Col 1 -->
-                <div class="md:col-span-1 border-r border-[#1E293B] pr-8">
-                    <img src="assets/images/3_logo_in_1.png" alt="Logos" class="h-8 mb-6 bg-white p-1 rounded">
+                <div class="md:col-span-1 pr-8">
+                    <div class="flex items-center gap-3 mb-6">
+                        <img class="h-10 w-auto" src="assets/images/politeknik_logo.png" alt="Logo Politeknik">
+                        <div class="flex flex-col justify-center">
+                            <span class="text-[16px] font-bold text-white leading-none mb-1 tracking-wide">TEFA Canning SIP</span>
+                            <span class="text-[12px] font-medium text-slate-400 leading-none">Politeknik Negeri Jember</span>
+                        </div>
+                    </div>
                     <p class="text-[#94A3B8] text-[12px] leading-relaxed">
                         Teaching Factory Canning adalah sarana pembelajaran industri di kampus yang menghasilkan produk bernilai jual.
                     </p>
@@ -354,8 +359,8 @@ require_once __DIR__ . '/config/database.php';
                     <p class="text-[#94A3B8] text-[12px] leading-relaxed mb-4">
                         TEFA Canning, Jl. Mastrip, Kotak Pos 164, Krajan Timur, Sumbersari, Kec. Sumbersari, Kab. Jember, Jawa Timur 68121
                     </p>
-                    <a href="https://maps.app.goo.gl/354mYQGfX4W81Tf19" target="_blank" class="text-primary text-[11px] hover:text-red-400 flex items-center">
-                        <i class="ph-fill ph-map-pin mr-1"></i> Petunjuk Arah
+                    <a href="https://maps.app.goo.gl/p397wt11aVfuTCjt9" target="_blank" class="text-primary text-[11px] hover:text-red-400 flex items-center">
+                        <i class="ph-fill ph-map-pin mr-1"></i> Buka di Google Maps
                     </a>
                 </div>
 
@@ -374,17 +379,24 @@ require_once __DIR__ . '/config/database.php';
                 <!-- Col 4 -->
                 <div>
                     <h5 class="text-white text-[10px] font-bold uppercase tracking-widest mb-6">Peta Lokasi</h5>
-                    <div class="h-28 bg-[#1E293B] rounded-lg overflow-hidden relative border border-[#334155]">
-                        <img src="https://static-maps.yandex.ru/1.x/?lang=en_US&ll=113.7226,-8.1587&z=15&l=map&size=300,150&pt=113.7226,-8.1587,vkgrm" alt="Map" class="w-full h-full object-cover">
-                        <a href="https://maps.app.goo.gl/354mYQGfX4W81Tf19" target="_blank" class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity text-white text-[11px] font-bold underline">
-                            View API map
-                        </a>
+                    <div class="h-32 bg-[#1E293B] rounded-lg overflow-hidden border border-[#334155]">
+                        <iframe
+                            src="https://maps.google.com/maps?q=-8.1556551,113.7268947&z=16&output=embed"
+                            width="100%"
+                            height="100%"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
                     </div>
                 </div>
             </div>
 
             <div class="border-t border-[#1E293B] pt-6 flex flex-col md:flex-row justify-between items-center text-[#64748B] text-[11px]">
-                <p>&copy; <?php echo date('Y'); ?> Teaching Factory Tefa Canning Politeknik Negeri Jember.</p>
+                <p>&copy; <?php echo date(
+                  "Y",
+                ); ?> Teaching Factory Tefa Canning Politeknik Negeri Jember.</p>
                 <div class="flex space-x-4 mt-4 md:mt-0">
                     <a href="#" class="hover:text-white"><i class="ph-fill ph-facebook-logo text-lg"></i></a>
                     <a href="#" class="hover:text-white"><i class="ph-fill ph-instagram-logo text-lg"></i></a>
