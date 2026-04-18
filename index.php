@@ -65,55 +65,59 @@ require_once __DIR__ . '/config/database.php';
     </nav>
 
     <!-- Hero Section -->
-    <div class="relative pt-32 pb-20 overflow-hidden flex flex-col items-center justify-center min-h-[95vh] text-center">
-        <!-- Soft red background blur behind text -->
-        <div class="absolute top-[30%] left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-red-50/80 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+    <div class="relative pt-[140px] pb-24 overflow-hidden flex flex-col justify-center min-h-[90vh]">
+        <!-- Full Hero Background Glow -->
+        <div class="absolute inset-0 bg-gradient-to-tr from-rose-50/60 via-red-50/30 to-rose-50/60 blur-[100px] pointer-events-none -z-10 scale-110"></div>
         
-        <div class="max-w-4xl mx-auto px-4 relative z-10">
-            <!-- Badge -->
-            <div class="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-white border border-red-100 text-primary mb-8 shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
-                <span class="w-1.5 h-1.5 rounded-full bg-primary mr-2 animate-pulse"></span>
-                <span class="text-[10px] font-medium tracking-wide">Teaching Factory - Polije</span>
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex justify-center">
+            
+            <div class="flex flex-col items-start text-left max-w-[750px] w-full">
+                <!-- Badge -->
+                <div class="inline-flex items-center justify-center px-3 py-1.5 rounded-full bg-[#FFF5F5] border border-red-100 text-primary mb-6 shadow-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary mr-2"></span>
+                    <span class="text-[11px] font-bold tracking-wide">Teaching Factory — Polije</span>
+                </div>
+                
+                <!-- Headline -->
+                <h1 class="text-4xl sm:text-5xl md:text-[60px] font-extrabold tracking-tight text-navy leading-[1.05] mb-6">
+                    Canning SIP<br>
+                    <span class="text-primary whitespace-nowrap">Sehat, Lezat & Bergizi</span>
+                </h1>
+                
+                <!-- Subhead -->
+                <p class="text-[16px] text-gray-500 max-w-[600px] leading-relaxed font-medium mb-10">
+                    Sarden kaleng premium dari ikan lemuru segar, diproduksi oleh Teaching Factory Politeknik Negeri Jember dengan standar mutu terjamin.
+                </p>
+                
+                <!-- Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 items-center">
+                    <a href="#katalog" class="inline-flex justify-center items-center px-6 py-3 rounded-lg text-[14px] font-bold text-white bg-[#E02424] hover:bg-dark transition-all shadow-md shadow-red-500/20">
+                        Lihat Produk
+                        <i class="ph-bold ph-caret-down ml-2"></i>
+                    </a>
+                    <a href="#batch" class="inline-flex justify-center items-center px-6 py-3 rounded-lg bg-white border border-[#FCA5A5] hover:bg-red-50 transition-all text-primary shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                        <i class="ph-bold ph-package text-lg mr-2"></i>
+                        <span class="text-[14px] font-bold leading-tight whitespace-nowrap">Pre-Order Sekarang</span>
+                    </a>
+                </div>
+                
+                <!-- Stats -->
+                <div class="mt-14 flex items-center gap-16 sm:gap-24">
+                    <div>
+                        <div class="text-[26px] font-extrabold text-navy leading-none mb-1.5">3</div>
+                        <div class="text-[12px] font-medium text-gray-400 capitalize">Varian Produk</div>
+                    </div>
+                    <div>
+                        <div class="text-[26px] font-extrabold text-navy leading-none mb-1.5">425gr</div>
+                        <div class="text-[12px] font-medium text-gray-400 capitalize">Per Kaleng</div>
+                    </div>
+                    <div>
+                        <div class="text-[26px] font-extrabold text-navy leading-none mb-1.5">100%</div>
+                        <div class="text-[12px] font-medium text-gray-400 capitalize">Tanpa Pengawet</div>
+                    </div>
+                </div>
             </div>
             
-            <!-- Headline -->
-            <h1 class="text-5xl sm:text-6xl md:text-[68px] font-extrabold tracking-tight text-navy leading-[1.1] mb-2">
-                Canning SIP<br>
-                <span class="text-primary">Sehat, Lezat & Bergizi</span>
-            </h1>
-            
-            <!-- Subhead -->
-            <p class="mt-6 text-[15px] sm:text-[16px] text-gray-500 max-w-[600px] mx-auto leading-relaxed font-normal">
-                Sarden kaleng premium dari ikan lemuru segar, diproduksi oleh Teaching Factory Politeknik Negeri Jember dengan standar mutu terjamin.
-            </p>
-            
-            <!-- Buttons -->
-            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="#katalog" class="inline-flex justify-center items-center px-8 py-3.5 rounded-lg text-[13px] font-semibold text-white bg-primary hover:bg-dark transition-all shadow-md shadow-red-500/20 w-48">
-                    Lihat Produk
-                    <i class="ph-bold ph-caret-down ml-2"></i>
-                </a>
-                <a href="#batch" class="inline-flex justify-center items-center px-8 py-3.5 rounded-lg text-[13px] font-semibold text-primary bg-white border border-red-200 hover:bg-red-50 transition-all w-48">
-                    <i class="ph-bold ph-shopping-bag mr-2"></i>
-                    Pre-Order Sekarang
-                </a>
-            </div>
-            
-            <!-- Stats -->
-            <div class="mt-20 border-t border-b border-gray-100 py-6 max-w-[600px] mx-auto flex justify-around">
-                <div class="text-center px-6">
-                    <div class="text-2xl font-extrabold text-navy">3</div>
-                    <div class="text-[10px] font-medium text-gray-400 mt-1 uppercase tracking-wider">Varian Produk</div>
-                </div>
-                <div class="text-center px-6 border-l border-gray-100">
-                    <div class="text-2xl font-extrabold text-navy">425gr</div>
-                    <div class="text-[10px] font-medium text-gray-400 mt-1 uppercase tracking-wider">Berat Bersih</div>
-                </div>
-                <div class="text-center px-6 border-l border-gray-100">
-                    <div class="text-2xl font-extrabold text-navy">100%</div>
-                    <div class="text-[10px] font-medium text-gray-400 mt-1 uppercase tracking-wider">Tanpa Pengawet</div>
-                </div>
-            </div>
         </div>
     </div>
 
