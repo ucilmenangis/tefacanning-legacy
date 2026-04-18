@@ -15,55 +15,68 @@ TEFA Canning SIP Legacy — PHP Native version of the TEFA Canning Transaction &
 
 - **PHP 8.3** (Native, no framework)
 - **PDO MySQL** — Raw queries, no ORM
-- **Tailwind CSS 3** — Compiled via CLI, stored in `assets/css/`
+- **Tailwind CSS** — Loaded via CDN (`cdn.tailwindcss.com`) with inline config. No build step.
 - **MariaDB** — Shared database with Laravel version
 - **Composer** — Only `vlucas/phpdotenv` (env loader)
 - **DomPDF** — PDF report generation (to be added via composer)
 
-## UI Identity & Colors
+## Commands
 
-```css
-Primary:  #DC2626 (Red-600)
-Accent:   #EF4444 (Red-500)
-Dark:     #991B1B (Red-800)
+```bash
+# Start dev server
+php -S localhost:8000
+
+# Install PHP dependencies
+composer install
 ```
 
-Same red theme as Laravel version. Use consistently across all panels.
+No build step, no linter, no tests. Tailwind via CDN.
+
+## UI Identity & Colors
+
+Defined in Tailwind inline config in `index.php`:
+
+```css
+primary: #E02424  (Red-600 equivalent)
+accent:  #F05252  (Red-500 equivalent)
+dark:    #9B1C1C  (Red-800 equivalent)
+navy:    #111827  (Gray-900, used for headings)
+```
+
+Font: **Inter** (Google Fonts). Icons: **Phosphor Icons** (`@phosphor-icons/web`). Max content width: `1200px`.
+
+## Current Implementation Status
+
+**What exists:** Landing page only (`index.php`). All other dirs are empty shells.
+
+**Implemented:**
+- `index.php` — Full landing page (hero, product catalog, batch info, SNI disclaimer, about, footer with Google Maps)
+- `config/database.php` — PDO connection
+- `.env` / `.env.example` — Environment config
+- `assets/images/` — 8 image assets
+
+**Not yet built:** Routing, auth, admin panel, customer panel, query helpers, services, views/layouts.
 
 ## Project Structure
 
 ```
 tefa-canning-legacy/
-├── index.php                ← Entry point + Router
+├── index.php                ← Landing page (NOT a router yet)
 ├── .env                     ← Environment config (DB, Fonnte token)
 ├── config/
-│   ├── database.php         ← PDO connection
-│   ├── app.php              ← App settings (to be created)
-│   └── fonnte.php           ← Fonnte API config (to be created)
+│   └── database.php         ← PDO connection
 ├── includes/
-│   ├── functions.php        ← Global helper functions
-│   ├── auth.php             ← Session auth helpers (to be created)
-│   └── middleware.php       ← Route protection (to be created)
-├── routes/
-│   ├── web.php              ← Public routes (to be created)
-│   ├── admin.php            ← Admin panel routes (to be created)
-│   └── customer.php         ← Customer panel routes (to be created)
-├── admin/                   ← Admin panel pages (CRUD, dashboard)
-├── customer/                ← Customer panel pages (pre-order, history, profile)
-├── auth/                    ← Login/register pages (admin + customer)
+│   └── functions.php        ← Empty — to be filled
+├── admin/                   ← Empty — Admin panel pages
+├── customer/                ← Empty — Customer panel pages
+├── auth/                    ← Empty — Login/register pages
 ├── assets/
-│   ├── css/output.css       ← Compiled Tailwind CSS
-│   ├── js/                  ← JavaScript files
-│   └── images/              ← Static images
-├── database/
-│   └── tefa_canning.sql     ← Full SQL dump (shared DB schema)
-├── services/
-│   ├── FonnteService.php    ← WhatsApp notification (to be created)
-│   └── PdfService.php       ← PDF generation (to be created)
-└── views/                   ← Reusable view partials (to be created)
-    ├── layouts/
-    ├── components/
-    └── pdf/
+│   ├── css/                 ← Empty (using CDN)
+│   ├── js/                  ← Empty
+│   └── images/              ← Static images (8 files)
+├── database/                ← Empty — SQL dump to be added
+├── services/                ← To be created (Fonnte, PDF)
+└── views/                   ← To be created (layouts, components)
 ```
 
 ## Architecture Decisions
@@ -147,11 +160,11 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 - [ ] Customer registration page
 
 ### Priority 3 — Landing Page (Public)
-- [ ] Hero section
-- [ ] Product catalog (3 products from DB)
-- [ ] Active batch info (dynamic from DB)
-- [ ] SNI disclaimer
-- [ ] Footer with Google Maps
+- [x] Hero section
+- [x] Product catalog (3 products — currently hardcoded, needs DB)
+- [x] Active batch info (currently hardcoded, needs DB)
+- [x] SNI disclaimer
+- [x] Footer with Google Maps
 
 ### Priority 4 — Admin Panel
 - [ ] Dashboard (stats widgets: revenue, orders, production summary)
@@ -190,7 +203,7 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 5. **Password:** Always `password_hash()` and `password_verify()`. Never store plaintext.
 6. **Price from DB:** Never trust form-submitted prices. Always lookup from `products` table.
 7. **Soft deletes:** Use `WHERE deleted_at IS NULL` in all queries on business tables.
-8. **Red theme:** Always use `#DC2626` as primary. Check Laravel version for UI reference.
+8. **Red theme:** Use `#E02424` (primary), `#F05252` (accent), `#9B1C1C` (dark). Check Laravel version for UI reference.
 
 ## Role-Based Access
 
@@ -230,9 +243,10 @@ WHERE mhr.model_type = 'App\Models\User' AND mhr.model_id = ?
 ## Development Server
 
 ```bash
-cd tefa-canning-legacy
 php -S localhost:8000
 ```
+
+No `.htaccess` yet. No clean URLs. Direct file access only (`/auth/login-admin.php`, `/admin/dashboard.php`, etc.).
 
 ## Reference
 
