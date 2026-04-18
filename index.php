@@ -213,41 +213,51 @@ require_once __DIR__ . '/config/database.php';
     </div>
 
     <!-- Batch Section -->
-    <div id="batch" class="py-24 bg-[#FAFAFA] border-y border-gray-100">
-        <div class="max-w-[700px] mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-[10px] font-bold text-primary tracking-widest uppercase mb-2">Info Terbaru</h2>
-                <h3 class="text-2xl font-bold text-navy mb-2">Batch Produksi</h3>
-                <p class="text-[14px] text-gray-500 font-normal">Informasi batch produksi yang sedang dibuka untuk pre-order.</p>
+    <div id="batch" class="py-24 bg-white relative">
+        <div class="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-[11px] font-bold text-primary tracking-widest uppercase mb-2">Info Terbaru</h2>
+                <h3 class="text-3xl font-bold text-navy mb-4">Batch Produksi</h3>
+                <p class="text-[14px] text-gray-400 font-medium max-w-md mx-auto leading-relaxed">
+                    Informasi batch produksi yang sedang dibuka untuk pre-order.
+                </p>
             </div>
 
-            <div class="bg-white rounded-[20px] shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-100 p-8">
-                <div class="flex items-center justify-between mb-5">
-                    <div class="flex items-center justify-center h-10 w-10 text-primary bg-red-50 rounded-lg">
-                        <i class="ph-fill ph-calendar-blank text-xl"></i>
+            <!-- Dynamic grid container -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl border border-red-100 p-6 flex flex-col hover:shadow-lg hover:shadow-red-500/5 transition-all">
+                    <div class="flex items-center justify-between mb-5">
+                        <div class="w-10 h-10 rounded-xl bg-[#FFF5F5] text-primary flex items-center justify-center">
+                            <i class="ph-bold ph-calendar-blank text-lg"></i>
+                        </div>
+                        <div class="px-2.5 py-1 rounded-full bg-[#ECFDF5] flex items-center text-[10px] font-bold text-[#10B981] tracking-wide">
+                            <span class="w-1.5 h-1.5 rounded-full bg-[#10B981] mr-1.5"></span>
+                            DIBUKA
+                        </div>
                     </div>
-                    <span class="inline-flex items-center px-3 py-1 rounded bg-green-50 text-[10px] font-bold text-green-600 uppercase tracking-widest">
-                        OPEN PRE-ORDER
-                    </span>
+                    
+                    <h4 class="text-lg font-bold text-navy mb-1">Batch 1</h4>
+                    <p class="text-[13px] text-primary font-semibold mb-2">Dies Natalies Polije</p>
+                    <p class="text-[12px] text-gray-400 mb-6 font-medium">Tidak ada</p>
+                    
+                    <div class="flex items-center gap-6 mb-8 text-[12px] font-medium text-gray-500">
+                        <div class="flex items-center">
+                            <i class="ph-bold ph-calendar text-gray-400 text-sm mr-2"></i>
+                            15 Feb 2026
+                        </div>
+                        <div class="flex items-center">
+                            <i class="ph-bold ph-shopping-bag text-gray-400 text-sm mr-2"></i>
+                            2 pesanan
+                        </div>
+                    </div>
+                    
+                    <a href="customer/preorder.php" class="mt-auto w-full flex items-center justify-center py-3.5 rounded-xl text-[13px] font-bold text-primary bg-[#FFF5F5] hover:bg-red-50 transition-colors">
+                        Pre-Order Batch Ini <i class="ph-bold ph-arrow-right ml-1.5 text-sm"></i>
+                    </a>
                 </div>
                 
-                <h4 class="text-xl font-bold text-navy mb-1">Batch 1</h4>
-                <p class="text-[13px] text-primary font-semibold mb-6">Masa Pre-Order Tersedia</p>
-                
-                <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="bg-[#FAFAFA] rounded-xl p-4 border border-gray-100">
-                        <div class="text-[10px] font-medium text-gray-400 mb-1 uppercase tracking-wider">Estimasi Jadi</div>
-                        <div class="text-[13px] font-bold text-navy">10 Mar 2024</div>
-                    </div>
-                    <div class="bg-[#FAFAFA] rounded-xl p-4 border border-gray-100">
-                        <div class="text-[10px] font-medium text-gray-400 mb-1 uppercase tracking-wider">Sisa Kuota</div>
-                        <div class="text-[13px] font-bold text-navy">Tersedia</div>
-                    </div>
-                </div>
-                
-                <a href="customer/preorder.php" class="w-full flex items-center justify-center py-3.5 rounded-xl text-[13px] font-bold text-primary bg-red-50 hover:bg-red-100 transition-colors">
-                    Pre-Order Batch 1 <i class="ph-bold ph-arrow-right ml-2 text-sm"></i>
-                </a>
             </div>
         </div>
     </div>
