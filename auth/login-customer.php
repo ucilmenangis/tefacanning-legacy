@@ -1,39 +1,29 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
+
 // Redirect if already logged in
-if (isset($_SESSION['customer_id'])) {
+if (isCustomerLoggedIn()) {
     header('Location: ../customer/dashboard.php');
     exit;
 }
 
-$error   = '';
-$success = '';
+$error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once __DIR__ . '/../config/database.php';
-    require_once __DIR__ . '/../includes/functions.php';
-
     $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
-    $remember = isset($_POST['remember']);
 
     if (empty($email) || empty($password)) {
         $error = 'Email dan password wajib diisi.';
     } else {
-        $customer = db_fetch_one(
+        $customer = db_fetch(
             "SELECT * FROM customers WHERE email = ? AND deleted_at IS NULL LIMIT 1",
             [$email]
         );
 
         if ($customer && password_verify($password, $customer['password'])) {
-            $_SESSION['customer_id']    = $customer['id'];
-            $_SESSION['customer_name']  = $customer['name'];
-            $_SESSION['customer_email'] = $customer['email'];
-
-            if ($remember) {
-                setcookie('customer_remember', base64_encode($customer['id']), time() + (86400 * 30), '/');
-            }
-
+            loginCustomer($customer['id']);
             header('Location: ../customer/dashboard.php');
             exit;
         } else {

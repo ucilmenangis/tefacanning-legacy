@@ -1,40 +1,29 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
+
 // Redirect if already logged in
-if (isset($_SESSION['admin_id'])) {
+if (isAdminLoggedIn()) {
     header('Location: ../admin/dashboard.php');
     exit;
 }
 
 $error = '';
-$success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once __DIR__ . '/../config/database.php';
-    require_once __DIR__ . '/../includes/functions.php';
-
     $email    = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
-    $remember = isset($_POST['remember']);
 
     if (empty($email) || empty($password)) {
         $error = 'Email dan password wajib diisi.';
     } else {
-        $user = db_fetch_one(
+        $user = db_fetch(
             "SELECT * FROM users WHERE email = ? LIMIT 1",
             [$email]
         );
 
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['admin_id']   = $user['id'];
-            $_SESSION['admin_name'] = $user['name'];
-            $_SESSION['admin_email'] = $user['email'];
-
-            if ($remember) {
-                // Set a remember-me cookie for 30 days
-                setcookie('admin_remember', base64_encode($user['id']), time() + (86400 * 30), '/');
-            }
-
+            loginAdmin($user['id']);
             header('Location: ../admin/dashboard.php');
             exit;
         } else {

@@ -89,7 +89,7 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `.env` / `.env.example` — Environment config
 - `assets/images/` — 8 image assets
 
-**Not yet built:** Routing, auth, admin panel, customer panel, query helpers, services, views/layouts.
+**Not yet built:** Layout system, CSRF, admin panel, customer panel, services.
 
 ## Project Structure
 
@@ -116,9 +116,9 @@ tefa-canning-legacy/
 ## Architecture Decisions
 
 ### Routing
-- **Simple file-based routing** through `index.php` with `$_GET['page']` or `$_SERVER['REQUEST_URI']`
-- No complex router library — keep it simple
-- Route groups: `/admin/*`, `/customer/*`, `/auth/*`, `/` (public)
+- **Direct file access** — no router, no `.htaccess`. URLs like `/admin/dashboard.php`, `/auth/login-admin.php`.
+- `index.php` serves as landing page only (not a router).
+- Each page includes shared files (`includes/auth.php`, `includes/functions.php`) at the top.
 
 ### Authentication (Dual Guard)
 Two separate session namespaces, mirroring Laravel's dual guard:
@@ -181,52 +181,53 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 
 ## Features to Implement (Full Conversion)
 
-### Priority 1 — Core Infrastructure
-- [ ] Router + .htaccess (clean URLs)
-- [ ] Session management (dual guard)
-- [ ] Auth helpers (login, logout, requireAuth)
-- [ ] Query helper functions (PDO wrapper)
-- [ ] View/layout system
+### Priority 1 — Core Infrastructure (Backend)
+- [x] Phase 1.1 — Query helpers (`includes/functions.php`)
+- [x] Phase 1.2 — Session + Auth (`includes/auth.php`)
+- [x] Phase 1.3 — Layout system (`includes/header-admin.php`, `header-customer.php`, footer files)
+- [ ] Phase 1.4 — CSRF token (security basic, needed before forms)
+- [ ] Phase 1.5 — Flash message (success/error feedback after actions)
 
 ### Priority 2 — Authentication Pages
-- [ ] Admin login page
-- [ ] Customer login page
-- [ ] Customer registration page
+- [ ] Phase 2.1 — Admin login page (`auth/login-admin.php`)
+- [ ] Phase 2.2 — Customer login page (`auth/login-customer.php`)
+- [ ] Phase 2.3 — Customer registration (`auth/register.php`)
 
-### Priority 3 — Landing Page (Public)
-- [x] Hero section
-- [x] Product catalog (3 products — currently hardcoded, needs DB)
-- [x] Active batch info (currently hardcoded, needs DB)
-- [x] SNI disclaimer
-- [x] Footer with Google Maps
+### Priority 3 — Landing Page (Dynamic)
+- [x] Phase 3.1 — Hero section
+- [x] Phase 3.2 — Product catalog (hardcoded — needs DB)
+- [x] Phase 3.3 — Batch info (hardcoded — needs DB)
+- [x] Phase 3.4 — SNI disclaimer
+- [x] Phase 3.5 — Footer with Google Maps
+- [ ] Phase 3.6 — Products from DB (replace hardcoded)
+- [ ] Phase 3.7 — Batches from DB (replace hardcoded)
 
 ### Priority 4 — Admin Panel
-- [ ] Dashboard (stats widgets: revenue, orders, production summary)
-- [ ] CRUD Products (price protection for non-super_admin)
-- [ ] CRUD Batches (status lifecycle)
-- [ ] CRUD Customers
-- [ ] CRUD Orders (status management, pickup validation)
-- [ ] User management (super_admin only)
-- [ ] Activity log viewer (super_admin only)
+- [ ] Phase 4.1 — Dashboard (Alif: UI, Ivan: data)
+- [ ] Phase 4.2 — CRUD Products (price protection for non-super_admin)
+- [ ] Phase 4.3 — CRUD Batches (status lifecycle)
+- [ ] Phase 4.4 — CRUD Customers
+- [ ] Phase 4.5 — CRUD Orders (status management, pickup validation)
+- [ ] Phase 4.6 — User management (super_admin only)
+- [ ] Phase 4.7 — Activity log viewer (super_admin only)
 
 ### Priority 5 — Customer Panel
-- [ ] Dashboard (4 widgets: welcome, order summary, latest batch, available products)
-- [ ] Pre-order form (batch + product selection, price from DB)
-- [ ] Order history (table with edit/delete for pending only)
-- [ ] Edit order (pending only, batch locked)
-- [ ] Edit profile (with active order lock)
-- [ ] Download PDF per order
+- [ ] Phase 5.1 — Dashboard (welcome, order summary, latest batch, available products)
+- [ ] Phase 5.2 — Pre-order form (batch + product selection, price from DB)
+- [ ] Phase 5.3 — Order history (table with edit/delete for pending only)
+- [ ] Phase 5.4 — Edit order (pending only, batch locked)
+- [ ] Phase 5.5 — Edit profile (with active order lock)
+- [ ] Phase 5.6 — Download PDF per order
 
 ### Priority 6 — Services
-- [ ] FonnteService (3 notification triggers)
-- [ ] PDF report generation (DomPDF)
+- [ ] Phase 6.1 — FonnteService (3 WhatsApp notification triggers)
+- [ ] Phase 6.2 — PDF generation (DomPDF)
 
 ### Priority 7 — Security
-- [ ] CSRF token on all forms
-- [ ] XSS prevention (htmlspecialchars on output)
-- [ ] Role-based access control (super_admin vs teknisi)
-- [ ] Product price protection
-- [ ] Core product deletion protection (3 SKUs)
+- [ ] Phase 7.1 — XSS prevention (htmlspecialchars on output)
+- [ ] Phase 7.2 — Role-based access control (super_admin vs teknisi)
+- [ ] Phase 7.3 — Product price protection
+- [ ] Phase 7.4 — Core product deletion protection (3 SKUs)
 
 ## Coding Conventions
 
@@ -280,7 +281,7 @@ WHERE mhr.model_type = 'App\Models\User' AND mhr.model_id = ?
 php -S localhost:8000
 ```
 
-No `.htaccess` yet. No clean URLs. Direct file access only (`/auth/login-admin.php`, `/admin/dashboard.php`, etc.).
+No `.htaccess`. No clean URLs. Direct file access only (`/auth/login-admin.php`, `/admin/dashboard.php`, etc.).
 
 ## Reference
 

@@ -1,18 +1,16 @@
 <?php
-session_start();
+require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
+
 // Redirect if already logged in
-if (isset($_SESSION['customer_id'])) {
+if (isCustomerLoggedIn()) {
     header('Location: ../customer/dashboard.php');
     exit;
 }
 
 $error   = '';
-$success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once __DIR__ . '/../config/database.php';
-    require_once __DIR__ . '/../includes/functions.php';
-
     $name         = trim($_POST['name'] ?? '');
     $email        = trim($_POST['email'] ?? '');
     $phone        = trim($_POST['phone'] ?? '');
@@ -32,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Konfirmasi password tidak cocok.';
     } else {
         // Check duplicate email
-        $existing = db_fetch_one(
+        $existing = db_fetch(
             "SELECT id FROM customers WHERE email = ? AND deleted_at IS NULL LIMIT 1",
             [$email]
         );
@@ -42,20 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $hashed = password_hash($password, PASSWORD_BCRYPT);
 
-            $inserted = db_execute(
+            $newId = db_insert(
                 "INSERT INTO customers (name, email, password, phone, organization, address, created_at, updated_at)
                  VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())",
                 [$name, $email, $hashed, $phone, $organization, $address]
             );
 
-            if ($inserted) {
-                $newCustomer = db_fetch_one(
-                    "SELECT * FROM customers WHERE email = ? LIMIT 1",
-                    [$email]
-                );
-                $_SESSION['customer_id']    = $newCustomer['id'];
-                $_SESSION['customer_name']  = $newCustomer['name'];
-                $_SESSION['customer_email'] = $newCustomer['email'];
+            if ($newId) {
+                loginCustomer($newId);
                 header('Location: ../customer/dashboard.php');
                 exit;
             } else {
