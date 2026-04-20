@@ -18,15 +18,15 @@
  */
 function db(): PDO
 {
-    static $conn = null;
+  static $conn = null;
 
-    if ($conn === null) {
-        require_once __DIR__ . '/../config/database.php';
-        // $conn is created in config/database.php
-        global $conn;
-    }
+  if ($conn === null) {
+    require_once __DIR__ . "/../config/database.php";
+    // $conn is created in config/database.php
+    global $conn;
+  }
 
-    return $conn;
+  return $conn;
 }
 
 /**
@@ -38,10 +38,10 @@ function db(): PDO
  */
 function db_fetch(string $sql, array $params = []): ?array
 {
-    $stmt = db()->prepare($sql);
-    $stmt->execute($params);
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row ?: null;
+  $stmt = db()->prepare($sql);
+  $stmt->execute($params);
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  return $row ?: null;
 }
 
 /**
@@ -53,9 +53,9 @@ function db_fetch(string $sql, array $params = []): ?array
  */
 function db_fetch_all(string $sql, array $params = []): array
 {
-    $stmt = db()->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $stmt = db()->prepare($sql);
+  $stmt->execute($params);
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 /**
@@ -67,9 +67,9 @@ function db_fetch_all(string $sql, array $params = []): array
  */
 function db_insert(string $sql, array $params = []): int
 {
-    $stmt = db()->prepare($sql);
-    $stmt->execute($params);
-    return (int) db()->lastInsertId();
+  $stmt = db()->prepare($sql);
+  $stmt->execute($params);
+  return (int) db()->lastInsertId();
 }
 
 /**
@@ -81,9 +81,9 @@ function db_insert(string $sql, array $params = []): int
  */
 function db_update(string $sql, array $params = []): int
 {
-    $stmt = db()->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->rowCount();
+  $stmt = db()->prepare($sql);
+  $stmt->execute($params);
+  return $stmt->rowCount();
 }
 
 /**
@@ -97,7 +97,7 @@ function db_update(string $sql, array $params = []): int
  */
 function db_delete(string $sql, array $params = []): int
 {
-    $stmt = db()->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->rowCount();
+  $stmt = db()->prepare($sql);
+  $stmt->execute($params);
+  return $stmt->rowCount();
 }
