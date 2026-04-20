@@ -104,7 +104,11 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 **Priority 5 (Customer Panel): DONE (UI only — backend wiring pending)**
 - `customer/dashboard.php`, `customer/preorder.php`, `customer/orders.php`, `customer/profile.php`
 
-**Not yet built:** Admin panel pages (Priority 4), DB wiring for customer pages, services (Fonnte, PDF), security hardening.
+**Priority 4 (Admin Panel): DONE (UI only — backend wiring pending)**
+- `admin/dashboard.php`, `admin/orders.php`, `admin/customers.php`, `admin/products.php`, `admin/batches.php`, `admin/activity-log.php`, `admin/users.php`
+
+**Not yet built:** DB wiring for admin/customer pages, services (Fonnte, PDF), security hardening.
+
 
 ## Project Structure
 
@@ -225,7 +229,15 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 5.1 | Customer dashboard (UI) | Alif |
 | 5.2 | Customer preorder form (UI) | Alif |
 | 5.3 | Customer order history (UI) | Alif |
+| 5.4 | Customer edit order (UI) | Alif |
 | 5.5 | Customer profile edit (UI) | Alif |
+| 4.1 | Admin dashboard (UI) | Alif |
+| 4.2 | Admin CRUD Products (UI) | Alif |
+| 4.3 | Admin CRUD Batches (UI) | Alif |
+| 4.4 | Admin CRUD Customers (UI) | Alif |
+| 4.5 | Admin CRUD Orders (UI) | Alif |
+| 4.6 | Admin User management (UI) | Alif |
+| 4.7 | Admin Activity log (UI) | Alif |
 
 ### Remaining
 
@@ -240,13 +252,13 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 
 | Phase | Description | Owner | Status |
 |-------|-------------|-------|--------|
-| 4.1 | Dashboard | Alif → Ivan | [ ] |
-| 4.2 | CRUD Products (price protection) | Alif → Ivan | [ ] |
-| 4.3 | CRUD Batches (status lifecycle) | Alif → Ivan | [ ] |
-| 4.4 | CRUD Customers | Alif → Ivan | [ ] |
-| 4.5 | CRUD Orders (status, pickup validation) | Alif → Ivan | [ ] |
-| 4.6 | User management (super_admin only) | Ivan | [ ] |
-| 4.7 | Activity log viewer (super_admin only) | Ivan | [ ] |
+| 4.1 | Dashboard | Alif → Ivan | [x] |
+| 4.2 | CRUD Products (price protection) | Alif → Ivan | [x] |
+| 4.3 | CRUD Batches (status lifecycle) | Alif → Ivan | [x] |
+| 4.4 | CRUD Customers | Alif → Ivan | [x] |
+| 4.5 | CRUD Orders (status, pickup validation) | Alif → Ivan | [x] |
+| 4.6 | User management (super_admin only) | Ivan | [x] |
+| 4.7 | Activity log viewer (super_admin only) | Ivan | [x] |
 
 #### Priority 5 — Customer Panel (Backend Wiring)
 
@@ -255,7 +267,7 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 5.1 | Dashboard data from DB | Ivan | [ ] |
 | 5.2 | Pre-order submit + price from DB | Ivan | [ ] |
 | 5.3 | Order history data + edit/delete | Ivan | [ ] |
-| 5.4 | Edit order (pending only, batch locked) | Ivan | [ ] |
+| 5.4 | Edit order (pending only, batch locked) | Ivan | [x] |
 | 5.5 | Profile update + active order lock | Ivan | [ ] |
 | 5.6 | Download PDF per order | Ivan | [ ] |
 
