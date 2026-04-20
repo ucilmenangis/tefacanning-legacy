@@ -185,8 +185,8 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 - [x] Phase 1.1 — Query helpers (`includes/functions.php`)
 - [x] Phase 1.2 — Session + Auth (`includes/auth.php`)
 - [x] Phase 1.3 — Layout system (`includes/header-admin.php`, `header-customer.php`, footer files)
-- [ ] Phase 1.4 — CSRF token (security basic, needed before forms)
-- [ ] Phase 1.5 — Flash message (success/error feedback after actions)
+- [x] Phase 1.4 — CSRF token (security basic, needed before forms)
+- [x] Phase 1.5 — Flash message (success/error feedback after actions)
 
 ### Priority 2 — Authentication Pages
 - [ ] Phase 2.1 — Admin login page (`auth/login-admin.php`)

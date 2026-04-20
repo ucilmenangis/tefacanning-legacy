@@ -209,3 +209,4 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
      MAIN CONTENT
 ════════════════════════════════════════════ -->
     <main id="main-content" class="min-h-screen pt-[60px] p-8">
+        <?php echo renderFlash(); ?>

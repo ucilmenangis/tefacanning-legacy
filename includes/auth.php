@@ -131,3 +131,122 @@ function requireCustomer(): void
         exit;
     }
 }
+
+// ─── CSRF Protection ──────────────────────────────────
+
+/**
+ * Generate CSRF token and store in session.
+ */
+function generateCsrfToken(): string
+{
+    startSession();
+    $token = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token'] = $token;
+    return $token;
+}
+
+/**
+ * Output a hidden input field with CSRF token.
+ * Put inside every <form>: <?php echo csrfField(); ?>
+ */
+function csrfField(): string
+{
+    $token = generateCsrfToken();
+    return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($token) . '">';
+}
+
+/**
+ * Verify CSRF token from form submission.
+ * Returns true if valid, false if invalid.
+ */
+function verifyCsrf(): bool
+{
+    startSession();
+    $token = $_POST['csrf_token'] ?? '';
+
+    if (empty($token) || empty($_SESSION['csrf_token'])) {
+        return false;
+    }
+
+    if (!hash_equals($_SESSION['csrf_token'], $token)) {
+        return false;
+    }
+
+    unset($_SESSION['csrf_token']);
+    return true;
+}
+
+// ─── Flash Messages ───────────────────────────────────
+
+/**
+ * Set a flash message (stored in session, read once, then deleted).
+ *
+ * Types: 'success', 'error', 'warning', 'info'
+ *
+ * Example:
+ *   setFlash('success', 'Produk berhasil ditambahkan!');
+ *   header('Location: /admin/products.php');
+ *   exit;
+ */
+function setFlash(string $type, string $message): void
+{
+    startSession();
+    $_SESSION['flash'] = [
+        'type' => $type,
+        'message' => $message,
+    ];
+}
+
+/**
+ * Get flash message and delete from session.
+ * Returns ['type' => 'success', 'message' => '...'] or null.
+ */
+function getFlash(): ?array
+{
+    startSession();
+    if (!isset($_SESSION['flash'])) {
+        return null;
+    }
+    $flash = $_SESSION['flash'];
+    unset($_SESSION['flash']);
+    return $flash;
+}
+
+/**
+ * Display flash message as HTML alert.
+ * Call this in layout files after <main> tag.
+ * Auto-hides after reading.
+ *
+ * Example:
+ *   <?php echo renderFlash(); ?>
+ */
+function renderFlash(): string
+{
+    $flash = getFlash();
+    if (!$flash) return '';
+
+    $type = $flash['type'];
+    $message = htmlspecialchars($flash['message']);
+
+    $colors = [
+        'success' => 'bg-emerald-50 border-emerald-200 text-emerald-800',
+        'error'   => 'bg-red-50 border-red-200 text-red-800',
+        'warning' => 'bg-amber-50 border-amber-200 text-amber-800',
+        'info'    => 'bg-blue-50 border-blue-200 text-blue-800',
+    ];
+
+    $icons = [
+        'success' => 'ph-check-circle',
+        'error'   => 'ph-x-circle',
+        'warning' => 'ph-warning',
+        'info'    => 'ph-info',
+    ];
+
+    $color = $colors[$type] ?? $colors['info'];
+    $icon = $icons[$type] ?? $icons['info'];
+
+    return '<div class="mb-5 rounded-xl border px-5 py-4 flex items-center gap-3 ' . $color . '">'
+         . '<i class="ph-bold ' . $icon . ' text-lg flex-shrink-0"></i>'
+         . '<span class="text-[13px] font-medium">' . $message . '</span>'
+         . '</div>';
+}

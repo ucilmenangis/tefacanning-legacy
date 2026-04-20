@@ -125,3 +125,4 @@ if (!isset($pageTitle)) $pageTitle = 'Admin Panel';
 
         <!-- Page Content -->
         <main class="flex-1 p-8">
+            <?php echo renderFlash(); ?>
