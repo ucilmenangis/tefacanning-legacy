@@ -88,15 +88,23 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 
 ## Current Implementation Status
 
-**What exists:** Landing page only (`index.php`). All other dirs are empty shells.
+**Priority 1 (Core Infrastructure): DONE**
+- `includes/functions.php` — Query helpers, CSRF, flash messages
+- `includes/auth.php` — Session management, dual guard, middleware
+- `includes/header-admin.php` + `footer-admin.php` — Admin layout
+- `includes/header-customer.php` + `footer-customer.php` — Customer layout
 
-**Implemented:**
-- `index.php` — Full landing page (hero, product catalog, batch info, SNI disclaimer, about, footer with Google Maps)
-- `config/database.php` — PDO connection
-- `.env` / `.env.example` — Environment config
-- `assets/images/` — 8 image assets
+**Priority 2 (Auth Pages): DONE (UI only — backend wiring pending)**
+- `auth/login-admin.php`, `auth/login-customer.php`, `auth/register.php`, `auth/forgot-password.php`
 
-**Not yet built:** Layout system, CSRF, admin panel, customer panel, services.
+**Priority 3 (Landing Page): DONE (static)**
+- `index.php` — Hero, product catalog, batch info, SNI disclaimer, footer with Google Maps
+- Products & batches still hardcoded — needs DB wiring
+
+**Priority 5 (Customer Panel): DONE (UI only — backend wiring pending)**
+- `customer/dashboard.php`, `customer/preorder.php`, `customer/orders.php`, `customer/profile.php`
+
+**Not yet built:** Admin panel pages (Priority 4), DB wiring for customer pages, services (Fonnte, PDF), security hardening.
 
 ## Project Structure
 
@@ -107,10 +115,23 @@ tefa-canning-legacy/
 ├── config/
 │   └── database.php         ← PDO connection
 ├── includes/
-│   └── functions.php        ← Empty — to be filled
+│   ├── functions.php        ← Query helpers, CSRF, flash
+│   ├── auth.php             ← Session + auth guards
+│   ├── header-admin.php     ← Admin layout header
+│   ├── header-customer.php  ← Customer layout header
+│   ├── footer-admin.php     ← Admin layout footer
+│   └── footer-customer.php  ← Customer layout footer
 ├── admin/                   ← Empty — Admin panel pages
-├── customer/                ← Empty — Customer panel pages
-├── auth/                    ← Empty — Login/register pages
+├── customer/                ← Customer pages (UI done, backend pending)
+│   ├── dashboard.php
+│   ├── preorder.php
+│   ├── orders.php
+│   └── profile.php
+├── auth/                    ← Auth pages (UI done)
+│   ├── login-admin.php
+│   ├── login-customer.php
+│   ├── register.php
+│   └── forgot-password.php
 ├── assets/
 │   ├── css/                 ← Empty (using CDN)
 │   ├── js/                  ← Empty
@@ -186,55 +207,75 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 
 **Passwords are bcrypt hashed.** Use `password_verify()` for login checks.
 
-## Features to Implement (Full Conversion)
+## Features to Implement
 
-### Priority 1 — Core Infrastructure (Backend)
-- [x] Phase 1.1 — Query helpers (`includes/functions.php`)
-- [x] Phase 1.2 — Session + Auth (`includes/auth.php`)
-- [x] Phase 1.3 — Layout system (`includes/header-admin.php`, `header-customer.php`, footer files)
-- [x] Phase 1.4 — CSRF token (security basic, needed before forms)
-- [x] Phase 1.5 — Flash message (success/error feedback after actions)
+### Completed
 
-### Priority 2 — Authentication Pages
-- [ ] Phase 2.1 — Admin login page (`auth/login-admin.php`)
-- [ ] Phase 2.2 — Customer login page (`auth/login-customer.php`)
-- [ ] Phase 2.3 — Customer registration (`auth/register.php`)
+| Phase | Description | Owner |
+|-------|-------------|-------|
+| 1.1 | Query helpers (`includes/functions.php`) | Ivan |
+| 1.2 | Session + Auth (`includes/auth.php`) | Ivan |
+| 1.3 | Layout system (header/footer admin + customer) | Ivan |
+| 1.4 | CSRF token | Ivan |
+| 1.5 | Flash message | Ivan |
+| 2.1 | Admin login page (`auth/login-admin.php`) | Alif |
+| 2.2 | Customer login page (`auth/login-customer.php`) | Alif |
+| 2.3 | Customer registration (`auth/register.php`) | Alif |
+| 3.1–3.5 | Landing page (hero, catalog, batch, SNI, footer) | Alif |
+| 5.1 | Customer dashboard (UI) | Alif |
+| 5.2 | Customer preorder form (UI) | Alif |
+| 5.3 | Customer order history (UI) | Alif |
+| 5.5 | Customer profile edit (UI) | Alif |
 
-### Priority 3 — Landing Page (Dynamic)
-- [x] Phase 3.1 — Hero section
-- [x] Phase 3.2 — Product catalog (hardcoded — needs DB)
-- [x] Phase 3.3 — Batch info (hardcoded — needs DB)
-- [x] Phase 3.4 — SNI disclaimer
-- [x] Phase 3.5 — Footer with Google Maps
-- [ ] Phase 3.6 — Products from DB (replace hardcoded)
-- [ ] Phase 3.7 — Batches from DB (replace hardcoded)
+### Remaining
 
-### Priority 4 — Admin Panel
-- [ ] Phase 4.1 — Dashboard (Alif: UI, Ivan: data)
-- [ ] Phase 4.2 — CRUD Products (price protection for non-super_admin)
-- [ ] Phase 4.3 — CRUD Batches (status lifecycle)
-- [ ] Phase 4.4 — CRUD Customers
-- [ ] Phase 4.5 — CRUD Orders (status management, pickup validation)
-- [ ] Phase 4.6 — User management (super_admin only)
-- [ ] Phase 4.7 — Activity log viewer (super_admin only)
+#### Priority 3 — Landing Page (Dynamic Data)
 
-### Priority 5 — Customer Panel
-- [ ] Phase 5.1 — Dashboard (welcome, order summary, latest batch, available products)
-- [ ] Phase 5.2 — Pre-order form (batch + product selection, price from DB)
-- [ ] Phase 5.3 — Order history (table with edit/delete for pending only)
-- [ ] Phase 5.4 — Edit order (pending only, batch locked)
-- [ ] Phase 5.5 — Edit profile (with active order lock)
-- [ ] Phase 5.6 — Download PDF per order
+| Phase | Description | Owner | Status |
+|-------|-------------|-------|--------|
+| 3.6 | Products from DB (replace hardcoded) | Ivan | [ ] |
+| 3.7 | Batches from DB (replace hardcoded) | Ivan | [ ] |
 
-### Priority 6 — Services
-- [ ] Phase 6.1 — FonnteService (3 WhatsApp notification triggers)
-- [ ] Phase 6.2 — PDF generation (DomPDF)
+#### Priority 4 — Admin Panel
 
-### Priority 7 — Security
-- [ ] Phase 7.1 — XSS prevention (htmlspecialchars on output)
-- [ ] Phase 7.2 — Role-based access control (super_admin vs teknisi)
-- [ ] Phase 7.3 — Product price protection
-- [ ] Phase 7.4 — Core product deletion protection (3 SKUs)
+| Phase | Description | Owner | Status |
+|-------|-------------|-------|--------|
+| 4.1 | Dashboard | Alif → Ivan | [ ] |
+| 4.2 | CRUD Products (price protection) | Alif → Ivan | [ ] |
+| 4.3 | CRUD Batches (status lifecycle) | Alif → Ivan | [ ] |
+| 4.4 | CRUD Customers | Alif → Ivan | [ ] |
+| 4.5 | CRUD Orders (status, pickup validation) | Alif → Ivan | [ ] |
+| 4.6 | User management (super_admin only) | Ivan | [ ] |
+| 4.7 | Activity log viewer (super_admin only) | Ivan | [ ] |
+
+#### Priority 5 — Customer Panel (Backend Wiring)
+
+| Phase | Description | Owner | Status |
+|-------|-------------|-------|--------|
+| 5.1 | Dashboard data from DB | Ivan | [ ] |
+| 5.2 | Pre-order submit + price from DB | Ivan | [ ] |
+| 5.3 | Order history data + edit/delete | Ivan | [ ] |
+| 5.4 | Edit order (pending only, batch locked) | Ivan | [ ] |
+| 5.5 | Profile update + active order lock | Ivan | [ ] |
+| 5.6 | Download PDF per order | Ivan | [ ] |
+
+#### Priority 6 — Services
+
+| Phase | Description | Owner | Status |
+|-------|-------------|-------|--------|
+| 6.1 | FonnteService (3 WhatsApp triggers) | Ivan | [ ] |
+| 6.2 | PDF generation (DomPDF) | Ivan | [ ] |
+
+#### Priority 7 — Security
+
+| Phase | Description | Owner | Status |
+|-------|-------------|-------|--------|
+| 7.1 | XSS prevention (htmlspecialchars on output) | Ivan | [ ] |
+| 7.2 | Role-based access control (super_admin vs teknisi) | Ivan | [ ] |
+| 7.3 | Product price protection | Ivan | [ ] |
+| 7.4 | Core product deletion protection (3 SKUs) | Ivan | [ ] |
+
+**Owner legend:** `Ivan` = backend, `Alif` = frontend UI, `Alif → Ivan` = Alif buat UI dulu, Ivan wiring ke DB.
 
 ## Coding Conventions
 
