@@ -203,7 +203,7 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 **Auth seed data (from Laravel):**
 - Super Admin: `superadmin@tefa.polije.ac.id` / `password`
 - Teknisi: `teknisi@tefa.polije.ac.id` / `password`
-- Customer: `customer_1@customer.com` through `customer_50@customer.com` / `password`
+- Customer: `customer@customer.com` / `customer`
 
 **Passwords are bcrypt hashed.** Use `password_verify()` for login checks.
 
