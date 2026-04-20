@@ -5,8 +5,15 @@
  */
 ?>
         </main>
-    </div>
-</div>
+    </div><!-- /.flex-1 -->
+</div><!-- /.flex.min-h-screen -->
+
+<script>
+    function toggleSidebar() {
+        const sb = document.getElementById('sidebar');
+        sb.classList.toggle('-translate-x-full');
+    }
+</script>
 
 </body>
 </html>
