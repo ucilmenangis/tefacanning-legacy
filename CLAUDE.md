@@ -127,10 +127,11 @@ tefa-canning-legacy/
 │   ├── preorder.php
 │   ├── orders.php
 │   └── profile.php
-├── auth/                    ← Auth pages (UI done)
+├── auth/                    ← Auth pages (backend done)
 │   ├── login-admin.php
 │   ├── login-customer.php
 │   ├── register.php
+│   ├── logout.php
 │   └── forgot-password.php
 ├── assets/
 │   ├── css/                 ← Empty (using CDN)
