@@ -147,7 +147,7 @@ include __DIR__ . '/../includes/header-customer.php';
                     <td class="px-5 py-5 text-gray-500">15 Feb 2026, 18:34</td>
                     <td class="px-6 py-5 text-right whitespace-nowrap">
                         <div class="flex items-center gap-4 justify-end">
-                            <a href="#" class="action-link text-[#d97706] hover:text-amber-700">
+                            <a href="edit-order.php" class="action-link text-[#d97706] hover:text-amber-700">
                                 <i class="ph ph-note-pencil text-base"></i> Edit
                             </a>
                             <a href="#" class="action-link text-gray-400 hover:text-navy">
