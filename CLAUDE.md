@@ -58,7 +58,8 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 
 ### Rules for Frontend Developer (Alif)
 
-1. **Use `$variables` for dynamic data.** Don't hardcode values in HTML body. Put data at top of file:
+1. **ALL files MUST be `.php`, NOT `.html`.** This is a PHP project. Never rename `.php` to `.html`. Every page: `dashboard.php`, `orders.php`, `profile.php`.
+2. **Use `$variables` for dynamic data.** Don't hardcode values in HTML body. Put data at top of file:
    ```php
    <?php
    // Data section (Ivan will wire this to DB later)
@@ -68,16 +69,22 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
    ?>
    <!-- HTML section (Alif builds this) -->
    ```
-2. **Don't build auth/login logic.** Build login forms only (HTML + Tailwind). Backend will handle session, validation, password check.
-3. **Include auth guard at top** of protected pages:
+3. **Don't build auth/login logic.** Build login forms only (HTML + Tailwind). Backend will handle session, validation, password check.
+4. **Use shared layout system.** Include header/footer in every page — don't duplicate `<head>`, sidebar, navbar, footer:
    ```php
-   <?php require_once __DIR__ . '/../includes/auth.php'; requireAdmin(); ?>
+   <?php
+   $pageTitle = 'Dashboard';
+   $currentPage = 'dashboard';
+   include __DIR__ . '/../includes/header-customer.php';
+   ?>
+   <!-- page content here -->
+   <?php include __DIR__ . '/../includes/footer-customer.php'; ?>
    ```
-4. **Follow existing file naming:** `admin/dashboard.php`, `admin/products.php`, `customer/orders.php`, etc.
-5. **Use shared layout system** when available (Phase 1.5). Don't duplicate `<head>`, navbar, footer in every page.
-6. **Same color theme:** primary `#E02424`, accent `#F05252`, dark `#9B1C1C`, navy `#111827`.
-7. **Don't modify files in:** `config/`, `includes/`, `services/`. Those are backend-only.
-8. **Commit message format:** `feat: [page/feature description]` or `fix: [what fixed]`.
+5. **Same color theme:** primary `#E02424`, accent `#F05252`, dark `#9B1C1C`, navy `#111827`.
+6. **Don't modify files in:** `config/`, `includes/`, `services/`. Those are backend-only.
+7. **CSRF token required** in every form: `<?php echo csrfField(); ?>`. Form tanpa ini akan ditolak saat submit.
+8. **Don't duplicate sidebar/navbar.** Already in header includes. Just write page content between header and footer.
+9. **Commit message format:** `feat: [page/feature description]` or `fix: [what fixed]`.
 
 ## Current Implementation Status
 
