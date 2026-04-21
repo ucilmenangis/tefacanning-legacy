@@ -97,9 +97,9 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 **Priority 2 (Auth Pages): DONE (UI only — backend wiring pending)**
 - `auth/login-admin.php`, `auth/login-customer.php`, `auth/register.php`, `auth/forgot-password.php`
 
-**Priority 3 (Landing Page): DONE (static)**
+**Priority 3 (Landing Page): DONE**
 - `index.php` — Hero, product catalog, batch info, SNI disclaimer, footer with Google Maps
-- Products & batches still hardcoded — needs DB wiring
+- ✅ Products & batches wired to DB (dynamic data)
 
 **Priority 5 (Customer Panel): IN PROGRESS (wiring DB)**
 - `customer/dashboard.php` — ✅ wired to DB (stats, batch, products)
@@ -240,6 +240,7 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 2.2 | Customer login page (`auth/login-customer.php`) | Alif |
 | 2.3 | Customer registration (`auth/register.php`) | Alif |
 | 3.1–3.5 | Landing page (hero, catalog, batch, SNI, footer) | Alif |
+| 3.6–3.7 | Landing page dynamic data (products & batches from DB) | Ivan |
 | 5.1 | Customer dashboard (UI) | Alif |
 | 5.1 | Customer dashboard (wired to DB) | Ivan |
 | 5.2 | Customer preorder submit (wired to DB) | Ivan |
@@ -264,8 +265,8 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 
 | Phase | Description | Owner | Status |
 |-------|-------------|-------|--------|
-| 3.6 | Products from DB (replace hardcoded) | Ivan | [ ] |
-| 3.7 | Batches from DB (replace hardcoded) | Ivan | [ ] |
+| 3.6 | Products from DB (replace hardcoded) | Ivan | [x] |
+| 3.7 | Batches from DB (replace hardcoded) | Ivan | [x] |
 
 #### Priority 4 — Admin Panel
 

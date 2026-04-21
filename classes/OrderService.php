@@ -29,8 +29,8 @@ class OrderService
              JOIN batches b ON o.batch_id = b.id
              WHERE o.customer_id = ? AND o.deleted_at IS NULL
              ORDER BY o.created_at DESC
-             LIMIT ?",
-            [$customerId, $limit]
+             LIMIT " . (int) $limit,
+            [$customerId]
         );
     }
 

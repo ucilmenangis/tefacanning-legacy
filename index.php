@@ -1,6 +1,25 @@
 <?php
 // Tefa Canning SIP Legacy - Landing Page
-require_once __DIR__ . "/config/database.php"; ?>
+require_once __DIR__ . "/includes/functions.php";
+require_once __DIR__ . "/classes/FormatHelper.php";
+
+// Active products from DB
+$products = db_fetch_all(
+  "SELECT id, name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name",
+);
+
+// Open batches from DB with order counts
+$batches = db_fetch_all(
+  "SELECT b.id, b.name, b.event_name, b.event_date, b.status,
+            (SELECT COUNT(*) FROM orders WHERE batch_id = b.id AND deleted_at IS NULL) as order_count
+     FROM batches b
+     WHERE b.deleted_at IS NULL AND b.status = 'open'
+     ORDER BY b.event_date ASC",
+);
+
+// Stats for hero
+$productCount = count($products);
+?>
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
@@ -103,7 +122,7 @@ require_once __DIR__ . "/config/database.php"; ?>
                 <!-- Stats -->
                 <div class="mt-14 flex items-center gap-16 sm:gap-24">
                     <div>
-                        <div class="text-[26px] font-extrabold text-navy leading-none mb-1.5">3</div>
+                        <div class="text-[26px] font-extrabold text-navy leading-none mb-1.5"><?php echo $productCount; ?></div>
                         <div class="text-[12px] font-medium text-gray-400 capitalize">Varian Produk</div>
                     </div>
                     <div>
@@ -132,46 +151,32 @@ require_once __DIR__ . "/config/database.php"; ?>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Product 1 -->
+                <?php
+                $bgColors = ["#FEF2F2", "#F0FDF4", "#FFFBEB"];
+                foreach ($products as $i => $product):
+                  $bg = $bgColors[$i % count($bgColors)]; ?>
                 <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-                    <div class="h-[280px] bg-[#FEF2F2] flex items-center justify-center p-6 relative">
-                        <!-- Simulated product image rendering like in screenshot (centered, taking some vertical space) -->
-                        <img src="assets/images/product.jpeg" alt="Sarden SIP Saus Tomat" class="h-full w-full object-cover rounded-xl shadow-sm">
+                    <div class="h-[280px] flex items-center justify-center relative" style="background:<?php echo $bg; ?>">
+                        <img src="assets/images/product.jpeg" alt="<?php echo htmlspecialchars(
+                          $product["name"],
+                        ); ?>" class="h-full w-full object-cover shadow-sm">
                     </div>
                     <div class="p-8">
                         <div class="flex items-center gap-2 mb-4">
+                            <?php if ($i === 0): ?>
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-primary text-white">
                                 TERLARIS
                             </span>
+                            <?php endif; ?>
                             <span class="text-[10px] font-medium text-gray-400 border border-gray-200 px-2 py-0.5 rounded">425gr</span>
                         </div>
-                        <h4 class="text-lg font-bold text-navy mb-2">Sarden SIP Saus Tomat</h4>
+                        <h4 class="text-lg font-bold text-navy mb-2"><?php echo htmlspecialchars(
+                          $product["name"],
+                        ); ?></h4>
                         <p class="text-[13px] text-gray-500 mb-6 leading-relaxed">
-                            Sarden kaleng premium dari perairan nusantara indonesia. Gurih dan sedap dengan balur saus tomat yang lezat.
-                        </p>
-                        <div class="flex items-center gap-4 pt-2">
-                            <div class="flex items-center text-[12px] text-gray-600 font-medium">
-                                <i class="ph-bold ph-check text-green-500 mr-1.5"></i> Halal
-                            </div>
-                            <div class="flex items-center text-[12px] text-gray-600 font-medium">
-                                <i class="ph-bold ph-check text-green-500 mr-1.5"></i> Sertifikat Karantina
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product 2 -->
-                <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-                    <div class="h-[280px] bg-[#F0FDF4] flex items-center justify-center p-6 relative">
-                        <img src="assets/images/product.jpeg" alt="Sarden SIP Asin" class="h-full w-full object-cover rounded-xl shadow-sm">
-                    </div>
-                    <div class="p-8">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="text-[10px] font-medium text-gray-400 border border-gray-200 px-2 py-0.5 rounded">425gr</span>
-                        </div>
-                        <h4 class="text-lg font-bold text-navy mb-2">Sarden SIP Asin</h4>
-                        <p class="text-[13px] text-gray-500 mb-6 leading-relaxed">
-                            Varian pertama (awal) — dari lemuru dan bumbu garam. Cocok sebagai teman santapan utama keluarga setiap hari.
+                            <?php echo FormatHelper::rupiah(
+                              $product["price"],
+                            ); ?> per kaleng. Minimum order 100 kaleng.
                         </p>
                         <div class="flex items-center gap-4 pt-2">
                             <div class="flex items-center text-[12px] text-gray-600 font-medium">
@@ -183,30 +188,16 @@ require_once __DIR__ . "/config/database.php"; ?>
                         </div>
                     </div>
                 </div>
+                <?php
+                endforeach;
+                ?>
 
-                <!-- Product 3 -->
-                <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
-                    <div class="h-[280px] bg-[#FFFBEB] flex items-center justify-center p-6 relative">
-                        <img src="assets/images/product.jpeg" alt="Sarden SIP Saus Cabai" class="h-full w-full object-cover rounded-xl shadow-sm">
-                    </div>
-                    <div class="p-8">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="text-[10px] font-medium text-gray-400 border border-gray-200 px-2 py-0.5 rounded">425gr</span>
-                        </div>
-                        <h4 class="text-lg font-bold text-navy mb-2">Sarden SIP Saus Cabai</h4>
-                        <p class="text-[13px] text-gray-500 mb-6 leading-relaxed">
-                            Bagi yang suka dengan rasa pedas khas Nusantara. Pedas pas, tidak mengubah cita rasa dasar ikan.
-                        </p>
-                        <div class="flex items-center gap-4 pt-2">
-                            <div class="flex items-center text-[12px] text-gray-600 font-medium">
-                                <i class="ph-bold ph-check text-green-500 mr-1.5"></i> Halal
-                            </div>
-                            <div class="flex items-center text-[12px] text-gray-600 font-medium">
-                                <i class="ph-bold ph-check text-green-500 mr-1.5"></i> Ekstra Cabai Segar
-                            </div>
-                        </div>
-                    </div>
+                <?php if (empty($products)): ?>
+                <div class="md:col-span-3 text-center py-12">
+                    <i class="ph-bold ph-storefront text-gray-300 text-4xl mb-3"></i>
+                    <p class="text-gray-400 text-sm">Belum ada produk tersedia</p>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -225,7 +216,7 @@ require_once __DIR__ . "/config/database.php"; ?>
             <!-- Dynamic grid container -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                <!-- Card 1 -->
+                <?php foreach ($batches as $batch): ?>
                 <div class="bg-white rounded-2xl border border-red-100 p-6 flex flex-col hover:shadow-lg hover:shadow-red-500/5 transition-all">
                     <div class="flex items-center justify-between mb-5">
                         <div class="w-10 h-10 rounded-xl bg-[#FFF5F5] text-primary flex items-center justify-center">
@@ -237,18 +228,28 @@ require_once __DIR__ . "/config/database.php"; ?>
                         </div>
                     </div>
 
-                    <h4 class="text-lg font-bold text-navy mb-1">Batch 1</h4>
-                    <p class="text-[13px] text-primary font-semibold mb-2">Dies Natalies Polije</p>
-                    <p class="text-[12px] text-gray-400 mb-6 font-medium">Tidak ada</p>
+                    <h4 class="text-lg font-bold text-navy mb-1"><?php echo htmlspecialchars(
+                      $batch["name"],
+                    ); ?></h4>
+                    <p class="text-[13px] text-primary font-semibold mb-2"><?php echo htmlspecialchars(
+                      $batch["event_name"],
+                    ); ?></p>
+                    <p class="text-[12px] text-gray-400 mb-6 font-medium"><?php echo date(
+                      "d M Y",
+                      strtotime($batch["event_date"]),
+                    ); ?></p>
 
                     <div class="flex items-center gap-6 mb-8 text-[12px] font-medium text-gray-500">
                         <div class="flex items-center">
                             <i class="ph-bold ph-calendar text-gray-400 text-sm mr-2"></i>
-                            15 Feb 2026
+                            <?php echo date(
+                              "d M Y",
+                              strtotime($batch["event_date"]),
+                            ); ?>
                         </div>
                         <div class="flex items-center">
                             <i class="ph-bold ph-shopping-bag text-gray-400 text-sm mr-2"></i>
-                            2 pesanan
+                            <?php echo $batch["order_count"]; ?> pesanan
                         </div>
                     </div>
 
@@ -256,6 +257,16 @@ require_once __DIR__ . "/config/database.php"; ?>
                         Pre-Order Batch Ini <i class="ph-bold ph-arrow-right ml-1.5 text-sm"></i>
                     </a>
                 </div>
+                <?php endforeach; ?>
+
+                <?php if (empty($batches)): ?>
+                <div class="md:col-span-3">
+                    <div class="bg-gray-50 rounded-2xl border border-gray-100 p-8 text-center">
+                        <i class="ph-bold ph-calendar-x text-gray-300 text-3xl mb-3"></i>
+                        <p class="text-gray-400 text-sm">Belum ada batch yang dibuka untuk pre-order</p>
+                    </div>
+                </div>
+                <?php endif; ?>
 
             </div>
         </div>
