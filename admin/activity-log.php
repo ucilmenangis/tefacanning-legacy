@@ -8,91 +8,230 @@ include __DIR__ . '/../includes/header-admin.php';
 
 // ── Mock Data ──
 $logs = [
-    ['id'=>1,'user'=>'Super Admin','event'=>'Pesanan Dibuat','desc'=>'Membuat pesanan baru ORD-NAEU0M9Z untuk Customer','created_at'=>'15 Feb 2026, 18:34'],
-    ['id'=>2,'user'=>'Super Admin','event'=>'Pesanan Dibuat','desc'=>'Membuat pesanan baru ORD-29T8TFXY untuk Customer','created_at'=>'15 Feb 2026, 18:34'],
-    ['id'=>3,'user'=>'Super Admin','event'=>'Login','desc'=>'Admin login via browser','created_at'=>'15 Feb 2026, 18:20'],
+    [
+        'waktu' => '16 Feb 2026, 01:36:25',
+        'ago' => '2 months ago',
+        'aktor' => 'Super Admin',
+        'aksi' => 'Diubah',
+        'target_type' => 'Order',
+        'target_id' => '5',
+        'deskripsi' => 'updated'
+    ],
+    [
+        'waktu' => '15 Feb 2026, 18:34:22',
+        'ago' => '2 months ago',
+        'aktor' => 'Sistem',
+        'aksi' => 'Dibuat',
+        'target_type' => 'Order',
+        'target_id' => '5',
+        'deskripsi' => 'created'
+    ],
+    [
+        'waktu' => '15 Feb 2026, 18:34:01',
+        'ago' => '2 months ago',
+        'aktor' => 'Sistem',
+        'aksi' => 'Dibuat',
+        'target_type' => 'Order',
+        'target_id' => '4',
+        'deskripsi' => 'created'
+    ],
+    [
+        'waktu' => '15 Feb 2026, 18:33:34',
+        'ago' => '2 months ago',
+        'aktor' => 'Sistem',
+        'aksi' => 'Dihapus',
+        'target_type' => 'Order',
+        'target_id' => '1',
+        'deskripsi' => 'deleted'
+    ],
+    [
+        'waktu' => '15 Feb 2026, 18:33:32',
+        'ago' => '2 months ago',
+        'aktor' => 'Sistem',
+        'aksi' => 'Dihapus',
+        'target_type' => 'Order',
+        'target_id' => '2',
+        'deskripsi' => 'deleted'
+    ],
+    [
+        'waktu' => '15 Feb 2026, 18:33:28',
+        'ago' => '2 months ago',
+        'aktor' => 'Sistem',
+        'aksi' => 'Dihapus',
+        'target_type' => 'Order',
+        'target_id' => '3',
+        'deskripsi' => 'deleted'
+    ],
+    [
+        'waktu' => '15 Feb 2026, 17:57:17',
+        'ago' => '2 months ago',
+        'aktor' => 'Super Admin',
+        'aksi' => 'Dibuat',
+        'target_type' => 'Order',
+        'target_id' => '3',
+        'deskripsi' => 'created'
+    ],
+    [
+        'waktu' => '15 Feb 2026, 17:36:35',
+        'ago' => '2 months ago',
+        'aktor' => 'Super Admin',
+        'aksi' => 'Dibuat',
+        'target_type' => 'Order',
+        'target_id' => '2',
+        'deskripsi' => 'created'
+    ],
+    [
+        'waktu' => '15 Feb 2026, 17:29:26',
+        'ago' => '2 months ago',
+        'aktor' => 'Super Admin',
+        'aksi' => 'Dibuat',
+        'target_type' => 'Order',
+        'target_id' => '1',
+        'deskripsi' => 'created'
+    ],
+    [
+        'waktu' => '15 Feb 2026, 15:45:41',
+        'ago' => '2 months ago',
+        'aktor' => 'Super Admin',
+        'aksi' => 'Dibuat',
+        'target_type' => 'Batch',
+        'target_id' => '1',
+        'deskripsi' => 'created'
+    ],
 ];
-$eventColors = [
-    'Pesanan Dibuat' => ['bg'=>'#eff6ff','color'=>'#2563eb','border'=>'#dbeafe'],
-    'Login'          => ['bg'=>'#ecfdf5','color'=>'#059669','border'=>'#a7f3d0'],
-    'Batch Update'   => ['bg'=>'#fffbeb','color'=>'#d97706','border'=>'#fde68a'],
-    'Hapus'          => ['bg'=>'#fef2f2','color'=>'#E02424','border'=>'#fecaca'],
-];
+
+function getActionClass($action) {
+    switch ($action) {
+        case 'Dibuat': return 'bg-emerald-50 text-emerald-600 border-emerald-100';
+        case 'Diubah': return 'bg-sky-50 text-sky-600 border-sky-100';
+        case 'Dihapus': return 'bg-rose-50 text-rose-600 border-rose-100';
+        default: return 'bg-gray-50 text-gray-600 border-gray-100';
+    }
+}
 ?>
 
 <style>
-.page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.breadcrumb  { font-size:12px; color:#9ca3af; margin-bottom:4px; }
-.table-wrap    { background:#fff; border:1px solid #f1f5f9; border-radius:12px; overflow:hidden; }
-.table-toolbar { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 16px; border-bottom:1px solid #f8fafc; }
-.mini-search { border:1px solid #e5e7eb; border-radius:7px; padding:6px 10px 6px 30px; font-size:12px; outline:none; background:#f9fafb; width:200px; transition:border-color .15s; }
-.mini-search:focus { border-color:#E02424; background:#fff; }
-.data-table { width:100%; text-align:left; font-size:12.5px; border-collapse:collapse; }
-.data-table th { font-size:11.5px; font-weight:600; color:#9ca3af; padding:10px 14px; border-bottom:1px solid #f1f5f9; white-space:nowrap; background:#fafafa; }
-.data-table td { padding:13px 14px; border-bottom:1px solid #f8fafc; color:#374151; vertical-align:middle; }
-.data-table tr:last-child td { border-bottom:none; }
-.data-table tbody tr:hover td { background:#fafafa; }
-.event-pill { display:inline-flex; align-items:center; padding:2px 9px; border-radius:999px;
-    font-size:11px; font-weight:600; border-width:1px; border-style:solid; }
-.table-footer { padding:12px 16px; border-top:1px solid #f8fafc; display:flex; align-items:center;
-    justify-content:space-between; font-size:12px; color:#9ca3af; }
+    .breadcrumb-item { font-size: 11px; color: #94a3b8; }
+    .breadcrumb-item.active { color: #1e293b; font-weight: 500; }
+    
+    .table-container { background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; overflow: hidden; }
+    .table-toolbar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 12px 20px; border-bottom: 1px solid #f8fafc; }
+    
+    .search-input { border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px 6px 32px; font-size: 12px; color: #374151; background: #f9fafb; outline: none; width: 180px; }
+    .search-input:focus { border-color: #E02424; background: #fff; }
+
+    .data-table { width: 100%; text-align: left; font-size: 13px; border-collapse: collapse; }
+    .data-table th { font-size: 11px; font-weight: 700; color: #1e293b; padding: 12px 20px; border-bottom: 1px solid #f1f5f9; text-transform: none; }
+    .data-table td { padding: 14px 20px; border-bottom: 1px solid #f8fafc; color: #334155; vertical-align: middle; }
+    .data-table tr:hover td { background: #fafafa; }
+
+    .badge-action { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 6px; font-size: 10px; font-weight: 600; border: 1px solid; }
+    .badge-target { display: flex; flex-direction: column; line-height: 1.2; }
+    .badge-target .type { font-size: 9px; color: #94a3b8; font-weight: 500; }
+    .badge-target .id { font-size: 11px; color: #334155; font-weight: 600; }
+
+    .pagination-btn { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 12px; color: #64748b; border: 1px solid #e2e8f0; transition: all 0.2s; }
+    .pagination-btn.active { background: #fef2f2; border-color: #fecaca; color: #E02424; font-weight: 600; }
+    .pagination-btn:hover:not(.active) { background: #f8fafc; }
 </style>
 
-<div class="breadcrumb">Audit & Log &rsaquo; <span>Log Aktivitas</span></div>
-<div class="page-header">
-    <h1 class="text-[22px] font-extrabold text-navy">Log Aktivitas</h1>
+<!-- Header & Breadcrumb -->
+<div class="mb-6">
+    <div class="flex items-center gap-2 mb-1">
+        <span class="breadcrumb-item">Log Aktivitas</span>
+        <i class="ph ph-caret-right text-[10px] text-slate-400"></i>
+        <span class="breadcrumb-item active">List</span>
+    </div>
+    <h1 class="text-2xl font-extrabold text-slate-800">Log Aktivitas</h1>
 </div>
 
-<div class="table-wrap">
+<!-- Table Section -->
+<div class="table-container shadow-sm">
     <div class="table-toolbar">
         <div class="relative">
-            <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-            <input type="text" placeholder="Search" class="mini-search" id="log-search">
+            <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input type="text" placeholder="Search" class="search-input" id="log-search-input">
         </div>
+        <button class="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
+            <i class="ph ph-funnel text-base"></i>
+        </button>
+        <button class="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
+            <i class="ph ph-squares-four text-base"></i>
+        </button>
     </div>
+
     <div class="overflow-x-auto">
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Pengguna</th>
-                    <th>Event</th>
+                    <th>Waktu <i class="ph ph-caret-down text-[10px] ml-1"></i></th>
+                    <th>Aktor <i class="ph ph-caret-down text-[10px] ml-1"></i></th>
+                    <th>Aksi</th>
+                    <th>Target</th>
                     <th>Deskripsi</th>
-                    <th>Waktu</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($logs as $log):
-                    $ev = $eventColors[$log['event']] ?? ['bg'=>'#f9fafb','color'=>'#6b7280','border'=>'#e5e7eb'];
-                ?>
+                <?php foreach ($logs as $log): ?>
                 <tr>
-                    <td class="text-gray-400 text-[11px]"><?php echo $log['id']; ?></td>
-                    <td class="font-semibold text-navy"><?php echo htmlspecialchars($log['user']); ?></td>
                     <td>
-                        <span class="event-pill"
-                              style="background:<?php echo $ev['bg'];?>;color:<?php echo $ev['color'];?>;border-color:<?php echo $ev['border'];?>">
-                            <?php echo htmlspecialchars($log['event']); ?>
+                        <div class="font-semibold text-slate-700"><?php echo $log['waktu']; ?></div>
+                        <div class="text-[11px] text-slate-400 mt-0.5"><?php echo $log['ago']; ?></div>
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="ph ph-user text-slate-300 text-lg"></i>
+                            <span class="font-medium"><?php echo $log['aktor']; ?></span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge-action <?php echo getActionClass($log['aksi']); ?>">
+                            <?php echo $log['aksi']; ?>
                         </span>
                     </td>
-                    <td class="text-gray-500 text-[12px]"><?php echo htmlspecialchars($log['desc']); ?></td>
-                    <td class="text-gray-400 text-[11.5px]"><?php echo $log['created_at']; ?></td>
+                    <td>
+                        <div class="badge-target border border-slate-100 bg-slate-50 px-2 py-1 rounded-md w-fit min-w-[70px]">
+                            <span class="type uppercase tracking-wider"><?php echo $log['target_type']; ?></span>
+                            <span class="id">ID: <?php echo $log['target_id']; ?></span>
+                        </div>
+                    </td>
+                    <td class="text-slate-500 italic"><?php echo $log['deskripsi']; ?></td>
+                    <td class="text-right">
+                        <button class="text-[12px] font-bold text-slate-600 hover:text-navy flex items-center gap-1.5 ml-auto group">
+                            <i class="ph ph-eye text-base text-slate-400 group-hover:text-navy"></i>
+                            View
+                        </button>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </div>
-    <div class="table-footer">
-        <span>Showing <?php echo count($logs); ?> results</span>
+
+    <!-- Table Footer -->
+    <div class="px-6 py-4 border-t border-slate-50 flex items-center justify-between">
+        <div class="text-[12px] text-slate-500">
+            Showing 1 to 10 of 16 results
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 mr-6">
+                <span class="text-[12px] text-slate-400">Per page</span>
+                <select class="text-[12px] border border-slate-200 rounded px-2 py-1 outline-none bg-white">
+                    <option>10</option>
+                    <option>25</option>
+                    <option>50</option>
+                </select>
+            </div>
+            <div class="flex items-center gap-1">
+                <button class="pagination-btn active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">
+                    <i class="ph ph-caret-right"></i>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
-
-<script>
-    document.getElementById('log-search').addEventListener('input', function() {
-        const q = this.value.toLowerCase();
-        document.querySelectorAll('.data-table tbody tr').forEach(tr => {
-            tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
-        });
-    });
-</script>
 
 <?php include __DIR__ . '/../includes/footer-admin.php'; ?>
