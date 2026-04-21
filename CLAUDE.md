@@ -101,8 +101,9 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `index.php` — Hero, product catalog, batch info, SNI disclaimer, footer with Google Maps
 - Products & batches still hardcoded — needs DB wiring
 
-**Priority 5 (Customer Panel): DONE (UI only — backend wiring pending)**
-- `customer/dashboard.php`, `customer/preorder.php`, `customer/orders.php`, `customer/profile.php`
+**Priority 5 (Customer Panel): IN PROGRESS (wiring DB)**
+- `customer/dashboard.php` — ✅ wired to DB (stats, batch, products)
+- `customer/preorder.php`, `customer/orders.php`, `customer/profile.php` — UI only, backend pending
 
 **Priority 4 (Admin Panel): DONE (UI only — backend wiring pending)**
 - `admin/dashboard.php`, `admin/orders.php`, `admin/customers.php`, `admin/products.php`, `admin/batches.php`, `admin/activity-log.php`, `admin/users.php`
@@ -228,6 +229,7 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 2.3 | Customer registration (`auth/register.php`) | Alif |
 | 3.1–3.5 | Landing page (hero, catalog, batch, SNI, footer) | Alif |
 | 5.1 | Customer dashboard (UI) | Alif |
+| 5.1 | Customer dashboard (wired to DB) | Ivan |
 | 5.2 | Customer preorder form (UI) | Alif |
 | 5.3 | Customer order history (UI) | Alif |
 | 5.4 | Customer edit order (UI) | Alif |
@@ -265,7 +267,7 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 
 | Phase | Description | Owner | Status |
 |-------|-------------|-------|--------|
-| 5.1 | Dashboard data from DB | Ivan | [ ] |
+| 5.1 | Dashboard data from DB | Ivan | [x] |
 | 5.2 | Pre-order submit + price from DB | Ivan | [ ] |
 | 5.3 | Order history data + edit/delete | Ivan | [ ] |
 | 5.4 | Edit order (pending only, batch locked) | Ivan | [x] |
