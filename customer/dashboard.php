@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../classes/OrderService.php';
+require_once __DIR__ . '/../classes/FormatHelper.php';
 requireCustomer();
 
 $customerId = getCustomerId();
@@ -17,26 +19,13 @@ if (!$customer) {
     exit;
 }
 
-// Order stats
-$totalOrders = db_fetch(
-    "SELECT COUNT(*) as count FROM orders WHERE customer_id = ? AND deleted_at IS NULL",
-    [$customerId]
-)['count'];
-
-$totalSpent = db_fetch(
-    "SELECT COALESCE(SUM(total_amount), 0) as total FROM orders WHERE customer_id = ? AND deleted_at IS NULL AND status != 'pending'",
-    [$customerId]
-)['total'];
-
-$pendingOrders = db_fetch(
-    "SELECT COUNT(*) as count FROM orders WHERE customer_id = ? AND status = 'pending' AND deleted_at IS NULL",
-    [$customerId]
-)['count'];
-
-$readyOrders = db_fetch(
-    "SELECT COUNT(*) as count FROM orders WHERE customer_id = ? AND status = 'ready' AND deleted_at IS NULL",
-    [$customerId]
-)['count'];
+// Order stats via OOP
+$orderService = new OrderService();
+$stats = $orderService->getStats($customerId);
+$totalOrders  = $stats['total_orders'];
+$totalSpent   = $stats['total_spent'];
+$pendingOrders = $stats['pending_count'];
+$readyOrders  = $stats['ready_count'];
 
 // Latest open batch
 $latestBatch = db_fetch(
@@ -52,16 +41,6 @@ $products = db_fetch_all(
     "SELECT name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name"
 );
 
-function formatRupiah($amount) {
-    return 'Rp ' . number_format($amount, 0, ',', '.');
-}
-
-$batchStatusMap = [
-    'open'      => ['label' => 'Buka',     'color' => 'emerald'],
-    'processing' => ['label' => 'Diproses', 'color' => 'amber'],
-    'ready'     => ['label' => 'Siap',     'color' => 'blue'],
-    'closed'    => ['label' => 'Tutup',    'color' => 'gray'],
-];
 
 $pageTitle = 'Dashboard';
 $currentPage = 'dashboard';
@@ -130,7 +109,7 @@ include __DIR__ . '/../includes/header-customer.php';
             <span class="text-[11px] font-medium text-gray-400">Total Belanja</span>
         </div>
         <div class="text-[22px] font-extrabold text-navy leading-none mb-2">
-            <?php echo formatRupiah($totalSpent); ?>
+            <?php echo FormatHelper::rupiah($totalSpent); ?>
         </div>
         <p class="text-[11px] font-medium text-emerald-500 mb-3">Akumulasi pengeluaran</p>
         <div class="h-[2px] rounded-full bg-gradient-to-r from-emerald-400 to-transparent opacity-20"></div>
@@ -177,7 +156,7 @@ include __DIR__ . '/../includes/header-customer.php';
             <?php if ($latestBatch): ?>
             <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
                 <?php
-                    $bs = $batchStatusMap[$latestBatch['status']] ?? ['label' => $latestBatch['status'], 'color' => 'gray'];
+                    $bs = FormatHelper::batchStatus($latestBatch['status']);
                 ?>
                 <div class="flex items-start justify-between mb-4">
                     <span class="text-[13px] font-semibold text-navy"><?php echo htmlspecialchars($latestBatch['name']); ?></span>

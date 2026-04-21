@@ -104,7 +104,14 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 **Priority 5 (Customer Panel): IN PROGRESS (wiring DB)**
 - `customer/dashboard.php` — ✅ wired to DB (stats, batch, products)
 - `customer/preorder.php` — ✅ wired to DB (submit order, price from DB, order history)
-- `customer/orders.php`, `customer/profile.php` — UI only, backend pending
+- `customer/orders.php` — ✅ wired to DB (order list, search, cancel pending)
+- `customer/edit-order.php` — ✅ wired to DB (edit pending order items, price from DB)
+- `customer/profile.php` — ✅ wired to DB (edit profile, change password, active order lock)
+
+**OOP Classes:**
+- `classes/FormatHelper.php` — static helpers: `rupiah()`, `tanggal()`, `orderStatus()`, `batchStatus()`
+- `classes/OrderService.php` — order operations: `getByCustomer()`, `getById()`, `cancel()`, `getStats()`
+- `classes/CustomerService.php` — customer operations: `getById()`, `updateProfile()`, `changePassword()`, `hasActiveOrders()`
 
 **Priority 4 (Admin Panel): DONE (UI only — backend wiring pending)**
 - `admin/dashboard.php`, `admin/orders.php`, `admin/customers.php`, `admin/products.php`, `admin/batches.php`, `admin/activity-log.php`, `admin/users.php`
@@ -144,6 +151,10 @@ tefa-canning-legacy/
 │   ├── js/                  ← Empty
 │   └── images/              ← Static images (8 files)
 ├── database/                ← Empty — SQL dump to be added
+├── classes/                 ← OOP business logic
+│   ├── FormatHelper.php     ← Static: rupiah, tanggal, status labels
+│   ├── OrderService.php     ← Order CRUD operations
+│   └── CustomerService.php  ← Customer profile, password, active order check
 ├── services/                ← To be created (Fonnte, PDF)
 └── views/                   ← To be created (layouts, components)
 ```
@@ -232,6 +243,9 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 5.1 | Customer dashboard (UI) | Alif |
 | 5.1 | Customer dashboard (wired to DB) | Ivan |
 | 5.2 | Customer preorder submit (wired to DB) | Ivan |
+| 5.3 | Customer order history (wired to DB) | Ivan |
+| 5.4 | Customer edit order (wired to DB) | Ivan |
+| 5.5 | Customer profile (wired to DB) | Ivan |
 | 5.2 | Customer preorder form (UI) | Alif |
 | 5.3 | Customer order history (UI) | Alif |
 | 5.4 | Customer edit order (UI) | Alif |
@@ -271,9 +285,9 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 |-------|-------------|-------|--------|
 | 5.1 | Dashboard data from DB | Ivan | [x] |
 | 5.2 | Pre-order submit + price from DB | Ivan | [x] |
-| 5.3 | Order history data + edit/delete | Ivan | [ ] |
+| 5.3 | Order history data + edit/delete | Ivan | [x] |
 | 5.4 | Edit order (pending only, batch locked) | Ivan | [x] |
-| 5.5 | Profile update + active order lock | Ivan | [ ] |
+| 5.5 | Profile update + active order lock | Ivan | [x] |
 | 5.6 | Download PDF per order | Ivan | [ ] |
 
 #### Priority 6 — Services

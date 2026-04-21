@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../classes/FormatHelper.php';
 requireCustomer();
 
 $customerId = getCustomerId();
@@ -103,9 +104,6 @@ $recentOrders = db_fetch_all(
     [$customerId]
 );
 
-function formatRupiah($amount) {
-    return 'Rp ' . number_format($amount, 0, ',', '.');
-}
 
 $pageTitle = 'Pre-Order Sarden';
 $currentPage = 'preorder';
@@ -356,19 +354,13 @@ include __DIR__ . '/../includes/header-customer.php';
     <?php else: ?>
     <div class="space-y-3">
         <?php foreach ($recentOrders as $order):
-            $statusMap = [
-                'pending'    => ['label' => 'Menunggu',    'class' => 'badge-amber'],
-                'processing' => ['label' => 'Diproses',    'class' => 'badge-blue'],
-                'ready'      => ['label' => 'Siap Diambil','class' => 'badge-green'],
-                'picked_up'  => ['label' => 'Diambil',     'class' => 'badge-gray'],
-            ];
-            $s = $statusMap[$order['status']] ?? ['label' => $order['status'], 'class' => 'badge-gray'];
+            $s = FormatHelper::orderStatus($order['status']);
         ?>
         <div class="section-card px-5 py-4 flex items-center gap-4">
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 mb-1 flex-wrap">
                     <span class="text-[13px] font-semibold text-navy"><?php echo htmlspecialchars($order['order_number']); ?></span>
-                    <span class="<?php echo $s['class']; ?> inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                    <span class="<?php echo $s['badge']; ?> inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded-full">
                         <?php echo $s['label']; ?>
                     </span>
                 </div>
@@ -381,7 +373,7 @@ include __DIR__ . '/../includes/header-customer.php';
                 </div>
             </div>
             <div class="text-right flex-shrink-0">
-                <p class="text-[13px] font-bold text-navy"><?php echo formatRupiah($order['total_amount']); ?></p>
+                <p class="text-[13px] font-bold text-navy"><?php echo FormatHelper::rupiah((float) $order['total_amount']); ?></p>
             </div>
         </div>
         <?php endforeach; ?>
