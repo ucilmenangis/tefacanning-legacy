@@ -101,8 +101,8 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `index.php` — Hero, product catalog, batch info, SNI disclaimer, footer with Google Maps
 - ✅ Products & batches wired to DB (dynamic data)
 
-**Priority 5 (Customer Panel): IN PROGRESS (wiring DB)**
-- `customer/dashboard.php` — ✅ wired to DB (stats, batch, products)
+**Priority 5 (Customer Panel): DONE**
+- `customer/dashboard.php` — ✅ wired to DB (stats, batch, products, sparkline charts)
 - `customer/preorder.php` — ✅ wired to DB (submit order, price from DB, order history)
 - `customer/orders.php` — ✅ wired to DB (order list, search, cancel pending)
 - `customer/edit-order.php` — ✅ wired to DB (edit pending order items, price from DB)
@@ -241,6 +241,7 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 2.3 | Customer registration (`auth/register.php`) | Alif |
 | 3.1–3.5 | Landing page (hero, catalog, batch, SNI, footer) | Alif |
 | 3.6–3.7 | Landing page dynamic data (products & batches from DB) | Ivan |
+| 5.0 | Dashboard sparkline charts (Chart.js CDN) | Ivan |
 | 5.1 | Customer dashboard (UI) | Alif |
 | 5.1 | Customer dashboard (wired to DB) | Ivan |
 | 5.2 | Customer preorder submit (wired to DB) | Ivan |
@@ -260,13 +261,6 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 4.7 | Admin Activity log (UI) | Alif |
 
 ### Remaining
-
-#### Priority 3 — Landing Page (Dynamic Data)
-
-| Phase | Description | Owner | Status |
-|-------|-------------|-------|--------|
-| 3.6 | Products from DB (replace hardcoded) | Ivan | [x] |
-| 3.7 | Batches from DB (replace hardcoded) | Ivan | [x] |
 
 #### Priority 4 — Admin Panel
 
