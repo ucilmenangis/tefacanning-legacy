@@ -54,150 +54,10 @@ $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
-        /* ── Sidebar nav groups ── */
-        .nav-group-label {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .08em;
-            color: #64748b;
-            padding: 6px 12px 4px;
-            text-transform: uppercase;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            padding: 7px 12px;
-            border-radius: 7px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: background .15s, color .15s;
-            user-select: none;
-            text-decoration: none;
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, .08);
-            color: #fff;
-        }
-
-        .nav-item.active {
-            color: #E02424;
-            background: rgba(224, 36, 36, .12);
-        }
-
-        .nav-item.active i {
-            color: #E02424;
-        }
-
-        /* submenu parent toggle */
-        .nav-parent {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            padding: 7px 12px;
-            border-radius: 7px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: background .15s, color .15s;
-            user-select: none;
-        }
-
-        .nav-parent:hover {
-            background: rgba(255, 255, 255, .08);
-            color: #fff;
-        }
-
-        .nav-parent.open {
-            color: #fff;
-        }
-
-        .nav-caret {
-            margin-left: auto;
-            transition: transform .2s;
-            font-size: 11px;
-        }
-
-        .nav-parent.open .nav-caret {
-            transform: rotate(180deg);
-        }
-
-        .nav-sub {
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height .25s ease;
-        }
-
-        .nav-sub.open {
-            max-height: 300px;
-        }
-
-        .nav-subitem {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px 6px 36px;
-            border-radius: 6px;
-            font-size: 12.5px;
-            font-weight: 500;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: background .15s, color .15s;
-            text-decoration: none;
-        }
-
-        .nav-subitem:hover {
-            background: rgba(255, 255, 255, .08);
-            color: #fff;
-        }
-
-        .nav-subitem.active {
-            color: #E02424;
-        }
-
-        .nav-subitem .dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: currentColor;
-            flex-shrink: 0;
-        }
-
-        .nav-badge {
-            margin-left: auto;
-            background: #E02424;
-            color: #fff;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 1px 6px;
-            border-radius: 999px;
-            min-width: 18px;
-            text-align: center;
-        }
-
-        /* ── Top bar search ── */
-        .topbar-search {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 6px 12px 6px 34px;
-            font-size: 13px;
-            color: #374151;
-            background: #f9fafb;
-            outline: none;
-            width: 220px;
-            transition: border-color .15s, box-shadow .15s;
-        }
-
-        .topbar-search:focus {
-            border-color: #E02424;
-            box-shadow: 0 0 0 3px rgba(224, 36, 36, .08);
-            background: #fff;
-        }
+        /* Accordion + dynamic states — can't be done with Tailwind alone */
+        .nav-sub { overflow:hidden; max-height:0; transition:max-height .25s ease; }
+        .nav-sub.open { max-height:300px; }
+        .nav-parent.open .nav-caret { transform:rotate(180deg); }
     </style>
 </head>
 
@@ -227,99 +87,99 @@ $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
 
                 <!-- Dashboard -->
                 <a href="<?php echo $base; ?>/admin/dashboard.php" id="nav-dashboard"
-                    class="nav-item <?php echo $currentPage === 'dashboard' ? 'active' : ''; ?>">
+                    class="flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'dashboard' ? '!text-primary bg-primary/10 [&_i]:text-primary' : ''; ?>">
                     <i class="ph-bold ph-squares-four text-base"></i>
                     Dashboard
                 </a>
 
                 <!-- Transaksi -->
                 <div>
-                    <div class="nav-parent <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-transaksi', this)">
                         <i class="ph-bold ph-receipt text-base"></i>
                         Transaksi
-                        <i class="ph-bold ph-caret-down nav-caret"></i>
+                        <i class="ph-bold ph-caret-down nav-caret ml-auto transition-transform duration-200 text-[11px]"></i>
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
                         id="grp-transaksi">
                         <a href="<?php echo $base; ?>/admin/orders.php"
-                            class="nav-subitem <?php echo $currentPage === 'orders' ? 'active' : ''; ?>">
-                            <span class="dot"></span> Pesanan
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'orders' ? '!text-primary' : ''; ?>">
+                            <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Pesanan
                         </a>
                     </div>
                 </div>
 
                 <!-- Master Data -->
                 <div>
-                    <div class="nav-parent <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-master', this)">
                         <i class="ph-bold ph-database text-base"></i>
                         Master Data
-                        <i class="ph-bold ph-caret-down nav-caret"></i>
+                        <i class="ph-bold ph-caret-down nav-caret ml-auto transition-transform duration-200 text-[11px]"></i>
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
                         id="grp-master">
                         <a href="<?php echo $base; ?>/admin/customers.php"
-                            class="nav-subitem <?php echo $currentPage === 'customers' ? 'active' : ''; ?>">
-                            <span class="dot"></span> Pelanggan
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'customers' ? '!text-primary' : ''; ?>">
+                            <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Pelanggan
                         </a>
                         <a href="<?php echo $base; ?>/admin/products.php"
-                            class="nav-subitem <?php echo $currentPage === 'products' ? 'active' : ''; ?>">
-                            <span class="dot"></span> Produk
-                            <span class="nav-badge">3</span>
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'products' ? '!text-primary' : ''; ?>">
+                            <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Produk
+                            <span class="ml-auto bg-primary text-white text-[10px] font-bold py-[1px] px-1.5 rounded-full min-w-[18px] text-center">3</span>
                         </a>
                     </div>
                 </div>
 
                 <!-- Manajemen Produksi -->
                 <div>
-                    <div class="nav-parent <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-produksi', this)">
                         <i class="ph-bold ph-factory text-base"></i>
                         Manajemen Produksi
-                        <i class="ph-bold ph-caret-down nav-caret"></i>
+                        <i class="ph-bold ph-caret-down nav-caret ml-auto transition-transform duration-200 text-[11px]"></i>
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
                         id="grp-produksi">
                         <a href="<?php echo $base; ?>/admin/batches.php"
-                            class="nav-subitem <?php echo $currentPage === 'batches' ? 'active' : ''; ?>">
-                            <span class="dot"></span> Batches
-                            <span class="nav-badge">1</span>
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'batches' ? '!text-primary' : ''; ?>">
+                            <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Batches
+                            <span class="ml-auto bg-primary text-white text-[10px] font-bold py-[1px] px-1.5 rounded-full min-w-[18px] text-center">1</span>
                         </a>
                     </div>
                 </div>
 
                 <!-- Audit & Log -->
                 <div>
-                    <div class="nav-parent <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-audit', this)">
                         <i class="ph-bold ph-shield-check text-base"></i>
                         Audit & Log
-                        <i class="ph-bold ph-caret-down nav-caret"></i>
+                        <i class="ph-bold ph-caret-down nav-caret ml-auto transition-transform duration-200 text-[11px]"></i>
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
                         id="grp-audit">
                         <a href="<?php echo $base; ?>/admin/activity-log.php"
-                            class="nav-subitem <?php echo $currentPage === 'activity-log' ? 'active' : ''; ?>">
-                            <span class="dot"></span> Log Aktivitas
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'activity-log' ? '!text-primary' : ''; ?>">
+                            <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Log Aktivitas
                         </a>
                     </div>
                 </div>
 
                 <!-- Pengaturan -->
                 <div>
-                    <div class="nav-parent <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-settings', this)">
                         <i class="ph-bold ph-gear text-base"></i>
                         Pengaturan
-                        <i class="ph-bold ph-caret-down nav-caret"></i>
+                        <i class="ph-bold ph-caret-down nav-caret ml-auto transition-transform duration-200 text-[11px]"></i>
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
                         id="grp-settings">
                         <a href="<?php echo $base; ?>/admin/users.php"
-                            class="nav-subitem <?php echo $currentPage === 'users' ? 'active' : ''; ?>">
-                            <span class="dot"></span> Pengguna
-                            <span class="nav-badge">2</span>
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'users' ? '!text-primary' : ''; ?>">
+                            <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Pengguna
+                            <span class="ml-auto bg-primary text-white text-[10px] font-bold py-[1px] px-1.5 rounded-full min-w-[18px] text-center">2</span>
                         </a>
                     </div>
                 </div>
@@ -342,7 +202,8 @@ $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
                 <div class="relative">
                     <i
                         class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                    <input type="text" placeholder="Search" class="topbar-search" id="topbar-search-input">
+                    <input type="text" placeholder="Search" id="topbar-search-input"
+                        class="border border-gray-200 rounded-lg py-1.5 pl-[34px] pr-3 text-[13px] text-gray-700 bg-gray-50 outline-none w-[220px] transition-all duration-150 focus:border-primary focus:ring-[3px] focus:ring-primary/10 focus:bg-white">
                 </div>
 
                 <!-- Right -->
