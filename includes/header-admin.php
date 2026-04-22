@@ -14,9 +14,8 @@ if (!isset($currentPage)) {
     $currentPage = '';
 }
 
-// Resolve base URL path (works from /admin/ subdirectory)
-$base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
 ?>
+
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 
@@ -86,7 +85,7 @@ $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
             <nav class="flex-1 py-3 px-2 space-y-0.5">
 
                 <!-- Dashboard -->
-                <a href="<?php echo $base; ?>/admin/dashboard.php" id="nav-dashboard"
+                <a href="dashboard.php" id="nav-dashboard"
                     class="flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'dashboard' ? '!text-primary bg-primary/10 [&_i]:text-primary' : ''; ?>">
                     <i class="ph-bold ph-squares-four text-base"></i>
                     Dashboard
@@ -102,7 +101,7 @@ $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
                         id="grp-transaksi">
-                        <a href="<?php echo $base; ?>/admin/orders.php"
+                        <a href="orders.php"
                             class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'orders' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Pesanan
                         </a>
@@ -119,11 +118,11 @@ $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
                         id="grp-master">
-                        <a href="<?php echo $base; ?>/admin/customers.php"
+                        <a href="customers.php"
                             class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'customers' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Pelanggan
                         </a>
-                        <a href="<?php echo $base; ?>/admin/products.php"
+                        <a href="products.php"
                             class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'products' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Produk
                             <span class="ml-auto bg-primary text-white text-[10px] font-bold py-[1px] px-1.5 rounded-full min-w-[18px] text-center">3</span>
@@ -141,7 +140,7 @@ $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
                         id="grp-produksi">
-                        <a href="<?php echo $base; ?>/admin/batches.php"
+                        <a href="batches.php"
                             class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'batches' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Batches
                             <span class="ml-auto bg-primary text-white text-[10px] font-bold py-[1px] px-1.5 rounded-full min-w-[18px] text-center">1</span>
@@ -159,7 +158,7 @@ $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
                         id="grp-audit">
-                        <a href="<?php echo $base; ?>/admin/activity-log.php"
+                        <a href="activity-log.php"
                             class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'activity-log' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Log Aktivitas
                         </a>
@@ -176,7 +175,7 @@ $base = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
                         id="grp-settings">
-                        <a href="<?php echo $base; ?>/admin/users.php"
+                        <a href="users.php"
                             class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'users' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Pengguna
                             <span class="ml-auto bg-primary text-white text-[10px] font-bold py-[1px] px-1.5 rounded-full min-w-[18px] text-center">2</span>
