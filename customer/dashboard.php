@@ -55,8 +55,10 @@ $monthlyOrders = db_fetch_all(
 );
 
 // Build sparkline data arrays
-$sparkOrders = array_column($monthlyOrders, 'total');
-$sparkAmounts = array_map(function($v) { return (float) $v; }, array_column($monthlyOrders, 'amount'));
+$sparkOrders = array_column($monthlyOrders, "total");
+$sparkAmounts = array_map(function ($v) {
+  return (float) $v;
+}, array_column($monthlyOrders, "amount"));
 
 // Monthly pending count
 $sparkPending = [];
@@ -67,7 +69,7 @@ $pendingRows = db_fetch_all(
    GROUP BY DATE_FORMAT(created_at, '%Y-%m') ORDER BY month ASC",
   [$customerId],
 );
-$sparkPending = array_column($pendingRows, 'total');
+$sparkPending = array_column($pendingRows, "total");
 
 // Monthly ready count
 $readyRows = db_fetch_all(
@@ -77,7 +79,7 @@ $readyRows = db_fetch_all(
    GROUP BY DATE_FORMAT(created_at, '%Y-%m') ORDER BY month ASC",
   [$customerId],
 );
-$sparkReady = array_column($readyRows, 'total');
+$sparkReady = array_column($readyRows, "total");
 
 $pageTitle = "Dashboard";
 $currentPage = "dashboard";
@@ -244,8 +246,7 @@ include __DIR__ . "/../includes/header-customer.php";
         <div class="flex items-center gap-2 px-5 py-4 border-b border-gray-50">
             <i class="ph-bold ph-storefront text-gray-300 text-base"></i>
             <h2 class="text-[13px] font-semibold text-navy">Produk Tersedia</h2>
-        </div>
-
+        </div
         <div class="divide-y divide-gray-50">
             <?php foreach ($products as $product): ?>
             <div class="flex items-center gap-3 px-5 py-3.5">
@@ -308,10 +309,16 @@ function sparkline(id, data, color) {
         }
     });
 }
-sparkline('spark-orders', <?php echo json_encode(array_map('intval', $sparkOrders)); ?>, '#E02424');
+sparkline('spark-orders', <?php echo json_encode(
+  array_map("intval", $sparkOrders),
+); ?>, '#E02424');
 sparkline('spark-spent', <?php echo json_encode($sparkAmounts); ?>, '#10b981');
-sparkline('spark-pending', <?php echo json_encode(array_map('intval', $sparkPending)); ?>, '#f59e0b');
-sparkline('spark-ready', <?php echo json_encode(array_map('intval', $sparkReady)); ?>, '#6b7280');
+sparkline('spark-pending', <?php echo json_encode(
+  array_map("intval", $sparkPending),
+); ?>, '#f59e0b');
+sparkline('spark-ready', <?php echo json_encode(
+  array_map("intval", $sparkReady),
+); ?>, '#6b7280');
 </script>
 
 <?php include __DIR__ . "/../includes/footer-customer.php"; ?>
