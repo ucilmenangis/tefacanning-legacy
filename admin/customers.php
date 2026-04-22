@@ -118,9 +118,24 @@ $customers = [
                         <span class="order-badge"><?php echo $row['orders']; ?></span>
                     </td>
                     <td class="text-right">
-                        <button class="icon-btn-sm" title="Opsi lainnya">
-                            <i class="ph ph-dots-three-vertical text-sm"></i>
-                        </button>
+                        <div class="relative inline-block text-left dropdown-container">
+                            <button type="button" class="icon-btn-sm dropdown-trigger" title="Opsi lainnya" onclick="toggleDropdown(event, this)">
+                                <i class="ph ph-dots-three-vertical text-sm pointer-events-none"></i>
+                            </button>
+                            <div class="hidden absolute right-0 mt-2 w-32 bg-white border border-gray-100 rounded-lg shadow-lg z-50 dropdown-menu text-left">
+                                <div class="py-1">
+                                    <a href="view-customer.php?id=<?php echo $row['id']; ?>" class="flex items-center gap-2 px-4 py-2 text-[12px] text-gray-600 hover:bg-gray-50 transition-colors">
+                                        <i class="ph ph-eye text-base text-gray-400"></i> View
+                                    </a>
+                                    <a href="edit-customer.php?id=<?php echo $row['id']; ?>" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-500 hover:bg-red-50 transition-colors font-medium">
+                                        <i class="ph ph-note-pencil text-base text-red-400"></i> Edit
+                                    </a>
+                                    <button type="button" onclick="confirmDelete(<?php echo $row['id']; ?>)" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-600 hover:bg-red-50 transition-colors w-full text-left font-medium">
+                                        <i class="ph ph-trash text-base text-red-500"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -149,6 +164,36 @@ $customers = [
     function toggleAll(master) {
         document.querySelectorAll('.cb-row').forEach(cb => cb.checked = master.checked);
     }
+
+    // Dropdown toggle
+    function toggleDropdown(event, btn) {
+        event.stopPropagation();
+        // Close other dropdowns
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            if (menu !== btn.nextElementSibling) {
+                menu.classList.add('hidden');
+            }
+        });
+        // Toggle current
+        const menu = btn.nextElementSibling;
+        menu.classList.toggle('hidden');
+    }
+
+    // Close dropdowns on outside click
+    window.onclick = function(event) {
+        if (!event.target.closest('.dropdown-container')) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.add('hidden');
+            });
+        }
+    }
+
+    function confirmDelete(id) {
+        if (confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
+            window.location.href = 'delete-customer.php?id=' + id;
+        }
+    }
+
     document.getElementById('customer-search').addEventListener('input', function() {
         const q = this.value.toLowerCase();
         document.querySelectorAll('.data-table tbody tr').forEach(tr => {
