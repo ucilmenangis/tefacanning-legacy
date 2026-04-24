@@ -112,11 +112,34 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `classes/FormatHelper.php` — static helpers: `rupiah()`, `tanggal()`, `orderStatus()`, `batchStatus()`
 - `classes/OrderService.php` — order operations: `getByCustomer()`, `getById()`, `cancel()`, `getStats()`
 - `classes/CustomerService.php` — customer operations: `getById()`, `updateProfile()`, `changePassword()`, `hasActiveOrders()`
+- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `requireSuperAdmin()`, `getAll()`
 
 **Priority 4 (Admin Panel): DONE (UI only — backend wiring pending)**
 - `admin/dashboard.php`, `admin/orders.php`, `admin/customers.php`, `admin/products.php`, `admin/batches.php`, `admin/activity-log.php`, `admin/users.php`
 
-**Not yet built:** DB wiring for admin/customer pages, services (Fonnte, PDF), security hardening.
+**Not yet built:** DB wiring for admin pages, services (Fonnte, PDF), security hardening (7.3-7.4).
+
+## Refactoring Plan (After All Features Complete)
+
+**Goal:** Unify code style — currently mixed procedural + OOP. Refactor everything to consistent OOP after user completes campus OOP course (week 11-16).
+
+**Known inconsistencies to refactor:**
+
+| Current (Procedural) | Target (OOP) | File |
+|----------------------|---------------|------|
+| `db()`, `db_fetch()`, `db_fetch_all()` | `Database` class (singleton, connection method) | `includes/functions.php` |
+| `requireAdmin()`, `loginAdmin()`, `isSuperAdmin()` | `AuthService` class with static methods | `includes/auth.php` |
+| `generateCsrfToken()`, `verifyCsrf()` | `CsrfService` class or part of `AuthService` | `includes/auth.php` |
+| `setFlash()`, `getFlash()`, `renderFlash()` | `FlashMessage` class | `includes/auth.php` |
+| `startSession()` | Part of `Session` class or `AuthService` | `includes/auth.php` |
+
+**OOP patterns to apply (based on course):**
+- Week 4 (Encapsulation): private properties, getters/setters in service classes
+- Week 5 (Inheritance): base `Service` class with shared DB access
+- Week 6 (Abstract/Interface): `RepositoryInterface` for DB operations
+- Week 7 (Polymorphism/Exception): custom exception classes for DB/auth errors
+
+**Rule:** Do NOT refactor during feature development. Complete all features first, then refactor in one pass.
 
 
 ## Project Structure
@@ -296,8 +319,8 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 
 | Phase | Description | Owner | Status |
 |-------|-------------|-------|--------|
-| 7.1 | XSS prevention (htmlspecialchars on output) | Ivan | [ ] |
-| 7.2 | Role-based access control (super_admin vs teknisi) | Ivan | [ ] |
+| 7.1 | XSS prevention (htmlspecialchars on output) | Ivan | [x] |
+| 7.2 | Role-based access control (super_admin vs teknisi) | Ivan | [x] |
 | 7.3 | Product price protection | Ivan | [ ] |
 | 7.4 | Core product deletion protection (3 SKUs) | Ivan | [ ] |
 

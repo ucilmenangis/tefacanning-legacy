@@ -14,6 +14,8 @@ if (!isset($currentPage)) {
     $currentPage = '';
 }
 
+// RBAC: check if current admin is super_admin
+$isAdminSuperAdmin = isSuperAdmin();
 ?>
 
 <!DOCTYPE html>
@@ -148,6 +150,7 @@ if (!isset($currentPage)) {
                     </div>
                 </div>
 
+                <?php if ($isAdminSuperAdmin): ?>
                 <!-- Audit & Log -->
                 <div>
                     <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
@@ -182,6 +185,7 @@ if (!isset($currentPage)) {
                         </a>
                     </div>
                 </div>
+                <?php endif; ?>
 
             </nav>
         </aside>
