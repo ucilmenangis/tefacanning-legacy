@@ -42,6 +42,12 @@ function loginAdmin(int $userId): void
     startSession();
     session_regenerate_id(true);
     $_SESSION['admin_id'] = $userId;
+
+    // Cache role in session to avoid DB query on every page
+    require_once __DIR__ . '/functions.php';
+    require_once __DIR__ . '/../classes/AdminService.php';
+    $adminService = new AdminService();
+    $_SESSION['admin_role'] = $adminService->getRole($userId);
 }
 
 /**
@@ -69,6 +75,37 @@ function getAdminId(): ?int
 {
     startSession();
     return $_SESSION['admin_id'] ?? null;
+}
+
+/**
+ * Get cached admin role from session.
+ * Returns 'super_admin', 'teknisi', or null.
+ */
+function getAdminRole(): ?string
+{
+    startSession();
+    return $_SESSION['admin_role'] ?? null;
+}
+
+/**
+ * Check if logged-in admin is super_admin.
+ */
+function isSuperAdmin(): bool
+{
+    return getAdminRole() === 'super_admin';
+}
+
+/**
+ * Protect page — only super_admin can access.
+ * Call after requireAdmin() on restricted pages.
+ */
+function requireSuperAdmin(): void
+{
+    if (!isSuperAdmin()) {
+        setFlash('error', 'Anda tidak memiliki akses ke halaman tersebut.');
+        header('Location: dashboard.php');
+        exit;
+    }
 }
 
 /**

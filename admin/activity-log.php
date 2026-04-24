@@ -1,9 +1,9 @@
 <?php
 $pageTitle   = 'Log Aktivitas';
 $currentPage = 'activity-log';
-// TODO: Uncomment when auth ready
-// require_once __DIR__ . '/../includes/auth.php';
-// requireAdmin();
+require_once __DIR__ . '/../includes/auth.php';
+requireAdmin();
+requireSuperAdmin();
 include __DIR__ . '/../includes/header-admin.php';
 
 // ── Mock Data ──

@@ -1,9 +1,9 @@
 <?php
 $pageTitle   = 'Pengguna';
 $currentPage = 'users';
-// TODO: Uncomment when auth ready (super_admin only)
-// require_once __DIR__ . '/../includes/auth.php';
-// requireAdmin();
+require_once __DIR__ . '/../includes/auth.php';
+requireAdmin();
+requireSuperAdmin();
 include __DIR__ . '/../includes/header-admin.php';
 
 // ── Mock Data ──

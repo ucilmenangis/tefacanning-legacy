@@ -1,9 +1,8 @@
 <?php
 $pageTitle   = 'Batches';
 $currentPage = 'batches';
-// TODO: Uncomment when auth ready
-// require_once __DIR__ . '/../includes/auth.php';
-// requireAdmin();
+require_once __DIR__ . '/../includes/auth.php';
+requireAdmin();
 include __DIR__ . '/../includes/header-admin.php';
 
 // ── Mock Data ──

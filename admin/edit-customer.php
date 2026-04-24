@@ -7,9 +7,8 @@
 $pageTitle   = 'Edit Customer';
 $currentPage = 'customers';
 
-// TODO: Backend wiring by Ivan
-// require_once __DIR__ . '/../includes/auth.php';
-// requireAdmin();
+require_once __DIR__ . '/../includes/auth.php';
+requireAdmin();
 
 include __DIR__ . '/../includes/header-admin.php';
 
