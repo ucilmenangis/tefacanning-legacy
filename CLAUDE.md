@@ -322,7 +322,7 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 7.1 | XSS prevention (htmlspecialchars on output) | Ivan | [x] |
 | 7.2 | Role-based access control (super_admin vs teknisi) | Ivan | [x] |
 | 7.3 | Product price protection | Ivan | [x] |
-| 7.4 | Core product deletion protection (3 SKUs) | Ivan | [ ] |
+| 7.4 | Core product deletion protection (3 SKUs) | Ivan | [x] |
 
 **Owner legend:** `Ivan` = backend, `Alif` = frontend UI, `Alif → Ivan` = Alif buat UI dulu, Ivan wiring ke DB.
 

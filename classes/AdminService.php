@@ -104,4 +104,20 @@ class AdminService
         $adminId = getAdminId();
         return $adminId && $this->isSuperAdmin($adminId);
     }
+
+    /**
+     * Check if a product is a core product that cannot be deleted.
+     * Core products are identified by their SKU.
+     */
+    public function isCoreProduct(int $productId): bool
+    {
+        $coreSkus = ['TEFA-ASN-001', 'TEFA-SSC-001', 'TEFA-SST-001'];
+
+        $product = db_fetch(
+            "SELECT sku FROM products WHERE id = ?",
+            [$productId]
+        );
+
+        return $product && in_array($product['sku'], $coreSkus);
+    }
 }
