@@ -75,4 +75,33 @@ class AdminService
              ORDER BY u.name ASC"
         );
     }
+
+    /**
+     * Verify a product price against the database.
+     * Returns the actual price from DB, or throws if product not found.
+     * Use this to prevent price manipulation from form submissions.
+     */
+    public function verifyProductPrice(int $productId): float
+    {
+        $product = db_fetch(
+            "SELECT price FROM products WHERE id = ? AND is_active = 1 AND deleted_at IS NULL",
+            [$productId]
+        );
+
+        if (!$product) {
+            throw new \InvalidArgumentException("Produk tidak ditemukan atau tidak aktif.");
+        }
+
+        return (float) $product['price'];
+    }
+
+    /**
+     * Check if current admin can edit product prices.
+     * Only super_admin can modify prices.
+     */
+    public function canEditPrice(): bool
+    {
+        $adminId = getAdminId();
+        return $adminId && $this->isSuperAdmin($adminId);
+    }
 }
