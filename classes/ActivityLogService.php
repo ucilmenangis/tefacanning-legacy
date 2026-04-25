@@ -24,7 +24,7 @@ class ActivityLogService
 
         db_insert(
             "INSERT INTO activity_log (log_name, description, subject_type, subject_id, causer_type, causer_id, properties, created_at, updated_at)
-             VALUES ('default', ?, ?, ?, 'App\\Models\\User', ?, ?, NOW(), NOW())",
+             VALUES ('default', ?, ?, ?, 'App\\\\Models\\\\User', ?, ?, NOW(), NOW())",
             [
                 $description,
                 $subjectType,
@@ -60,7 +60,7 @@ class ActivityLogService
         return db_fetch_all(
             "SELECT al.*, u.name AS causer_name
              FROM activity_log al
-             LEFT JOIN users u ON u.id = al.causer_id AND al.causer_type = 'App\\Models\\User'
+             LEFT JOIN users u ON u.id = al.causer_id AND al.causer_type = 'App\\\\Models\\\\User'
              WHERE {$whereClause}
              ORDER BY al.created_at DESC
              LIMIT ? OFFSET ?",

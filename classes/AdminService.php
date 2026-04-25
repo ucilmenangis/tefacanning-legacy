@@ -23,7 +23,7 @@ class AdminService
       "SELECT r.name
              FROM roles r
              JOIN model_has_roles mhr ON mhr.role_id = r.id
-             WHERE mhr.model_type = 'App\\Models\\User' AND mhr.model_id = ?",
+             WHERE mhr.model_type = 'App\\\\Models\\\\User' AND mhr.model_id = ?",
       [$userId],
     );
 
@@ -71,7 +71,7 @@ class AdminService
     return db_fetch_all(
       "SELECT u.id, u.name, u.email, u.phone, r.name as role
              FROM users u
-             LEFT JOIN model_has_roles mhr ON mhr.model_id = u.id AND mhr.model_type = 'App\\Models\\User'
+             LEFT JOIN model_has_roles mhr ON mhr.model_id = u.id AND mhr.model_type = 'App\\\\Models\\\\User'
              LEFT JOIN roles r ON mhr.role_id = r.id
              ORDER BY u.name ASC",
     );
