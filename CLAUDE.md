@@ -112,12 +112,26 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `classes/FormatHelper.php` — static helpers: `rupiah()`, `tanggal()`, `orderStatus()`, `batchStatus()`
 - `classes/OrderService.php` — order operations: `getByCustomer()`, `getById()`, `cancel()`, `getStats()`
 - `classes/CustomerService.php` — customer operations: `getById()`, `updateProfile()`, `changePassword()`, `hasActiveOrders()`
-- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `requireSuperAdmin()`, `getAll()`
+- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `requireSuperAdmin()`, `getAll()`, `getDashboardStats()`, `getActiveBatch()`, `getRecentOrders()`, `getBatchOrders()`, `getBatchProducts()`, `getBatchOrderCount()`, `verifyProductPrice()`, `canEditPrice()`, `isCoreProduct()`
+- `classes/ProductService.php` — product CRUD: `getAll()`, `getById()`, `create()`, `update()`, `softDelete()`
+- `classes/BatchService.php` — batch CRUD: `getAll()`, `getById()`, `getOpenBatches()`, `create()`, `update()`, `softDelete()`
+- `classes/CustomerAdminService.php` — customer admin CRUD: `getAll()`, `getById()`, `getStats()`, `update()`, `softDelete()`
+- `classes/ActivityLogService.php` — activity log: `log()`, `getAll()`, `countAll()`
 
-**Priority 4 (Admin Panel): DONE (UI only — backend wiring pending)**
-- `admin/dashboard.php`, `admin/orders.php`, `admin/customers.php`, `admin/products.php`, `admin/batches.php`, `admin/activity-log.php`, `admin/users.php`
+**Priority 4 (Admin Panel): DONE (wired to DB)**
+- `admin/dashboard.php` — stats, active batch summary, recent orders (all from DB)
+- `admin/products.php` — list, create, delete (inline POST)
+- `admin/batches.php` — list, create, delete (inline POST)
+- `admin/customers.php` — list, delete (inline POST)
+- `admin/orders.php` — list, delete (inline POST)
+- `admin/edit-customer.php` — edit, delete (inline POST + activity log)
+- `admin/edit-order.php` — edit status/items, delete (inline POST + activity log)
+- `admin/create-product.php` — new product form (RBAC price protection)
+- `admin/create-batch.php` — new batch form
+- `admin/pengaturan.php` — user list from DB (super_admin only)
+- `admin/activity-log.php` — real logs from activity_log table (super_admin only)
 
-**Not yet built:** DB wiring for admin pages, services (Fonnte, PDF), security hardening (7.3-7.4).
+**Not yet built:** services (Fonnte, PDF), PDF download per order (5.6).
 
 ## Refactoring Plan (After All Features Complete)
 
@@ -157,7 +171,18 @@ tefa-canning-legacy/
 │   ├── header-customer.php  ← Customer layout header
 │   ├── footer-admin.php     ← Admin layout footer
 │   └── footer-customer.php  ← Customer layout footer
-├── admin/                   ← Empty — Admin panel pages
+├── admin/                   ← Admin panel (all wired to DB)
+│   ├── dashboard.php
+│   ├── products.php
+│   ├── batches.php
+│   ├── customers.php
+│   ├── orders.php
+│   ├── activity-log.php
+│   ├── pengaturan.php
+│   ├── create-product.php
+│   ├── create-batch.php
+│   ├── edit-customer.php
+│   └── edit-order.php
 ├── customer/                ← Customer pages (UI done, backend pending)
 │   ├── dashboard.php
 │   ├── preorder.php
@@ -176,8 +201,13 @@ tefa-canning-legacy/
 ├── database/                ← Empty — SQL dump to be added
 ├── classes/                 ← OOP business logic
 │   ├── FormatHelper.php     ← Static: rupiah, tanggal, status labels
-│   ├── OrderService.php     ← Order CRUD operations
-│   └── CustomerService.php  ← Customer profile, password, active order check
+│   ├── OrderService.php     ← Order CRUD (customer-side)
+│   ├── CustomerService.php  ← Customer profile, password, active order check
+│   ├── AdminService.php     ← Admin operations, dashboard queries, RBAC
+│   ├── ProductService.php   ← Product CRUD
+│   ├── BatchService.php     ← Batch CRUD
+│   ├── CustomerAdminService.php ← Customer admin CRUD
+│   └── ActivityLogService.php   ← Activity log read/write
 ├── services/                ← To be created (Fonnte, PDF)
 └── views/                   ← To be created (layouts, components)
 ```

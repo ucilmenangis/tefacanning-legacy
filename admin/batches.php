@@ -2,20 +2,31 @@
 $pageTitle   = 'Batches';
 $currentPage = 'batches';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 requireAdmin();
+
+require_once __DIR__ . '/../classes/BatchService.php';
+require_once __DIR__ . '/../classes/ActivityLogService.php';
+require_once __DIR__ . '/../classes/FormatHelper.php';
+
+$batchService = new BatchService();
+$activityLogService = new ActivityLogService();
+
+// ── POST: Delete ──
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete') {
+    $deleteId = intval($_GET['id'] ?? 0);
+    if ($deleteId && verifyCsrf()) {
+        $batchService->softDelete($deleteId);
+        $activityLogService->log('deleted', 'App\Models\Batch', $deleteId, 'deleted');
+        setFlash('success', 'Batch berhasil dihapus.');
+    }
+    header('Location: batches.php');
+    exit;
+}
+
 include __DIR__ . '/../includes/header-admin.php';
 
-// ── Mock Data ──
-$batches = [
-    [
-        'id'      => 1,
-        'name'    => 'Batch 1',
-        'event'   => 'Dies Natalis Polije',
-        'tanggal' => '15 Feb 2026',
-        'status'  => 'open',
-        'pesanan' => 2,
-    ],
-];
+$batches = $batchService->getAll();
 
 $statusMap = [
     'open'       => ['label' => 'Open',       'bg' => '#ecfdf5', 'color' => '#059669', 'border' => '#a7f3d0'],
@@ -114,10 +125,10 @@ $statusMap = [
                     <td>
                         <span class="flex items-center gap-1.5 text-gray-500">
                             <i class="ph ph-calendar-blank text-gray-300 text-sm"></i>
-                            <?php echo htmlspecialchars($batch['event']); ?>
+                            <?php echo htmlspecialchars($batch['event_name']); ?>
                         </span>
                     </td>
-                    <td class="font-semibold" style="color:#E02424"><?php echo $batch['tanggal']; ?></td>
+                    <td class="font-semibold" style="color:#E02424"><?php echo FormatHelper::tanggal($batch['event_date']); ?></td>
                     <td>
                         <span class="status-pill"
                               style="background:<?php echo $st['bg'];?>;color:<?php echo $st['color'];?>;border-color:<?php echo $st['border'];?>">
@@ -125,12 +136,24 @@ $statusMap = [
                         </span>
                     </td>
                     <td>
-                        <span class="pesanan-count"><?php echo $batch['pesanan']; ?></span>
+                        <span class="pesanan-count"><?php echo $batch['order_count']; ?></span>
                     </td>
                     <td class="text-right">
-                        <button class="icon-btn-sm" title="Opsi lainnya">
-                            <i class="ph ph-dots-three-vertical text-sm"></i>
-                        </button>
+                        <div class="relative inline-block text-left dropdown-container">
+                            <button type="button" class="icon-btn-sm dropdown-trigger" title="Opsi lainnya" onclick="toggleDropdown(event, this)">
+                                <i class="ph ph-dots-three-vertical text-sm pointer-events-none"></i>
+                            </button>
+                            <div class="hidden absolute right-0 mt-2 w-32 bg-white border border-gray-100 rounded-lg shadow-lg z-50 dropdown-menu text-left">
+                                <div class="py-1">
+                                    <a href="edit-batch.php?id=<?php echo $batch['id']; ?>" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-500 hover:bg-red-50 transition-colors font-medium">
+                                        <i class="ph ph-note-pencil text-base text-red-400"></i> Edit
+                                    </a>
+                                    <button type="button" onclick="confirmDelete(<?php echo $batch['id']; ?>)" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-600 hover:bg-red-50 transition-colors w-full text-left font-medium">
+                                        <i class="ph ph-trash text-base text-red-500"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -155,9 +178,38 @@ $statusMap = [
     </div>
 </div>
 
+<!-- Hidden CSRF for JS actions -->
+<div class="hidden"><?php echo csrfField(); ?></div>
+
 <script>
     function toggleAll(master) {
         document.querySelectorAll('.cb-row').forEach(cb => cb.checked = master.checked);
+    }
+    function toggleDropdown(event, btn) {
+        event.stopPropagation();
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            if (menu !== btn.nextElementSibling) menu.classList.add('hidden');
+        });
+        btn.nextElementSibling.classList.toggle('hidden');
+    }
+    window.onclick = function(event) {
+        if (!event.target.closest('.dropdown-container')) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+        }
+    }
+    function confirmDelete(id) {
+        if (confirm('Apakah Anda yakin ingin menghapus batch ini?')) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'batches.php?action=delete&id=' + id;
+            var csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = 'csrf_token';
+            csrf.value = document.querySelector('input[name="csrf_token"]')?.value || '';
+            form.appendChild(csrf);
+            document.body.appendChild(form);
+            form.submit();
+        }
     }
     document.getElementById('batch-search').addEventListener('input', function() {
         const q = this.value.toLowerCase();

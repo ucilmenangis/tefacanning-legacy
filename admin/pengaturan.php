@@ -6,25 +6,24 @@ requireAdmin();
 requireSuperAdmin();
 include __DIR__ . '/../includes/header-admin.php';
 
-// ── Mock Data ──
-$users = [
-    [
-        'id' => 1,
-        'name' => 'Super Admin',
-        'email' => 'superadmin@tefa.polije.ac.id',
-        'phone' => null,
-        'role' => 'Super Admin',
-        'created_at' => '15 Feb 2026'
-    ],
-    [
-        'id' => 2,
-        'name' => 'Teknisi',
-        'email' => 'teknisi@tefa.polije.ac.id',
-        'phone' => null,
-        'role' => 'Teknisi',
-        'created_at' => '15 Feb 2026'
-    ],
-];
+require_once __DIR__ . '/../classes/AdminService.php';
+require_once __DIR__ . '/../classes/FormatHelper.php';
+
+$adminService = new AdminService();
+$users_raw = $adminService->getAll();
+
+$users = [];
+foreach ($users_raw as $u) {
+    $roleLabel = $u['role'] === 'super_admin' ? 'Super Admin' : ucfirst($u['role'] ?? 'User');
+    $users[] = [
+        'id' => $u['id'],
+        'name' => $u['name'],
+        'email' => $u['email'],
+        'phone' => $u['phone'],
+        'role' => $roleLabel,
+        'created_at' => FormatHelper::tanggal($u['created_at'] ?? 'now'),
+    ];
+}
 
 function getRoleClass($role) {
     if ($role === 'Super Admin') {
@@ -138,7 +137,7 @@ function getRoleClass($role) {
 
     <!-- Table Footer -->
     <div class="table-footer">
-        <div>Showing 1 to 2 of 2 results</div>
+        <div>Showing 1 to <?php echo count($users); ?> of <?php echo count($users); ?> results</div>
         <div class="flex items-center gap-2">
             <span>Per page</span>
             <select class="border border-slate-200 rounded px-2 py-1 outline-none bg-white">

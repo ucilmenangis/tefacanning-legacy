@@ -1,44 +1,153 @@
 <?php
 /**
  * Admin Edit Order Page
- * UI Prototype for TEFA Canning Admin Panel
  */
 
-$pageTitle   = 'Edit ORD-NAEU0M9Z';
+$pageTitle   = 'Edit Order';
 $currentPage = 'orders';
 
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 requireAdmin();
 
-include __DIR__ . '/../includes/header-admin.php';
+require_once __DIR__ . '/../classes/AdminService.php';
+require_once __DIR__ . '/../classes/ActivityLogService.php';
+require_once __DIR__ . '/../classes/FormatHelper.php';
 
-// Mock Data
+$adminService = new AdminService();
+$activityLogService = new ActivityLogService();
+
+// Validate ID parameter
+$id = intval($_GET['id'] ?? 0);
+if (!$id) {
+    setFlash('error', 'ID pesanan tidak valid.');
+    header('Location: orders.php');
+    exit;
+}
+
+// Fetch order with customer + batch info
+$orderRaw = db_fetch(
+    "SELECT o.id, o.order_number, o.pickup_code, o.status, o.total_amount, o.profit, o.picked_up_at, o.created_at,
+            o.customer_id, o.batch_id,
+            c.name AS customer_name, b.name AS batch_name
+     FROM orders o
+     JOIN customers c ON c.id = o.customer_id
+     JOIN batches b ON b.id = o.batch_id
+     WHERE o.id = ? AND o.deleted_at IS NULL",
+    [$id]
+);
+
+if (!$orderRaw) {
+    setFlash('error', 'Pesanan tidak ditemukan.');
+    header('Location: orders.php');
+    exit;
+}
+
+// Fetch order items
+$items = db_fetch_all(
+    "SELECT op.id, op.product_id, op.quantity, op.unit_price, op.subtotal, p.name AS product_name
+     FROM order_product op
+     JOIN products p ON p.id = op.product_id
+     WHERE op.order_id = ?",
+    [$id]
+);
+
+// Fetch all active products for dropdown
+$allProducts = db_fetch_all(
+    "SELECT id, name, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name ASC"
+);
+
+// ── POST Handlers ──
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrf()) {
+        setFlash('error', 'Token CSRF tidak valid.');
+        header('Location: edit-order.php?id=' . $id);
+        exit;
+    }
+
+    $action = $_GET['action'] ?? '';
+
+    if ($action === 'delete') {
+        db_update("UPDATE orders SET deleted_at = NOW() WHERE id = ?", [$id]);
+        $activityLogService->log('deleted', 'App\Models\Order', $id, 'deleted');
+        setFlash('success', 'Pesanan berhasil dihapus.');
+        header('Location: orders.php');
+        exit;
+    }
+
+    // Update order
+    $status = $_POST['status'] ?? $orderRaw['status'];
+    $productIds = $_POST['products'] ?? [];
+    $quantities = $_POST['qty'] ?? [];
+
+    // Validate status transition
+    $validStatuses = ['pending', 'processing', 'ready', 'picked_up'];
+    if (!in_array($status, $validStatuses)) {
+        $status = $orderRaw['status'];
+    }
+
+    // If picked_up, set timestamp
+    $pickedUpAt = $orderRaw['picked_up_at'];
+    if ($status === 'picked_up' && !$pickedUpAt) {
+        $pickedUpAt = date('Y-m-d H:i:s');
+    }
+
+    // Delete existing order_product rows and recalculate
+    db_delete("DELETE FROM order_product WHERE order_id = ?", [$id]);
+
+    $totalAmount = 0;
+    foreach ($productIds as $i => $productId) {
+        $productId = intval($productId);
+        $qty = max(1, intval($quantities[$i] ?? 1));
+
+        // Get price from DB (security: never trust form prices)
+        $price = $adminService->verifyProductPrice($productId);
+        $subtotal = $price * $qty;
+        $totalAmount += $subtotal;
+
+        db_insert(
+            "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
+            [$id, $productId, $qty, $price, $subtotal]
+        );
+    }
+
+    db_update(
+        "UPDATE orders SET status = ?, total_amount = ?, picked_up_at = ?, updated_at = NOW() WHERE id = ?",
+        [$status, $totalAmount, $pickedUpAt, $id]
+    );
+
+    $activityLogService->log('updated', 'App\Models\Order', $id, 'updated', [
+        'status' => $status,
+        'total' => $totalAmount,
+    ]);
+
+    setFlash('success', 'Pesanan berhasil diperbarui.');
+    header('Location: edit-order.php?id=' . $id);
+    exit;
+}
+
+// Build template-ready order data
 $order = [
-    'number' => 'ORD-NAEU0M9Z',
-    'pickup_code' => 'PSJXCY',
-    'customer' => 'Customer',
-    'batch' => 'Batch 1',
-    'status' => 'processing',
-    'total' => '7500000.00',
-    'profit' => '0.00',
-    'pickup_at' => 'Belum diambil',
-    'created_at' => '15 Feb 2026, 18:34',
-    'items' => [
-        [
-            'id' => 1,
-            'product' => 'Sarden SIP Saus Tomat',
-            'qty' => 100,
-            'price' => 25000.00,
-            'subtotal' => 2500000.00
-        ],
-        [
-            'id' => 2,
-            'product' => 'Sarden SIP Saus Cabai',
-            'qty' => 200,
-            'price' => 25000.00,
-            'subtotal' => 5000000.00
-        ]
-    ],
+    'number'     => $orderRaw['order_number'],
+    'pickup_code' => $orderRaw['pickup_code'],
+    'customer'   => $orderRaw['customer_name'],
+    'batch'      => $orderRaw['batch_name'],
+    'status'     => $orderRaw['status'],
+    'total'      => $orderRaw['total_amount'],
+    'profit'     => $orderRaw['profit'] ?? '0.00',
+    'pickup_at'  => $orderRaw['picked_up_at'] ? FormatHelper::tanggal($orderRaw['picked_up_at']) : 'Belum diambil',
+    'created_at' => FormatHelper::tanggal($orderRaw['created_at']),
+    'items'      => array_map(function($item) {
+        return [
+            'id'       => $item['id'],
+            'product_id' => $item['product_id'],
+            'product'  => $item['product_name'],
+            'qty'      => $item['quantity'],
+            'price'    => $item['unit_price'],
+            'subtotal' => $item['subtotal'],
+        ];
+    }, $items),
     'notes' => ''
 ];
 
@@ -48,6 +157,8 @@ $statuses = [
     'ready' => 'Ready',
     'picked_up' => 'Picked Up'
 ];
+
+include __DIR__ . '/../includes/header-admin.php';
 ?>
 
 <style>
@@ -111,20 +222,20 @@ $statuses = [
         <div class="breadcrumb">
             <a href="orders.php">Pesanan</a>
             <i class="ph ph-caret-right text-[10px]"></i>
-            <a href="view-order.php?id=1"><?php echo $order['number']; ?></a>
+            <a href="view-order.php?id=<?php echo $id; ?>"><?php echo htmlspecialchars($order['number']); ?></a>
             <i class="ph ph-caret-right text-[10px]"></i>
             <span class="active">Edit</span>
         </div>
         <h1 class="text-[24px] font-extrabold text-navy">Edit <?php echo $order['number']; ?></h1>
     </div>
-    <button type="button" class="btn-delete-top" onclick="confirmDelete(1)">
+    <button type="button" class="btn-delete-top" onclick="confirmDelete(<?php echo $id; ?>)">
         Delete
     </button>
 </div>
 
-<form action="update-order.php" method="POST" id="edit-order-form">
-    <?php if (function_exists('csrfField')) echo csrfField(); ?>
-    <input type="hidden" name="order_id" value="1">
+<form action="edit-order.php?id=<?php echo $id; ?>" method="POST" id="edit-order-form">
+    <?php echo csrfField(); ?>
+    <input type="hidden" name="order_id" value="<?php echo $id; ?>">
 
     <div class="edit-grid">
         <!-- Main Column (Left) -->
@@ -197,8 +308,9 @@ $statuses = [
                                 <td>
                                     <div class="select-wrapper">
                                         <select name="products[]" class="input select" required>
-                                            <option value="1" <?php echo $item['product'] == 'Sarden SIP Saus Tomat' ? 'selected' : ''; ?>>Sarden SIP Saus Tomat</option>
-                                            <option value="2" <?php echo $item['product'] == 'Sarden SIP Saus Cabai' ? 'selected' : ''; ?>>Sarden SIP Saus Cabai</option>
+                                            <?php foreach ($allProducts as $ap): ?>
+                                            <option value="<?php echo $ap['id']; ?>" <?php echo $ap['id'] == $item['product_id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($ap['name']); ?></option>
+                                            <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </td>
@@ -208,13 +320,13 @@ $statuses = [
                                 <td>
                                     <div class="input-group">
                                         <span class="input-prefix">Rp</span>
-                                        <input type="text" class="input input-with-prefix text-right" value="<?php echo number_format($item['price'], 2, '.', ''); ?>" disabled>
+                                        <input type="text" class="input input-with-prefix text-right" value="<?php echo number_format($item['price'], 0, ',', '.'); ?>" disabled>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group">
                                         <span class="input-prefix">Rp</span>
-                                        <input type="text" class="input input-with-prefix text-right font-semibold" value="<?php echo number_format($item['subtotal'], 2, '.', ''); ?>" disabled>
+                                        <input type="text" class="input input-with-prefix text-right font-semibold" value="<?php echo number_format($item['subtotal'], 0, ',', '.'); ?>" disabled>
                                     </div>
                                 </td>
                                 <td class="text-right">
@@ -323,7 +435,16 @@ $statuses = [
 
     function confirmDelete(id) {
         if (confirm('Apakah Anda yakin ingin menghapus pesanan ini?')) {
-            window.location.href = 'delete-order.php?id=' + id;
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'edit-order.php?action=delete&id=' + id;
+            var csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = 'csrf_token';
+            csrf.value = document.querySelector('input[name="csrf_token"]')?.value || '';
+            form.appendChild(csrf);
+            document.body.appendChild(form);
+            form.submit();
         }
     }
 
@@ -335,8 +456,9 @@ $statuses = [
                 <div class="select-wrapper">
                     <select name="products[]" class="input select" required>
                         <option value="" disabled selected>Pilih Produk</option>
-                        <option value="1">Sarden SIP Saus Tomat</option>
-                        <option value="2">Sarden SIP Saus Cabai</option>
+                        <?php foreach ($allProducts as $ap): ?>
+                        <option value="<?php echo $ap['id']; ?>"><?php echo htmlspecialchars(addslashes($ap['name'])); ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
             </td>
@@ -346,13 +468,13 @@ $statuses = [
             <td>
                 <div class="input-group">
                     <span class="input-prefix">Rp</span>
-                    <input type="text" class="input input-with-prefix text-right" value="0.00" disabled>
+                    <input type="text" class="input input-with-prefix text-right" value="0" disabled>
                 </div>
             </td>
             <td>
                 <div class="input-group">
                     <span class="input-prefix">Rp</span>
-                    <input type="text" class="input input-with-prefix text-right font-semibold" value="0.00" disabled>
+                    <input type="text" class="input input-with-prefix text-right font-semibold" value="0" disabled>
                 </div>
             </td>
             <td class="text-right">

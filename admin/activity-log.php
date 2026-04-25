@@ -6,99 +6,47 @@ requireAdmin();
 requireSuperAdmin();
 include __DIR__ . '/../includes/header-admin.php';
 
-// ── Mock Data ──
-$logs = [
-    [
-        'waktu' => '16 Feb 2026, 01:36:25',
-        'ago' => '2 months ago',
-        'aktor' => 'Super Admin',
-        'aksi' => 'Diubah',
-        'target_type' => 'Order',
-        'target_id' => '5',
-        'deskripsi' => 'updated'
-    ],
-    [
-        'waktu' => '15 Feb 2026, 18:34:22',
-        'ago' => '2 months ago',
-        'aktor' => 'Sistem',
-        'aksi' => 'Dibuat',
-        'target_type' => 'Order',
-        'target_id' => '5',
-        'deskripsi' => 'created'
-    ],
-    [
-        'waktu' => '15 Feb 2026, 18:34:01',
-        'ago' => '2 months ago',
-        'aktor' => 'Sistem',
-        'aksi' => 'Dibuat',
-        'target_type' => 'Order',
-        'target_id' => '4',
-        'deskripsi' => 'created'
-    ],
-    [
-        'waktu' => '15 Feb 2026, 18:33:34',
-        'ago' => '2 months ago',
-        'aktor' => 'Sistem',
-        'aksi' => 'Dihapus',
-        'target_type' => 'Order',
-        'target_id' => '1',
-        'deskripsi' => 'deleted'
-    ],
-    [
-        'waktu' => '15 Feb 2026, 18:33:32',
-        'ago' => '2 months ago',
-        'aktor' => 'Sistem',
-        'aksi' => 'Dihapus',
-        'target_type' => 'Order',
-        'target_id' => '2',
-        'deskripsi' => 'deleted'
-    ],
-    [
-        'waktu' => '15 Feb 2026, 18:33:28',
-        'ago' => '2 months ago',
-        'aktor' => 'Sistem',
-        'aksi' => 'Dihapus',
-        'target_type' => 'Order',
-        'target_id' => '3',
-        'deskripsi' => 'deleted'
-    ],
-    [
-        'waktu' => '15 Feb 2026, 17:57:17',
-        'ago' => '2 months ago',
-        'aktor' => 'Super Admin',
-        'aksi' => 'Dibuat',
-        'target_type' => 'Order',
-        'target_id' => '3',
-        'deskripsi' => 'created'
-    ],
-    [
-        'waktu' => '15 Feb 2026, 17:36:35',
-        'ago' => '2 months ago',
-        'aktor' => 'Super Admin',
-        'aksi' => 'Dibuat',
-        'target_type' => 'Order',
-        'target_id' => '2',
-        'deskripsi' => 'created'
-    ],
-    [
-        'waktu' => '15 Feb 2026, 17:29:26',
-        'ago' => '2 months ago',
-        'aktor' => 'Super Admin',
-        'aksi' => 'Dibuat',
-        'target_type' => 'Order',
-        'target_id' => '1',
-        'deskripsi' => 'created'
-    ],
-    [
-        'waktu' => '15 Feb 2026, 15:45:41',
-        'ago' => '2 months ago',
-        'aktor' => 'Super Admin',
-        'aksi' => 'Dibuat',
-        'target_type' => 'Batch',
-        'target_id' => '1',
-        'deskripsi' => 'created'
-    ],
-];
+require_once __DIR__ . '/../classes/ActivityLogService.php';
+
+$logService = new ActivityLogService();
+
+$page = max(1, intval($_GET['page'] ?? 1));
+$perPage = max(1, intval($_GET['per_page'] ?? 10));
+$offset = ($page - 1) * $perPage;
+
+$filters = [];
+if (!empty($_GET['event'])) {
+    $filters['event'] = $_GET['event'];
+}
+if (!empty($_GET['subject_type'])) {
+    $filters['subject_type'] = $_GET['subject_type'];
+}
+
+$logs_raw = $logService->getAll($perPage, $offset, $filters);
+$totalLogs = $logService->countAll($filters);
+$totalPages = max(1, ceil($totalLogs / $perPage));
+
+// Map raw DB rows to template format
+$logs = [];
+foreach ($logs_raw as $row) {
+    $subjectShort = basename(str_replace('App\\Models\\', '', $row['subject_type'] ?? ''));
+    $eventLabel = match($row['description'] ?? '') {
+        'created' => 'Dibuat',
+        'updated' => 'Diubah',
+        'deleted' => 'Dihapus',
+        default => ucfirst($row['description'] ?? '-'),
+    };
+
+    $logs[] = [
+        'waktu' => date('d M Y, H:i:s', strtotime($row['created_at'])),
+        'ago' => '',
+        'aktor' => $row['causer_name'] ?? 'Sistem',
+        'aksi' => $eventLabel,
+        'target_type' => $subjectShort,
+        'target_id' => $row['subject_id'] ?? '-',
+        'deskripsi' => $row['description'] ?? '-',
+    ];
+}
 
 function getActionClass($action) {
     switch ($action) {
@@ -212,7 +160,7 @@ function getActionClass($action) {
     <!-- Table Footer -->
     <div class="px-6 py-4 border-t border-slate-50 flex items-center justify-between">
         <div class="text-[12px] text-slate-500">
-            Showing 1 to 10 of 16 results
+            Showing <?php echo $offset + 1; ?> to <?php echo min($offset + $perPage, $totalLogs); ?> of <?php echo $totalLogs; ?> results
         </div>
         <div class="flex items-center gap-3">
             <div class="flex items-center gap-2 mr-6">

@@ -2,42 +2,37 @@
 $pageTitle   = 'Produk';
 $currentPage = 'products';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 requireAdmin();
+
+require_once __DIR__ . '/../classes/ProductService.php';
+require_once __DIR__ . '/../classes/AdminService.php';
+require_once __DIR__ . '/../classes/ActivityLogService.php';
+require_once __DIR__ . '/../classes/FormatHelper.php';
+
+$productService = new ProductService();
+$adminService = new AdminService();
+$activityLogService = new ActivityLogService();
+
+// ── POST: Delete ──
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete') {
+    $deleteId = intval($_GET['id'] ?? 0);
+    if ($deleteId && verifyCsrf()) {
+        if ($adminService->isCoreProduct($deleteId)) {
+            setFlash('error', 'Produk inti tidak dapat dihapus.');
+        } else {
+            $productService->softDelete($deleteId);
+            $activityLogService->log('deleted', 'App\Models\Product', $deleteId, 'deleted');
+            setFlash('success', 'Produk berhasil dihapus.');
+        }
+    }
+    header('Location: products.php');
+    exit;
+}
+
 include __DIR__ . '/../includes/header-admin.php';
 
-// ── Mock Data ──
-$products = [
-    [
-        'id'     => 1,
-        'name'   => 'Sarden SIP Asin',
-        'sku'    => 'TEFA-ASN-001',
-        'price'  => 'IDR 22,000.00',
-        'stock'  => 500,
-        'satuan' => 'kaleng',
-        'aktif'  => true,
-        'img'    => '../assets/images/product.jpeg',
-    ],
-    [
-        'id'     => 2,
-        'name'   => 'Sarden SIP Saus Cabai',
-        'sku'    => 'TEFA-SSC-001',
-        'price'  => 'IDR 25,000.00',
-        'stock'  => 500,
-        'satuan' => 'kaleng',
-        'aktif'  => true,
-        'img'    => '../assets/images/product.jpeg',
-    ],
-    [
-        'id'     => 3,
-        'name'   => 'Sarden SIP Saus Tomat',
-        'sku'    => 'TEFA-SST-001',
-        'price'  => 'IDR 25,000.00',
-        'stock'  => 500,
-        'satuan' => 'kaleng',
-        'aktif'  => true,
-        'img'    => '../assets/images/product.jpeg',
-    ],
-];
+$products = $productService->getAll();
 ?>
 
 <style>
@@ -122,17 +117,17 @@ $products = [
                 <tr>
                     <td class="cb-cell"><input type="checkbox" class="cb cb-row"></td>
                     <td style="width:44px">
-                        <img src="<?php echo $prod['img']; ?>" alt="product" class="w-8 h-8 rounded object-cover border border-gray-100">
+                        <img src="../assets/images/product.jpeg" alt="product" class="w-8 h-8 rounded object-cover border border-gray-100">
                     </td>
                     <td>
                         <div class="font-bold text-[12.5px]" style="color:#E02424"><?php echo htmlspecialchars($prod['name']); ?></div>
                         <div class="text-[11px] text-gray-400"><?php echo htmlspecialchars($prod['sku']); ?></div>
                     </td>
-                    <td class="font-semibold" style="color:#E02424"><?php echo $prod['price']; ?></td>
+                    <td class="font-semibold" style="color:#E02424"><?php echo FormatHelper::rupiah($prod['price']); ?></td>
                     <td><span class="stock-badge"><?php echo $prod['stock']; ?></span></td>
-                    <td class="text-gray-500"><?php echo $prod['satuan']; ?></td>
+                    <td class="text-gray-500">kaleng</td>
                     <td>
-                        <?php if ($prod['aktif']): ?>
+                        <?php if ($prod['is_active']): ?>
                         <span class="inline-flex items-center justify-center w-6 h-6 rounded-full border-2 border-teal-400 text-teal-400">
                             <i class="ph ph-check text-xs"></i>
                         </span>
@@ -143,9 +138,21 @@ $products = [
                         <?php endif; ?>
                     </td>
                     <td class="text-right">
-                        <button class="icon-btn-sm" title="Opsi lainnya">
-                            <i class="ph ph-dots-three-vertical text-sm"></i>
-                        </button>
+                        <div class="relative inline-block text-left dropdown-container">
+                            <button type="button" class="icon-btn-sm dropdown-trigger" title="Opsi lainnya" onclick="toggleDropdown(event, this)">
+                                <i class="ph ph-dots-three-vertical text-sm pointer-events-none"></i>
+                            </button>
+                            <div class="hidden absolute right-0 mt-2 w-32 bg-white border border-gray-100 rounded-lg shadow-lg z-50 dropdown-menu text-left">
+                                <div class="py-1">
+                                    <a href="edit-product.php?id=<?php echo $prod['id']; ?>" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-500 hover:bg-red-50 transition-colors font-medium">
+                                        <i class="ph ph-note-pencil text-base text-red-400"></i> Edit
+                                    </a>
+                                    <button type="button" onclick="confirmDelete(<?php echo $prod['id']; ?>)" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-600 hover:bg-red-50 transition-colors w-full text-left font-medium">
+                                        <i class="ph ph-trash text-base text-red-500"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -170,9 +177,38 @@ $products = [
     </div>
 </div>
 
+<!-- Hidden CSRF for JS actions -->
+<div class="hidden"><?php echo csrfField(); ?></div>
+
 <script>
     function toggleAll(master) {
         document.querySelectorAll('.cb-row').forEach(cb => cb.checked = master.checked);
+    }
+    function toggleDropdown(event, btn) {
+        event.stopPropagation();
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            if (menu !== btn.nextElementSibling) menu.classList.add('hidden');
+        });
+        btn.nextElementSibling.classList.toggle('hidden');
+    }
+    window.onclick = function(event) {
+        if (!event.target.closest('.dropdown-container')) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+        }
+    }
+    function confirmDelete(id) {
+        if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'products.php?action=delete&id=' + id;
+            var csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = 'csrf_token';
+            csrf.value = document.querySelector('input[name="csrf_token"]')?.value || '';
+            form.appendChild(csrf);
+            document.body.appendChild(form);
+            form.submit();
+        }
     }
     document.getElementById('product-search').addEventListener('input', function() {
         const q = this.value.toLowerCase();

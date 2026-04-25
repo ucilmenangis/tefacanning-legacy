@@ -5,26 +5,23 @@ require_once __DIR__ . '/../includes/auth.php';
 requireAdmin();
 include __DIR__ . '/../includes/header-admin.php';
 
-// ── Mock Data (Ivan akan wiring ke DB) ──
+require_once __DIR__ . '/../classes/AdminService.php';
+require_once __DIR__ . '/../classes/FormatHelper.php';
+
+$adminService = new AdminService();
+$dbStats = $adminService->getDashboardStats();
+$activeBatch = $adminService->getActiveBatch();
+$batch_orders = $activeBatch ? $adminService->getBatchOrders($activeBatch['id']) : [];
+$batch_products = $activeBatch ? $adminService->getBatchProducts($activeBatch['id']) : [];
+$recent_orders = $adminService->getRecentOrders(5);
+
 $stats = [
-    'batch_aktif'   => ['label' => 'Batch Aktif',    'value' => 'Batch 1', 'sub' => '15 Feb 2026', 'color' => 'red'],
-    'order_batch'   => ['label' => 'Order Batch Ini','value' => '2',       'sub' => 'Total pesanan di batch aktif', 'color' => 'blue'],
-    'siap_ambil'    => ['label' => 'Siap Diambil',   'value' => '0',       'sub' => 'Tidak ada pesanan', 'color' => 'teal'],
-    'total_pelanggan' => ['label' => 'Total Pelanggan','value' => '1',     'sub' => 'Pelanggan terdaftar', 'color' => 'green'],
-    'total_omset'   => ['label' => 'Total Omset',    'value' => 'Rp 0',    'sub' => 'Revenue keseluruhan', 'color' => 'indigo'],
-    'total_profit'  => ['label' => 'Total Profit',   'value' => 'Rp 0',    'sub' => 'Keuntungan bersih', 'color' => 'red'],
-];
-$batch_orders = [
-    ['no' => 'ORD-NAEU0M97', 'customer' => 'Customer', 'status' => 'processing', 'pickup_code' => 'PSJXCY', 'diambil' => 'Belum', 'tanggal' => '15 Feb 2026, 18:34'],
-    ['no' => 'ORD-29T8TFXY', 'customer' => 'Customer', 'status' => 'pending',    'pickup_code' => 'YWHS9M','diambil' => 'Belum', 'tanggal' => '15 Feb 2026, 18:34'],
-];
-$batch_products = [
-    ['produk' => 'Sarden SIP Saus Tomat', 'sku' => 'TEFA-SST-001', 'qty' => 200, 'satuan' => 'kaleng'],
-    ['produk' => 'Sarden SIP Saus Cabai', 'sku' => 'TEFA-SSC-001', 'qty' => 200, 'satuan' => 'kaleng'],
-];
-$recent_orders = [
-    ['no' => 'ORD-NAEU0M9Z', 'customer' => 'Customer',  'phone' => '08123456789', 'batch' => 'Batch 1', 'status' => 'processing', 'total' => 'IDR 7,500,000.00', 'tanggal' => '15 Feb 2026, 18:34'],
-    ['no' => 'ORD-29T8TFXY', 'customer' => 'Customer',  'phone' => '08123456789', 'batch' => 'Batch 1', 'status' => 'pending',    'total' => 'IDR 2,500,000.00', 'tanggal' => '15 Feb 2026, 18:34'],
+    'batch_aktif'   => ['label' => 'Batch Aktif',    'value' => $activeBatch ? $activeBatch['name'] : 'Tidak ada', 'sub' => $activeBatch ? FormatHelper::tanggal($activeBatch['event_date']) : 'Tidak ada batch aktif', 'color' => 'red'],
+    'order_batch'   => ['label' => 'Order Batch Ini','value' => $activeBatch ? (string) $adminService->getBatchOrderCount($activeBatch['id']) : '0', 'sub' => 'Total pesanan di batch aktif', 'color' => 'blue'],
+    'siap_ambil'    => ['label' => 'Siap Diambil',   'value' => (string) $dbStats['siap_ambil'], 'sub' => $dbStats['siap_ambil'] > 0 ? 'Pesanan siap diambil' : 'Tidak ada pesanan', 'color' => 'teal'],
+    'total_pelanggan' => ['label' => 'Total Pelanggan','value' => (string) $dbStats['total_pelanggan'], 'sub' => 'Pelanggan terdaftar', 'color' => 'green'],
+    'total_omset'   => ['label' => 'Total Omset',    'value' => FormatHelper::rupiah($dbStats['total_omset']), 'sub' => 'Revenue keseluruhan', 'color' => 'indigo'],
+    'total_profit'  => ['label' => 'Total Profit',   'value' => FormatHelper::rupiah($dbStats['total_profit']), 'sub' => 'Keuntungan bersih', 'color' => 'red'],
 ];
 
 $statusMap = [
@@ -71,7 +68,7 @@ $statusMap = [
         <div class="w-9 h-9 rounded-full bg-navy flex items-center justify-center text-white text-[13px] font-bold">SA</div>
         <div>
             <p class="text-[14px] font-bold text-navy">Welcome</p>
-            <p class="text-[11px] text-gray-400">Super Admin</p>
+            <p class="text-[11px] text-gray-400"><?php echo htmlspecialchars(isSuperAdmin() ? 'Super Admin' : 'Teknisi'); ?></p>
         </div>
     </div>
     <a href="../auth/logout.php" class="inline-flex items-center gap-1.5 text-[12px] text-gray-400 hover:text-navy border border-gray-200 px-3 py-1.5 rounded-lg transition-colors">
@@ -148,16 +145,16 @@ $statusMap = [
         <tbody>
             <?php foreach ($batch_orders as $row): $st = $statusMap[$row['status']] ?? ['label'=>$row['status'],'class'=>'badge-pending']; ?>
             <tr>
-                <td class="font-semibold text-navy"><?php echo $row['no']; ?></td>
-                <td class="text-gray-500"><?php echo $row['customer']; ?></td>
+                <td class="font-semibold text-navy"><?php echo htmlspecialchars($row['order_number']); ?></td>
+                <td class="text-gray-500"><?php echo htmlspecialchars($row['customer_name']); ?></td>
                 <td>
                     <span class="status-badge <?php echo $st['class']; ?>">
                         <span class="dot-status"></span><?php echo $st['label']; ?>
                     </span>
                 </td>
-                <td class="font-mono text-[12px] text-gray-500"><?php echo $row['pickup_code']; ?></td>
-                <td class="text-primary text-[12px] font-semibold"><?php echo $row['diambil']; ?></td>
-                <td class="text-gray-400"><?php echo $row['tanggal']; ?></td>
+                <td class="font-mono text-[12px] text-gray-500"><?php echo htmlspecialchars($row['pickup_code']); ?></td>
+                <td class="text-primary text-[12px] font-semibold"><?php echo $row['picked_up_at'] ? FormatHelper::tanggal($row['picked_up_at']) : 'Belum'; ?></td>
+                <td class="text-gray-400"><?php echo FormatHelper::tanggal($row['created_at']); ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
@@ -181,8 +178,8 @@ $statusMap = [
         <tbody>
             <?php foreach ($batch_products as $prod): ?>
             <tr>
-                <td class="font-semibold" style="color:#E02424"><?php echo $prod['produk']; ?></td>
-                <td class="text-gray-400 font-mono text-[12px]"><?php echo $prod['sku']; ?></td>
+                <td class="font-semibold" style="color:#E02424"><?php echo htmlspecialchars($prod['produk']); ?></td>
+                <td class="text-gray-400 font-mono text-[12px]"><?php echo htmlspecialchars($prod['sku']); ?></td>
                 <td class="font-bold text-navy"><?php echo $prod['qty']; ?></td>
                 <td class="text-gray-500"><?php echo $prod['satuan']; ?></td>
             </tr>
@@ -214,21 +211,21 @@ $statusMap = [
         <tbody>
             <?php foreach ($recent_orders as $row): $st = $statusMap[$row['status']] ?? ['label'=>$row['status'],'class'=>'badge-pending']; ?>
             <tr>
-                <td class="font-bold text-navy"><?php echo $row['no']; ?></td>
+                <td class="font-bold text-navy"><?php echo htmlspecialchars($row['order_number']); ?></td>
                 <td>
-                    <div class="font-semibold text-[12px]" style="color:#E02424"><?php echo $row['customer']; ?></div>
-                    <div class="text-[11px] text-gray-400"><?php echo $row['phone']; ?></div>
+                    <div class="font-semibold text-[12px]" style="color:#E02424"><?php echo htmlspecialchars($row['customer_name']); ?></div>
+                    <div class="text-[11px] text-gray-400"><?php echo htmlspecialchars($row['customer_phone'] ?? '-'); ?></div>
                 </td>
                 <td>
-                    <span class="text-[11px] bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded font-semibold"><?php echo $row['batch']; ?></span>
+                    <span class="text-[11px] bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded font-semibold"><?php echo htmlspecialchars($row['batch_name']); ?></span>
                 </td>
                 <td>
                     <span class="status-badge <?php echo $st['class']; ?>">
                         <span class="dot-status"></span><?php echo $st['label']; ?>
                     </span>
                 </td>
-                <td class="font-semibold" style="color:#E02424"><?php echo $row['total']; ?></td>
-                <td class="text-primary font-semibold text-[12px]"><?php echo $row['tanggal']; ?></td>
+                <td class="font-semibold" style="color:#E02424"><?php echo FormatHelper::rupiah($row['total_amount']); ?></td>
+                <td class="text-primary font-semibold text-[12px]"><?php echo FormatHelper::tanggal($row['created_at']); ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>

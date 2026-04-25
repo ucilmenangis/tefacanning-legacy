@@ -2,36 +2,38 @@
 $pageTitle   = 'Pesanan';
 $currentPage = 'orders';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 requireAdmin();
+
+require_once __DIR__ . '/../classes/FormatHelper.php';
+require_once __DIR__ . '/../classes/ActivityLogService.php';
+
+$activityLogService = new ActivityLogService();
+
+// ── POST: Delete ──
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete') {
+    $deleteId = intval($_GET['id'] ?? 0);
+    if ($deleteId && verifyCsrf()) {
+        db_update("UPDATE orders SET deleted_at = NOW() WHERE id = ?", [$deleteId]);
+        $activityLogService->log('deleted', 'App\Models\Order', $deleteId, 'deleted');
+        setFlash('success', 'Pesanan berhasil dihapus.');
+    }
+    header('Location: orders.php');
+    exit;
+}
+
 include __DIR__ . '/../includes/header-admin.php';
 
-// ── Mock Data ──
-$orders = [
-    [
-        'id'          => 1,
-        'no'          => 'ORD-NAEU0M9Z',
-        'customer'    => 'Customer',
-        'phone'       => '08123456789',
-        'batch'       => 'Batch 1',
-        'status'      => 'processing',
-        'pickup_code' => 'PSTXCY',
-        'total'       => 'IDR 7,500,000.00',
-        'diambil'     => null,
-        'tanggal'     => '15 Feb 2026',
-    ],
-    [
-        'id'          => 2,
-        'no'          => 'ORD-29T8TFXY',
-        'customer'    => 'Customer',
-        'phone'       => '08123456789',
-        'batch'       => 'Batch 1',
-        'status'      => 'pending',
-        'pickup_code' => 'YUHS9K',
-        'total'       => 'IDR 2,500,000.00',
-        'diambil'     => null,
-        'tanggal'     => '15 Feb 2026',
-    ],
-];
+$orders = db_fetch_all(
+    "SELECT o.id, o.order_number, o.status, o.pickup_code, o.total_amount, o.picked_up_at, o.created_at,
+            c.name AS customer_name, c.phone AS customer_phone,
+            b.name AS batch_name
+     FROM orders o
+     JOIN customers c ON c.id = o.customer_id
+     JOIN batches b ON b.id = o.batch_id
+     WHERE o.deleted_at IS NULL
+     ORDER BY o.created_at DESC"
+);
 
 $statusMap = [
     'processing' => ['label' => 'Processing', 'icon' => 'ph-arrows-clockwise', 'bg' => '#eff6ff', 'color' => '#2563eb', 'border' => '#dbeafe'],
@@ -132,14 +134,14 @@ $statusMap = [
                 ?>
                 <tr>
                     <td class="cb-cell"><input type="checkbox" class="cb cb-row"></td>
-                    <td class="font-bold text-navy"><?php echo $row['no']; ?></td>
+                    <td class="font-bold text-navy"><?php echo htmlspecialchars($row['order_number']); ?></td>
                     <td>
-                        <div class="font-semibold text-[12.5px]" style="color:#E02424"><?php echo $row['customer']; ?></div>
-                        <div class="text-[11px] text-gray-400"><?php echo $row['phone']; ?></div>
+                        <div class="font-semibold text-[12.5px]" style="color:#E02424"><?php echo htmlspecialchars($row['customer_name']); ?></div>
+                        <div class="text-[11px] text-gray-400"><?php echo htmlspecialchars($row['customer_phone'] ?? '-'); ?></div>
                     </td>
                     <td>
                         <span class="text-[11px] bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded font-semibold">
-                            <?php echo $row['batch']; ?>
+                            <?php echo htmlspecialchars($row['batch_name']); ?>
                         </span>
                     </td>
                     <td>
@@ -149,10 +151,10 @@ $statusMap = [
                             <?php echo $st['label']; ?>
                         </span>
                     </td>
-                    <td class="font-mono text-[12px] text-gray-500"><?php echo $row['pickup_code']; ?></td>
-                    <td class="font-semibold" style="color:#E02424"><?php echo $row['total']; ?></td>
-                    <td class="text-gray-400 text-[12px]"><?php echo $row['diambil'] ?? '—'; ?></td>
-                    <td class="text-primary font-semibold text-[12px]"><?php echo $row['tanggal']; ?></td>
+                    <td class="font-mono text-[12px] text-gray-500"><?php echo htmlspecialchars($row['pickup_code']); ?></td>
+                    <td class="font-semibold" style="color:#E02424"><?php echo FormatHelper::rupiah($row['total_amount']); ?></td>
+                    <td class="text-gray-400 text-[12px]"><?php echo $row['picked_up_at'] ? FormatHelper::tanggal($row['picked_up_at']) : '—'; ?></td>
+                    <td class="text-primary font-semibold text-[12px]"><?php echo FormatHelper::tanggal($row['created_at']); ?></td>
                     <td class="text-right">
                         <div class="flex items-center gap-1 justify-end">
                             <button class="action-pill text-gray-400 hover:bg-red-50 hover:text-primary" title="Download PDF">
@@ -201,6 +203,9 @@ $statusMap = [
     </div>
 </div>
 
+<!-- Hidden CSRF for JS actions -->
+<div class="hidden"><?php echo csrfField(); ?></div>
+
 <script>
     function toggleAll(master) {
         document.querySelectorAll('.cb-row').forEach(cb => cb.checked = master.checked);
@@ -231,7 +236,16 @@ $statusMap = [
 
     function confirmDelete(id) {
         if (confirm('Apakah Anda yakin ingin menghapus pesanan ini?')) {
-            window.location.href = 'delete-order.php?id=' + id;
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'orders.php?action=delete&id=' + id;
+            var csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = 'csrf_token';
+            csrf.value = document.querySelector('input[name="csrf_token"]')?.value || '';
+            form.appendChild(csrf);
+            document.body.appendChild(form);
+            form.submit();
         }
     }
 

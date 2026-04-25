@@ -1,31 +1,96 @@
 <?php
 /**
  * Admin Edit Customer Page
- * UI Prototype for TEFA Canning Admin Panel
  */
 
 $pageTitle   = 'Edit Customer';
 $currentPage = 'customers';
 
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 requireAdmin();
 
-include __DIR__ . '/../includes/header-admin.php';
+require_once __DIR__ . '/../classes/CustomerAdminService.php';
+require_once __DIR__ . '/../classes/ActivityLogService.php';
+require_once __DIR__ . '/../classes/FormatHelper.php';
 
-// Mock Data
+$customerAdminService = new CustomerAdminService();
+$activityLogService = new ActivityLogService();
+
+// Validate ID parameter
+$id = intval($_GET['id'] ?? 0);
+if (!$id) {
+    setFlash('error', 'ID pelanggan tidak valid.');
+    header('Location: customers.php');
+    exit;
+}
+
+$customer = $customerAdminService->getById($id);
+if (!$customer) {
+    setFlash('error', 'Pelanggan tidak ditemukan.');
+    header('Location: customers.php');
+    exit;
+}
+
+$stats = $customerAdminService->getStats($id);
+
+// ── POST Handlers ──
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrf()) {
+        setFlash('error', 'Token CSRF tidak valid.');
+        header('Location: edit-customer.php?id=' . $id);
+        exit;
+    }
+
+    $action = $_GET['action'] ?? '';
+
+    if ($action === 'delete') {
+        $customerAdminService->softDelete($id);
+        $activityLogService->log('deleted', 'App\Models\Customer', $id, 'deleted', ['old' => $customer]);
+        setFlash('success', 'Pelanggan berhasil dihapus.');
+        header('Location: customers.php');
+        exit;
+    }
+
+    // Update customer
+    $data = [
+        'name'         => trim($_POST['name'] ?? ''),
+        'organization' => trim($_POST['organization'] ?? '') ?: null,
+        'phone'        => trim($_POST['phone'] ?? '') ?: null,
+        'email'        => trim($_POST['email'] ?? '') ?: null,
+        'address'      => trim($_POST['address'] ?? '') ?: null,
+    ];
+
+    if (empty($data['name'])) {
+        setFlash('error', 'Nama pelanggan wajib diisi.');
+        header('Location: edit-customer.php?id=' . $id);
+        exit;
+    }
+
+    $customerAdminService->update($id, $data);
+    $activityLogService->log('updated', 'App\Models\Customer', $id, 'updated', ['new' => $data, 'old' => $customer]);
+
+    setFlash('success', 'Data pelanggan berhasil diperbarui.');
+    header('Location: edit-customer.php?id=' . $id);
+    exit;
+}
+
+// Build template-ready data
 $customer = [
-    'id' => 1,
-    'name' => 'Customer',
-    'organization' => 'customer_organization',
-    'phone' => '08123456789',
-    'email' => 'customer@customer.com',
-    'address' => 'alamat testing',
-    'stats' => [
-        'total_orders' => '2 pesanan',
-        'total_transactions' => 'Rp 10.000.000',
-        'joined_at' => '15 Feb 2026'
+    'id'           => $customer['id'],
+    'name'         => $customer['name'],
+    'organization' => $customer['organization'] ?? '',
+    'phone'        => $customer['phone'] ?? '',
+    'email'        => $customer['email'] ?? '',
+    'address'      => $customer['address'] ?? '',
+    'stats'        => [
+        'total_orders'      => $stats['total_orders'] . ' pesanan',
+        'total_transactions' => FormatHelper::rupiah($stats['total_spent']),
+        'joined_at'         => FormatHelper::tanggal($stats['joined_at'] ?? 'now'),
     ]
 ];
+
+include __DIR__ . '/../includes/header-admin.php';
 ?>
 
 <style>
@@ -74,14 +139,14 @@ $customer = [
         </div>
         <h1 class="text-[24px] font-extrabold text-navy">Edit Customer</h1>
     </div>
-    <button type="button" class="btn-delete-top" onclick="confirmDelete(1)">
+    <button type="button" class="btn-delete-top" onclick="confirmDelete(<?php echo $id; ?>)">
         Delete
     </button>
 </div>
 
-<form action="update-customer.php" method="POST" id="edit-customer-form">
-    <?php if (function_exists('csrfField')) echo csrfField(); ?>
-    <input type="hidden" name="customer_id" value="1">
+<form action="edit-customer.php?id=<?php echo $id; ?>" method="POST" id="edit-customer-form">
+    <?php echo csrfField(); ?>
+    <input type="hidden" name="customer_id" value="<?php echo $id; ?>">
 
     <div class="edit-grid">
         <!-- Main Column (Left) -->
@@ -167,7 +232,16 @@ $customer = [
 <script>
     function confirmDelete(id) {
         if (confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
-            window.location.href = 'delete-customer.php?id=' + id;
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'edit-customer.php?action=delete&id=' + id;
+            var csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = 'csrf_token';
+            csrf.value = document.querySelector('input[name="csrf_token"]')?.value || '';
+            form.appendChild(csrf);
+            document.body.appendChild(form);
+            form.submit();
         }
     }
 </script>

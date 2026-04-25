@@ -2,20 +2,30 @@
 $pageTitle   = 'Pelanggan';
 $currentPage = 'customers';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/functions.php';
 requireAdmin();
+
+require_once __DIR__ . '/../classes/CustomerAdminService.php';
+require_once __DIR__ . '/../classes/ActivityLogService.php';
+
+$customerAdminService = new CustomerAdminService();
+$activityLogService = new ActivityLogService();
+
+// ── POST: Delete ──
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete') {
+    $deleteId = intval($_GET['id'] ?? 0);
+    if ($deleteId && verifyCsrf()) {
+        $customerAdminService->softDelete($deleteId);
+        $activityLogService->log('deleted', 'App\Models\Customer', $deleteId, 'deleted');
+        setFlash('success', 'Pelanggan berhasil dihapus.');
+    }
+    header('Location: customers.php');
+    exit;
+}
+
 include __DIR__ . '/../includes/header-admin.php';
 
-// ── Mock Data ──
-$customers = [
-    [
-        'id'           => 1,
-        'name'         => 'Customer',
-        'organization' => 'customer_organization',
-        'phone'        => '08123456789',
-        'email'        => 'customer@customer.com',
-        'orders'       => 2,
-    ],
-];
+$customers = $customerAdminService->getAll();
 ?>
 
 <style>
@@ -114,7 +124,7 @@ $customers = [
                         </span>
                     </td>
                     <td>
-                        <span class="order-badge"><?php echo $row['orders']; ?></span>
+                        <span class="order-badge"><?php echo $row['order_count']; ?></span>
                     </td>
                     <td class="text-right">
                         <div class="relative inline-block text-left dropdown-container">
@@ -159,6 +169,9 @@ $customers = [
     </div>
 </div>
 
+<!-- Hidden CSRF for JS actions -->
+<div class="hidden"><?php echo csrfField(); ?></div>
+
 <script>
     function toggleAll(master) {
         document.querySelectorAll('.cb-row').forEach(cb => cb.checked = master.checked);
@@ -189,7 +202,16 @@ $customers = [
 
     function confirmDelete(id) {
         if (confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
-            window.location.href = 'delete-customer.php?id=' + id;
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'customers.php?action=delete&id=' + id;
+            var csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = 'csrf_token';
+            csrf.value = document.querySelector('meta[name="csrf-token"]')?.content || document.querySelector('input[name="csrf_token"]')?.value || '';
+            form.appendChild(csrf);
+            document.body.appendChild(form);
+            form.submit();
         }
     }
 

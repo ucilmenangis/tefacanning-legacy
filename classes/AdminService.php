@@ -120,4 +120,102 @@ class AdminService
 
         return $product && in_array($product['sku'], $coreSkus);
     }
+
+    // ── Dashboard Methods ──
+
+    /**
+     * Get aggregate stats for admin dashboard.
+     */
+    public function getDashboardStats(): array
+    {
+        $customerCount = db_fetch("SELECT COUNT(*) AS total FROM customers WHERE deleted_at IS NULL");
+        $omset = db_fetch("SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders WHERE deleted_at IS NULL");
+        $profit = db_fetch("SELECT COALESCE(SUM(profit), 0) AS total FROM orders WHERE deleted_at IS NULL");
+        $readyCount = db_fetch("SELECT COUNT(*) AS total FROM orders WHERE status = 'ready' AND deleted_at IS NULL");
+
+        return [
+            'total_pelanggan' => (int) ($customerCount['total'] ?? 0),
+            'total_omset' => (float) ($omset['total'] ?? 0),
+            'total_profit' => (float) ($profit['total'] ?? 0),
+            'siap_ambil' => (int) ($readyCount['total'] ?? 0),
+        ];
+    }
+
+    /**
+     * Get the currently active batch (first open/processing batch).
+     */
+    public function getActiveBatch(): ?array
+    {
+        return db_fetch(
+            "SELECT id, name, event_name, event_date, status
+             FROM batches
+             WHERE status IN ('open', 'processing') AND deleted_at IS NULL
+             ORDER BY created_at DESC
+             LIMIT 1"
+        );
+    }
+
+    /**
+     * Get recent orders across all batches.
+     */
+    public function getRecentOrders(int $limit = 5): array
+    {
+        $limit = (int) $limit;
+        return db_fetch_all(
+            "SELECT o.id, o.order_number, o.status, o.total_amount, o.pickup_code, o.created_at,
+                    c.name AS customer_name, c.phone AS customer_phone,
+                    b.name AS batch_name
+             FROM orders o
+             JOIN customers c ON c.id = o.customer_id
+             JOIN batches b ON b.id = o.batch_id
+             WHERE o.deleted_at IS NULL
+             ORDER BY o.created_at DESC
+             LIMIT {$limit}"
+        );
+    }
+
+    /**
+     * Get orders in a specific batch.
+     */
+    public function getBatchOrders(int $batchId): array
+    {
+        return db_fetch_all(
+            "SELECT o.id, o.order_number, o.status, o.pickup_code, o.picked_up_at, o.created_at,
+                    c.name AS customer_name
+             FROM orders o
+             JOIN customers c ON c.id = o.customer_id
+             WHERE o.batch_id = ? AND o.deleted_at IS NULL
+             ORDER BY o.created_at DESC",
+            [$batchId]
+        );
+    }
+
+    /**
+     * Get product quantity summary for a batch.
+     */
+    public function getBatchProducts(int $batchId): array
+    {
+        return db_fetch_all(
+            "SELECT p.name AS produk, p.sku, SUM(op.quantity) AS qty, 'kaleng' AS satuan
+             FROM order_product op
+             JOIN orders o ON o.id = op.order_id
+             JOIN products p ON p.id = op.product_id
+             WHERE o.batch_id = ? AND o.deleted_at IS NULL
+             GROUP BY p.id
+             ORDER BY p.name ASC",
+            [$batchId]
+        );
+    }
+
+    /**
+     * Get count of orders in a batch.
+     */
+    public function getBatchOrderCount(int $batchId): int
+    {
+        $row = db_fetch(
+            "SELECT COUNT(*) AS total FROM orders WHERE batch_id = ? AND deleted_at IS NULL",
+            [$batchId]
+        );
+        return (int) ($row['total'] ?? 0);
+    }
 }
