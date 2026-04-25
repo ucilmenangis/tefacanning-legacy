@@ -1,25 +1,26 @@
 <?php
-$pageTitle   = 'Log Aktivitas';
-$currentPage = 'activity-log';
-require_once __DIR__ . '/../includes/auth.php';
+$pageTitle = "Log Aktivitas";
+$currentPage = "activity-log";
+require_once __DIR__ . "/../includes/auth.php";
 requireAdmin();
 requireSuperAdmin();
-include __DIR__ . '/../includes/header-admin.php';
+include __DIR__ . "/../includes/header-admin.php";
+require_once __DIR__ . "/../includes/functions.php";
 
-require_once __DIR__ . '/../classes/ActivityLogService.php';
+require_once __DIR__ . "/../classes/ActivityLogService.php";
 
 $logService = new ActivityLogService();
 
-$page = max(1, intval($_GET['page'] ?? 1));
-$perPage = max(1, intval($_GET['per_page'] ?? 10));
+$page = max(1, intval($_GET["page"] ?? 1));
+$perPage = max(1, intval($_GET["per_page"] ?? 10));
 $offset = ($page - 1) * $perPage;
 
 $filters = [];
-if (!empty($_GET['event'])) {
-    $filters['event'] = $_GET['event'];
+if (!empty($_GET["event"])) {
+  $filters["event"] = $_GET["event"];
 }
-if (!empty($_GET['subject_type'])) {
-    $filters['subject_type'] = $_GET['subject_type'];
+if (!empty($_GET["subject_type"])) {
+  $filters["subject_type"] = $_GET["subject_type"];
 }
 
 $logs_raw = $logService->getAll($perPage, $offset, $filters);
@@ -29,42 +30,49 @@ $totalPages = max(1, ceil($totalLogs / $perPage));
 // Map raw DB rows to template format
 $logs = [];
 foreach ($logs_raw as $row) {
-    $subjectShort = basename(str_replace('App\\Models\\', '', $row['subject_type'] ?? ''));
-    $eventLabel = match($row['description'] ?? '') {
-        'created' => 'Dibuat',
-        'updated' => 'Diubah',
-        'deleted' => 'Dihapus',
-        default => ucfirst($row['description'] ?? '-'),
-    };
+  $subjectShort = basename(
+    str_replace("App\\Models\\", "", $row["subject_type"] ?? ""),
+  );
+  $eventLabel = match ($row["description"] ?? "") {
+    "created" => "Dibuat",
+    "updated" => "Diubah",
+    "deleted" => "Dihapus",
+    default => ucfirst($row["description"] ?? "-"),
+  };
 
-    $logs[] = [
-        'waktu' => date('d M Y, H:i:s', strtotime($row['created_at'])),
-        'ago' => '',
-        'aktor' => $row['causer_name'] ?? 'Sistem',
-        'aksi' => $eventLabel,
-        'target_type' => $subjectShort,
-        'target_id' => $row['subject_id'] ?? '-',
-        'deskripsi' => $row['description'] ?? '-',
-    ];
+  $logs[] = [
+    "waktu" => date("d M Y, H:i:s", strtotime($row["created_at"])),
+    "ago" => "",
+    "aktor" => $row["causer_name"] ?? "Sistem",
+    "aksi" => $eventLabel,
+    "target_type" => $subjectShort,
+    "target_id" => $row["subject_id"] ?? "-",
+    "deskripsi" => $row["description"] ?? "-",
+  ];
 }
 
-function getActionClass($action) {
-    switch ($action) {
-        case 'Dibuat': return 'bg-emerald-50 text-emerald-600 border-emerald-100';
-        case 'Diubah': return 'bg-sky-50 text-sky-600 border-sky-100';
-        case 'Dihapus': return 'bg-rose-50 text-rose-600 border-rose-100';
-        default: return 'bg-gray-50 text-gray-600 border-gray-100';
-    }
+function getActionClass($action)
+{
+  switch ($action) {
+    case "Dibuat":
+      return "bg-emerald-50 text-emerald-600 border-emerald-100";
+    case "Diubah":
+      return "bg-sky-50 text-sky-600 border-sky-100";
+    case "Dihapus":
+      return "bg-rose-50 text-rose-600 border-rose-100";
+    default:
+      return "bg-gray-50 text-gray-600 border-gray-100";
+  }
 }
 ?>
 
 <style>
     .breadcrumb-item { font-size: 11px; color: #94a3b8; }
     .breadcrumb-item.active { color: #1e293b; font-weight: 500; }
-    
+
     .table-container { background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; overflow: hidden; }
     .table-toolbar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 12px 20px; border-bottom: 1px solid #f8fafc; }
-    
+
     .search-input { border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px 6px 32px; font-size: 12px; color: #374151; background: #f9fafb; outline: none; width: 180px; }
     .search-input:focus { border-color: #E02424; background: #fff; }
 
@@ -124,27 +132,41 @@ function getActionClass($action) {
                 <?php foreach ($logs as $log): ?>
                 <tr>
                     <td>
-                        <div class="font-semibold text-slate-700"><?php echo $log['waktu']; ?></div>
-                        <div class="text-[11px] text-slate-400 mt-0.5"><?php echo $log['ago']; ?></div>
+                        <div class="font-semibold text-slate-700"><?php echo $log[
+                          "waktu"
+                        ]; ?></div>
+                        <div class="text-[11px] text-slate-400 mt-0.5"><?php echo $log[
+                          "ago"
+                        ]; ?></div>
                     </td>
                     <td>
                         <div class="flex items-center gap-2">
                             <i class="ph ph-user text-slate-300 text-lg"></i>
-                            <span class="font-medium"><?php echo $log['aktor']; ?></span>
+                            <span class="font-medium"><?php echo $log[
+                              "aktor"
+                            ]; ?></span>
                         </div>
                     </td>
                     <td>
-                        <span class="badge-action <?php echo getActionClass($log['aksi']); ?>">
-                            <?php echo $log['aksi']; ?>
+                        <span class="badge-action <?php echo getActionClass(
+                          $log["aksi"],
+                        ); ?>">
+                            <?php echo $log["aksi"]; ?>
                         </span>
                     </td>
                     <td>
                         <div class="badge-target border border-slate-100 bg-slate-50 px-2 py-1 rounded-md w-fit min-w-[70px]">
-                            <span class="type uppercase tracking-wider"><?php echo $log['target_type']; ?></span>
-                            <span class="id">ID: <?php echo $log['target_id']; ?></span>
+                            <span class="type uppercase tracking-wider"><?php echo $log[
+                              "target_type"
+                            ]; ?></span>
+                            <span class="id">ID: <?php echo $log[
+                              "target_id"
+                            ]; ?></span>
                         </div>
                     </td>
-                    <td class="text-slate-500 italic"><?php echo $log['deskripsi']; ?></td>
+                    <td class="text-slate-500 italic"><?php echo $log[
+                      "deskripsi"
+                    ]; ?></td>
                     <td class="text-right">
                         <button class="text-[12px] font-bold text-slate-600 hover:text-navy flex items-center gap-1.5 ml-auto group">
                             <i class="ph ph-eye text-base text-slate-400 group-hover:text-navy"></i>
@@ -160,7 +182,10 @@ function getActionClass($action) {
     <!-- Table Footer -->
     <div class="px-6 py-4 border-t border-slate-50 flex items-center justify-between">
         <div class="text-[12px] text-slate-500">
-            Showing <?php echo $offset + 1; ?> to <?php echo min($offset + $perPage, $totalLogs); ?> of <?php echo $totalLogs; ?> results
+            Showing <?php echo $offset + 1; ?> to <?php echo min(
+   $offset + $perPage,
+   $totalLogs,
+ ); ?> of <?php echo $totalLogs; ?> results
         </div>
         <div class="flex items-center gap-3">
             <div class="flex items-center gap-2 mr-6">
@@ -182,4 +207,4 @@ function getActionClass($action) {
     </div>
 </div>
 
-<?php include __DIR__ . '/../includes/footer-admin.php'; ?>
+<?php include __DIR__ . "/../includes/footer-admin.php"; ?>

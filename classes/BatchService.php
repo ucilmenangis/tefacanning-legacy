@@ -11,6 +11,8 @@
  *   update($id, $data)   — update batch
  *   softDelete($id)      — set deleted_at
  */
+require_once __DIR__ . '/../includes/functions.php';
+
 class BatchService
 {
     /**

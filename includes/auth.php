@@ -89,10 +89,30 @@ function getAdminRole(): ?string
 
 /**
  * Check if logged-in admin is super_admin.
+ * Falls back to DB query if session role not cached.
  */
 function isSuperAdmin(): bool
 {
-    return getAdminRole() === 'super_admin';
+    $role = getAdminRole();
+    if ($role !== null) {
+        return $role === 'super_admin';
+    }
+
+    // Fallback: query DB if role not in session (e.g. logged in before AdminService fix)
+    $adminId = getAdminId();
+    if (!$adminId) {
+        return false;
+    }
+
+    require_once __DIR__ . '/functions.php';
+    require_once __DIR__ . '/../classes/AdminService.php';
+    $adminService = new AdminService();
+    $role = $adminService->getRole($adminId);
+
+    // Cache for future requests
+    $_SESSION['admin_role'] = $role;
+
+    return $role === 'super_admin';
 }
 
 /**

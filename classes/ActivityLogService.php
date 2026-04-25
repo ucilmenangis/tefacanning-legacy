@@ -11,6 +11,8 @@
  *   getAll($limit, $offset, $filters)
  *   countAll($filters)
  */
+require_once __DIR__ . '/../includes/functions.php';
+
 class ActivityLogService
 {
     /**

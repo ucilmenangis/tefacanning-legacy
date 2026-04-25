@@ -71,7 +71,7 @@ $statusMap = [
             <p class="text-[11px] text-gray-400"><?php echo htmlspecialchars(isSuperAdmin() ? 'Super Admin' : 'Teknisi'); ?></p>
         </div>
     </div>
-    <a href="../auth/logout.php" class="inline-flex items-center gap-1.5 text-[12px] text-gray-400 hover:text-navy border border-gray-200 px-3 py-1.5 rounded-lg transition-colors">
+    <a href="../auth/logout.php?type=admin" class="inline-flex items-center gap-1.5 text-[12px] text-gray-400 hover:text-navy border border-gray-200 px-3 py-1.5 rounded-lg transition-colors">
         <i class="ph ph-sign-out"></i> Sign out
     </a>
 </div>

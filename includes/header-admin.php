@@ -178,7 +178,7 @@ $isAdminSuperAdmin = isSuperAdmin();
                     </div>
                     <div class="nav-sub <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
                         id="grp-settings">
-                        <a href="users.php"
+                        <a href="pengaturan.php"
                             class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'users' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Pengguna
                             <span class="ml-auto bg-primary text-white text-[10px] font-bold py-[1px] px-1.5 rounded-full min-w-[18px] text-center">2</span>

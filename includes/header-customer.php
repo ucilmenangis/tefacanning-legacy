@@ -198,7 +198,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
                     text-white text-[11px] font-bold select-none">
                 <?php echo $customerInitial; ?>
             </div>
-            <a href="<?php echo $basePath; ?>/logout.php"
+            <a href="../auth/logout.php?type=customer"
                 class="text-[11px] text-gray-400 hover:text-[#E02424] transition-colors" title="Logout">
                 <i class="ph-bold ph-sign-out text-base"></i>
             </a>

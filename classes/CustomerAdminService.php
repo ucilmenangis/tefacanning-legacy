@@ -10,6 +10,8 @@
  *   update($id, $data)   — update customer profile
  *   softDelete($id)      — soft delete customer
  */
+require_once __DIR__ . '/../includes/functions.php';
+
 class CustomerAdminService
 {
     /**
