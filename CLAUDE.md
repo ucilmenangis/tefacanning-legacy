@@ -199,6 +199,12 @@ tefa-canning-legacy/
 │   ├── js/                  ← Empty
 │   └── images/              ← Static images (8 files)
 ├── database/                ← Empty — SQL dump to be added
+├── docs/                    ← Internal documentation
+│   ├── 01-query-helpers.md
+│   ├── 02-session-management.md
+│   ├── 03-layout-system.md
+│   ├── 05-flash-message.md
+│   └── 06-rbac-role-system.md
 ├── classes/                 ← OOP business logic
 │   ├── FormatHelper.php     ← Static: rupiah, tanggal, status labels
 │   ├── OrderService.php     ← Order CRUD (customer-side)
