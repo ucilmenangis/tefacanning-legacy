@@ -15,6 +15,33 @@ $batch_orders = $activeBatch ? $adminService->getBatchOrders($activeBatch['id'])
 $batch_products = $activeBatch ? $adminService->getBatchProducts($activeBatch['id']) : [];
 $recent_orders = $adminService->getRecentOrders(5);
 
+// Monthly data for sparkline charts (last 6 months)
+$sparkOrders = db_fetch_all(
+    "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
+     FROM orders WHERE deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+     GROUP BY month ORDER BY month ASC"
+);
+$sparkOmset = db_fetch_all(
+    "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COALESCE(SUM(total_amount), 0) as amount
+     FROM orders WHERE deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+     GROUP BY month ORDER BY month ASC"
+);
+$sparkReady = db_fetch_all(
+    "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
+     FROM orders WHERE status = 'ready' AND deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+     GROUP BY month ORDER BY month ASC"
+);
+$sparkCustomers = db_fetch_all(
+    "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
+     FROM customers WHERE deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+     GROUP BY month ORDER BY month ASC"
+);
+$sparkProfit = db_fetch_all(
+    "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COALESCE(SUM(profit), 0) as amount
+     FROM orders WHERE deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+     GROUP BY month ORDER BY month ASC"
+);
+
 $stats = [
     'batch_aktif'   => ['label' => 'Batch Aktif',    'value' => $activeBatch ? $activeBatch['name'] : 'Tidak ada', 'sub' => $activeBatch ? FormatHelper::tanggal($activeBatch['event_date']) : 'Tidak ada batch aktif', 'color' => 'red'],
     'order_batch'   => ['label' => 'Order Batch Ini','value' => $activeBatch ? (string) $adminService->getBatchOrderCount($activeBatch['id']) : '0', 'sub' => 'Total pesanan di batch aktif', 'color' => 'blue'],
@@ -35,7 +62,6 @@ $statusMap = [
 <style>
 /* ── Stat Cards ── */
 .stat-card { background:#fff; border:1px solid #f1f5f9; border-radius:12px; padding:20px 24px; position:relative; overflow:hidden; }
-.stat-wave { position:absolute; bottom:0; left:0; right:0; height:36px; opacity:.25; }
 
 /* ── Badges ── */
 .badge-processing { background:#eff6ff; color:#2563eb; border:1px solid #dbeafe; }
@@ -92,10 +118,7 @@ $statusMap = [
         </p>
         <p class="text-[22px] font-extrabold text-navy mb-0.5"><?php echo $s['value']; ?></p>
         <p class="text-[11px]" style="color:<?php echo $wc;?>"><?php echo $s['sub']; ?></p>
-        <!-- fake sparkline wave -->
-        <svg class="stat-wave" viewBox="0 0 300 36" preserveAspectRatio="none">
-            <path d="M0,18 C50,5 100,30 150,15 C200,0 250,28 300,18" stroke="<?php echo $wc;?>" stroke-width="2" fill="none"/>
-        </svg>
+        <div style="height:32px; margin-top:8px;"><canvas id="spark-<?php echo $key; ?>"></canvas></div>
     </div>
     <?php endforeach; ?>
 </div>
@@ -115,9 +138,7 @@ $statusMap = [
         </p>
         <p class="text-[22px] font-extrabold text-navy mb-0.5"><?php echo $s['value']; ?></p>
         <p class="text-[11px]" style="color:<?php echo $wc;?>"><?php echo $s['sub']; ?></p>
-        <svg class="stat-wave" viewBox="0 0 300 36" preserveAspectRatio="none">
-            <path d="M0,22 C60,8 120,28 180,12 C240,0 270,24 300,16" stroke="<?php echo $wc;?>" stroke-width="2" fill="none"/>
-        </svg>
+        <div style="height:32px; margin-top:8px;"><canvas id="spark-<?php echo $key; ?>"></canvas></div>
     </div>
     <?php endforeach; ?>
 </div>
@@ -231,5 +252,50 @@ $statusMap = [
         </tbody>
     </table>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+function sparkline(id, data, color) {
+    if (!data.length) data = [0];
+    new Chart(document.getElementById(id), {
+        type: 'line',
+        data: {
+            labels: data.map(function() { return ''; }),
+            datasets: [{
+                data: data,
+                borderColor: color,
+                borderWidth: 2,
+                fill: true,
+                backgroundColor: color + '15',
+                pointRadius: 0,
+                tension: 0.4,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            scales: { x: { display: false }, y: { display: false } },
+            elements: { line: { borderCapStyle: 'round' } }
+        }
+    });
+}
+<?php
+// Build sparkline data arrays from monthly queries
+$sparkOrdersData = array_map('intval', array_column($sparkOrders, 'total'));
+$sparkOmsetData = array_map('floatval', array_column($sparkOmset, 'amount'));
+$sparkReadyData = array_map('intval', array_column($sparkReady, 'total'));
+$sparkCustomersData = array_map('intval', array_column($sparkCustomers, 'total'));
+$sparkProfitData = array_map('floatval', array_column($sparkProfit, 'amount'));
+?>
+// Row 1
+sparkline('spark-batch_aktif', <?php echo json_encode($sparkOrdersData); ?>, '#E02424');
+sparkline('spark-order_batch', <?php echo json_encode($sparkOrdersData); ?>, '#2563eb');
+sparkline('spark-siap_ambil', <?php echo json_encode($sparkReadyData); ?>, '#0d9488');
+// Row 2
+sparkline('spark-total_pelanggan', <?php echo json_encode($sparkCustomersData); ?>, '#059669');
+sparkline('spark-total_omset', <?php echo json_encode($sparkOmsetData); ?>, '#4f46e5');
+sparkline('spark-total_profit', <?php echo json_encode($sparkProfitData); ?>, '#E02424');
+</script>
 
 <?php include __DIR__ . '/../includes/footer-admin.php'; ?>
