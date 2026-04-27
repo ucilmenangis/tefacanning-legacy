@@ -45,7 +45,7 @@ $products = $productService->getAll();
     border:none; cursor:pointer; transition:background .15s; text-decoration:none; }
 .btn-primary:hover { background:#9B1C1C; }
 
-.table-wrap    { background:#fff; border:1px solid #f1f5f9; border-radius:12px; overflow:hidden; }
+.table-wrap    { background:#fff; border:1px solid #f1f5f9; border-radius:12px; overflow:visible; }
 .table-toolbar { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 16px; border-bottom:1px solid #f8fafc; }
 .mini-search { border:1px solid #e5e7eb; border-radius:7px; padding:6px 10px 6px 30px; font-size:12px; outline:none; background:#f9fafb; width:200px; transition:border-color .15s; }
 .mini-search:focus { border-color:#E02424; background:#fff; }
