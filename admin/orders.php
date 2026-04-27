@@ -157,9 +157,9 @@ $statusMap = [
                     <td class="text-primary font-semibold text-[12px]"><?php echo FormatHelper::tanggal($row['created_at']); ?></td>
                     <td class="text-right">
                         <div class="flex items-center gap-1 justify-end">
-                            <button class="action-pill text-gray-400 hover:bg-red-50 hover:text-primary" title="Download PDF">
+                            <a href="../api/download-pdf.php?id=<?php echo $row['id']; ?>" class="action-pill text-gray-400 hover:bg-red-50 hover:text-primary" title="Download PDF">
                                 <i class="ph ph-file-pdf text-base"></i> PDF
-                            </button>
+                            </a>
                             <div class="relative inline-block text-left dropdown-container">
                                 <button type="button" class="icon-btn-sm dropdown-trigger" title="Opsi lainnya" onclick="toggleDropdown(event, this)">
                                     <i class="ph ph-dots-three-vertical text-sm pointer-events-none"></i>
