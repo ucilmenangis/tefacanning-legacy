@@ -58,7 +58,7 @@ class AdminService
    */
   public function getById(int $userId): ?array
   {
-    return db_fetch("SELECT id, name, email, phone FROM users WHERE id = ?", [
+    return db_fetch("SELECT id, name, email FROM users WHERE id = ?", [
       $userId,
     ]);
   }
@@ -69,7 +69,7 @@ class AdminService
   public function getAll(): array
   {
     return db_fetch_all(
-      "SELECT u.id, u.name, u.email, u.phone, r.name as role
+      "SELECT u.id, u.name, u.email, u.created_at, r.name as role
              FROM users u
              LEFT JOIN model_has_roles mhr ON mhr.model_id = u.id AND mhr.model_type = 'App\\\\Models\\\\User'
              LEFT JOIN roles r ON mhr.role_id = r.id
