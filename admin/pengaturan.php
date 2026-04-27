@@ -19,7 +19,6 @@ foreach ($users_raw as $u) {
         'id' => $u['id'],
         'name' => $u['name'],
         'email' => $u['email'],
-        'phone' => $u['phone'],
         'role' => $roleLabel,
         'created_at' => FormatHelper::tanggal($u['created_at'] ?? 'now'),
     ];
