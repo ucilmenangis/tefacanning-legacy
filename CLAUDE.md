@@ -128,6 +128,9 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `admin/edit-order.php` — edit status/items, delete (inline POST + activity log)
 - `admin/create-product.php` — new product form (RBAC price protection)
 - `admin/create-batch.php` — new batch form
+- `admin/create-order.php` — new order form (select customer, batch, products)
+- `admin/view-order.php` — read-only order detail page
+- `admin/edit-product.php` — edit product form (RBAC price protection)
 - `admin/pengaturan.php` — user list from DB (super_admin only)
 - `admin/activity-log.php` — real logs from activity_log table (super_admin only)
 
@@ -183,8 +186,11 @@ tefa-canning-legacy/
 │   ├── pengaturan.php
 │   ├── create-product.php
 │   ├── create-batch.php
+│   ├── create-order.php
+│   ├── view-order.php
 │   ├── edit-customer.php
-│   └── edit-order.php
+│   ├── edit-order.php
+│   └── edit-product.php
 ├── customer/                ← Customer pages (UI done, backend pending)
 │   ├── dashboard.php
 │   ├── preorder.php
@@ -215,7 +221,8 @@ tefa-canning-legacy/
 │   ├── ProductService.php   ← Product CRUD
 │   ├── BatchService.php     ← Batch CRUD
 │   ├── CustomerAdminService.php ← Customer admin CRUD
-│   └── ActivityLogService.php   ← Activity log read/write
+│   ├── ActivityLogService.php   ← Activity log read/write
+│   └── PdfService.php           ← PDF generation (DomPDF)
 │   └── PdfService.php           ← PDF generation (DomPDF)
 ├── services/                ← To be created (Fonnte)
 └── views/
