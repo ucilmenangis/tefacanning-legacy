@@ -88,14 +88,14 @@ $isAdminSuperAdmin = isSuperAdmin();
 
                 <!-- Dashboard -->
                 <a href="dashboard.php" id="nav-dashboard"
-                    class="flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'dashboard' ? '!text-primary bg-primary/10 [&_i]:text-primary' : ''; ?>">
+                    class="flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none no-underline hover:bg-primary/10 hover:text-primary <?php echo $currentPage === 'dashboard' ? '!text-primary bg-primary/10 [&_i]:text-primary' : ''; ?>">
                     <i class="ph-bold ph-squares-four text-base"></i>
                     Dashboard
                 </a>
 
                 <!-- Transaksi -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary open:!text-white <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-transaksi', this)">
                         <i class="ph-bold ph-receipt text-base"></i>
                         Transaksi
@@ -104,7 +104,7 @@ $isAdminSuperAdmin = isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
                         id="grp-transaksi">
                         <a href="orders.php"
-                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'orders' ? '!text-primary' : ''; ?>">
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-primary/10 hover:text-primary <?php echo $currentPage === 'orders' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Pesanan
                         </a>
                     </div>
@@ -112,7 +112,7 @@ $isAdminSuperAdmin = isSuperAdmin();
 
                 <!-- Master Data -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary open:!text-white <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-master', this)">
                         <i class="ph-bold ph-database text-base"></i>
                         Master Data
@@ -121,11 +121,11 @@ $isAdminSuperAdmin = isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
                         id="grp-master">
                         <a href="customers.php"
-                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'customers' ? '!text-primary' : ''; ?>">
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-primary/10 hover:text-primary <?php echo $currentPage === 'customers' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Pelanggan
                         </a>
                         <a href="products.php"
-                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'products' ? '!text-primary' : ''; ?>">
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-primary/10 hover:text-primary <?php echo $currentPage === 'products' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Produk
                             <span class="ml-auto bg-primary text-white text-[10px] font-bold py-[1px] px-1.5 rounded-full min-w-[18px] text-center">3</span>
                         </a>
@@ -134,7 +134,7 @@ $isAdminSuperAdmin = isSuperAdmin();
 
                 <!-- Manajemen Produksi -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary open:!text-white <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-produksi', this)">
                         <i class="ph-bold ph-factory text-base"></i>
                         Manajemen Produksi
@@ -143,7 +143,7 @@ $isAdminSuperAdmin = isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
                         id="grp-produksi">
                         <a href="batches.php"
-                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'batches' ? '!text-primary' : ''; ?>">
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-primary/10 hover:text-primary <?php echo $currentPage === 'batches' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Batches
                             <span class="ml-auto bg-primary text-white text-[10px] font-bold py-[1px] px-1.5 rounded-full min-w-[18px] text-center">1</span>
                         </a>
@@ -153,7 +153,7 @@ $isAdminSuperAdmin = isSuperAdmin();
                 <?php if ($isAdminSuperAdmin): ?>
                 <!-- Audit & Log -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary open:!text-white <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-audit', this)">
                         <i class="ph-bold ph-shield-check text-base"></i>
                         Audit & Log
@@ -162,7 +162,7 @@ $isAdminSuperAdmin = isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
                         id="grp-audit">
                         <a href="activity-log.php"
-                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'activity-log' ? '!text-primary' : ''; ?>">
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-primary/10 hover:text-primary <?php echo $currentPage === 'activity-log' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Log Aktivitas
                         </a>
                     </div>
@@ -170,7 +170,7 @@ $isAdminSuperAdmin = isSuperAdmin();
 
                 <!-- Pengaturan -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-white/[.08] hover:text-white open:!text-white <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary open:!text-white <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-settings', this)">
                         <i class="ph-bold ph-gear text-base"></i>
                         Pengaturan
@@ -179,7 +179,7 @@ $isAdminSuperAdmin = isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
                         id="grp-settings">
                         <a href="pengaturan.php"
-                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-white/[.08] hover:text-white <?php echo $currentPage === 'users' ? '!text-primary' : ''; ?>">
+                            class="flex items-center gap-2 py-1.5 px-3 pl-9 rounded-md text-[12.5px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:bg-primary/10 hover:text-primary <?php echo $currentPage === 'users' ? '!text-primary' : ''; ?>">
                             <span class="w-[5px] h-[5px] rounded-full bg-current shrink-0"></span> Pengguna
                             <span class="ml-auto bg-primary text-white text-[10px] font-bold py-[1px] px-1.5 rounded-full min-w-[18px] text-center">2</span>
                         </a>
