@@ -118,8 +118,11 @@ include __DIR__ . '/../includes/header-customer.php';
                         <?php echo FormatHelper::tanggal($order['created_at']); ?>
                     </td>
                     <td class="px-6 py-5 text-right whitespace-nowrap">
-                        <?php if ($order['status'] === 'pending'): ?>
                         <div class="flex items-center gap-4 justify-end">
+                            <a href="../api/download-pdf.php?id=<?php echo $order['id']; ?>" class="action-link text-emerald-600 hover:text-emerald-700" title="Download PDF">
+                                <i class="ph ph-file-pdf text-base"></i> PDF
+                            </a>
+                            <?php if ($order['status'] === 'pending'): ?>
                             <a href="edit-order.php?id=<?php echo $order['id']; ?>" class="action-link text-[#d97706] hover:text-amber-700">
                                 <i class="ph ph-note-pencil text-base"></i> Edit
                             </a>
@@ -131,8 +134,8 @@ include __DIR__ . '/../includes/header-customer.php';
                                     <i class="ph ph-trash text-base"></i> Hapus
                                 </button>
                             </form>
+                            <?php endif; ?>
                         </div>
-                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

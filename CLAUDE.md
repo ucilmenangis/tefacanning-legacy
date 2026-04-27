@@ -17,8 +17,7 @@ TEFA Canning SIP Legacy — PHP Native version of the TEFA Canning Transaction &
 - **PDO MySQL** — Raw queries, no ORM
 - **Tailwind CSS** — Loaded via CDN (`cdn.tailwindcss.com`) with inline config. No build step.
 - **MariaDB** — Shared database with Laravel version
-- **Composer** — Only `vlucas/phpdotenv` (env loader)
-- **DomPDF** — PDF report generation (to be added via composer)
+- **Composer** — `vlucas/phpdotenv` (env loader), `dompdf/dompdf` (PDF generation)
 
 ## Commands
 
@@ -117,6 +116,7 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `classes/BatchService.php` — batch CRUD: `getAll()`, `getById()`, `getOpenBatches()`, `create()`, `update()`, `softDelete()`
 - `classes/CustomerAdminService.php` — customer admin CRUD: `getAll()`, `getById()`, `getStats()`, `update()`, `softDelete()`
 - `classes/ActivityLogService.php` — activity log: `log()`, `getAll()`, `countAll()`
+- `classes/PdfService.php` — PDF generation: `generateOrderPdf()`, `download()`
 
 **Priority 4 (Admin Panel): DONE (wired to DB)**
 - `admin/dashboard.php` — stats, active batch summary, recent orders (all from DB)
@@ -131,7 +131,7 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `admin/pengaturan.php` — user list from DB (super_admin only)
 - `admin/activity-log.php` — real logs from activity_log table (super_admin only)
 
-**Not yet built:** services (Fonnte, PDF), PDF download per order (5.6).
+**Not yet built:** FonnteService (WhatsApp notifications).
 
 ## Refactoring Plan (After All Features Complete)
 
@@ -171,6 +171,8 @@ tefa-canning-legacy/
 │   ├── header-customer.php  ← Customer layout header
 │   ├── footer-admin.php     ← Admin layout footer
 │   └── footer-customer.php  ← Customer layout footer
+├── api/
+│   └── download-pdf.php     ← PDF download endpoint (dual auth)
 ├── admin/                   ← Admin panel (all wired to DB)
 │   ├── dashboard.php
 │   ├── products.php
@@ -214,8 +216,11 @@ tefa-canning-legacy/
 │   ├── BatchService.php     ← Batch CRUD
 │   ├── CustomerAdminService.php ← Customer admin CRUD
 │   └── ActivityLogService.php   ← Activity log read/write
-├── services/                ← To be created (Fonnte, PDF)
-└── views/                   ← To be created (layouts, components)
+│   └── PdfService.php           ← PDF generation (DomPDF)
+├── services/                ← To be created (Fonnte)
+└── views/
+    └── pdf/
+        └── order-report.php ← PDF template for order reports
 ```
 
 ## Architecture Decisions
@@ -342,14 +347,14 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 5.3 | Order history data + edit/delete | Ivan | [x] |
 | 5.4 | Edit order (pending only, batch locked) | Ivan | [x] |
 | 5.5 | Profile update + active order lock | Ivan | [x] |
-| 5.6 | Download PDF per order | Ivan | [ ] |
+| 5.6 | Download PDF per order | Ivan | [x] |
 
 #### Priority 6 — Services
 
 | Phase | Description | Owner | Status |
 |-------|-------------|-------|--------|
 | 6.1 | FonnteService (3 WhatsApp triggers) | Ivan | [ ] |
-| 6.2 | PDF generation (DomPDF) | Ivan | [ ] |
+| 6.2 | PDF generation (DomPDF) | Ivan | [x] |
 
 #### Priority 7 — Security
 

@@ -228,9 +228,14 @@ include __DIR__ . '/../includes/header-admin.php';
         </div>
         <h1 class="text-[24px] font-extrabold text-navy">Edit <?php echo $order['number']; ?></h1>
     </div>
-    <button type="button" class="btn-delete-top" onclick="confirmDelete(<?php echo $id; ?>)">
-        Delete
-    </button>
+    <div class="flex items-center gap-3">
+        <a href="../api/download-pdf.php?id=<?php echo $id; ?>" class="btn-cancel" style="background:#059669;color:#fff;border-color:#059669;">
+            <i class="ph ph-file-pdf"></i> Download PDF
+        </a>
+        <button type="button" class="btn-delete-top" onclick="confirmDelete(<?php echo $id; ?>)">
+            Delete
+        </button>
+    </div>
 </div>
 
 <form action="edit-order.php?id=<?php echo $id; ?>" method="POST" id="edit-order-form">
