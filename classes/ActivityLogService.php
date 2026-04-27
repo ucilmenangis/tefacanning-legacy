@@ -54,8 +54,8 @@ class ActivityLogService
         }
 
         $whereClause = implode(' AND ', $where);
-        $params[] = $limit;
-        $params[] = $offset;
+        $limit = (int) $limit;
+        $offset = (int) $offset;
 
         return db_fetch_all(
             "SELECT al.*, u.name AS causer_name
@@ -63,7 +63,7 @@ class ActivityLogService
              LEFT JOIN users u ON u.id = al.causer_id AND al.causer_type = 'App\\\\Models\\\\User'
              WHERE {$whereClause}
              ORDER BY al.created_at DESC
-             LIMIT ? OFFSET ?",
+             LIMIT {$limit} OFFSET {$offset}",
             $params
         );
     }
