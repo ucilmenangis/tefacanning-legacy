@@ -125,7 +125,6 @@ function getActionClass($action)
                     <th>Aksi</th>
                     <th>Target</th>
                     <th>Deskripsi</th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -167,12 +166,6 @@ function getActionClass($action)
                     <td class="text-slate-500 italic"><?php echo $log[
                       "deskripsi"
                     ]; ?></td>
-                    <td class="text-right">
-                        <button class="text-[12px] font-bold text-slate-600 hover:text-navy flex items-center gap-1.5 ml-auto group">
-                            <i class="ph ph-eye text-base text-slate-400 group-hover:text-navy"></i>
-                            View
-                        </button>
-                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
