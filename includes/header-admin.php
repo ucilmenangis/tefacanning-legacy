@@ -95,7 +95,7 @@ $isAdminSuperAdmin = isSuperAdmin();
 
                 <!-- Transaksi -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary open:!text-white <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-transaksi', this)">
                         <i class="ph-bold ph-receipt text-base"></i>
                         Transaksi
@@ -112,7 +112,7 @@ $isAdminSuperAdmin = isSuperAdmin();
 
                 <!-- Master Data -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary open:!text-white <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-master', this)">
                         <i class="ph-bold ph-database text-base"></i>
                         Master Data
@@ -134,7 +134,7 @@ $isAdminSuperAdmin = isSuperAdmin();
 
                 <!-- Manajemen Produksi -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary open:!text-white <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-produksi', this)">
                         <i class="ph-bold ph-factory text-base"></i>
                         Manajemen Produksi
@@ -153,7 +153,7 @@ $isAdminSuperAdmin = isSuperAdmin();
                 <?php if ($isAdminSuperAdmin): ?>
                 <!-- Audit & Log -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary open:!text-white <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-audit', this)">
                         <i class="ph-bold ph-shield-check text-base"></i>
                         Audit & Log
@@ -170,7 +170,7 @@ $isAdminSuperAdmin = isSuperAdmin();
 
                 <!-- Pengaturan -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary open:!text-white <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[9px] py-[7px] px-3 rounded-[7px] text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 select-none hover:bg-primary/10 hover:text-primary <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-settings', this)">
                         <i class="ph-bold ph-gear text-base"></i>
                         Pengaturan
