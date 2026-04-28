@@ -60,102 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <style>
-        body { background-color: #f1f5f9; }
-
-        .auth-card {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.06);
-            border: 1px solid rgba(0,0,0,0.04);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #1e293b;
-            background: #ffffff;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-        }
-        .form-input:focus {
-            border-color: #E02424;
-            box-shadow: 0 0 0 3px rgba(224,36,36,0.08);
-        }
-        .form-input::placeholder { color: #94a3b8; }
-
-        .btn-primary {
-            width: 100%;
-            padding: 11px 20px;
-            background: #E02424;
-            color: #ffffff;
-            font-weight: 600;
-            font-size: 14px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-        .btn-primary:hover {
-            background: #c81e1e;
-            box-shadow: 0 4px 12px rgba(224,36,36,0.25);
-        }
-        .btn-primary:active { transform: translateY(1px); }
-
-        .form-label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 6px;
-        }
-
-        .alert-error {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .alert-success {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            color: #E02424;
-            font-size: 13px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: color 0.15s;
-        }
-        .back-link:hover { color: #9B1C1C; text-decoration: underline; }
-    </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex items-center justify-center p-4">
+<body class="font-sans antialiased min-h-screen flex items-center justify-center p-4 bg-[#f8f9fb]">
 
     <div class="w-full max-w-[420px]">
-        <div class="auth-card px-10 py-10">
+        <div class="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06),0_4px_24px_rgba(0,0,0,0.06)] border border-black/[0.04] px-10 py-10">
 
             <!-- Logo -->
             <div class="flex flex-col items-center mb-6">
@@ -171,23 +80,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Title -->
             <h1 class="text-[22px] font-bold text-navy text-center mb-2">Forgot password?</h1>
             <div class="text-center mb-6">
-                <a href="login-customer.php" class="back-link">
-                    <i class="ph ph-arrow-left" style="font-size:13px;"></i>
+                <a href="login-customer.php" class="inline-flex items-center gap-2 text-gray-400 hover:text-primary transition-colors text-[13px]">
+                    <i class="ph ph-arrow-left text-[13px]"></i>
                     back to login
                 </a>
             </div>
 
             <!-- Alerts -->
             <?php if ($error): ?>
-            <div class="alert-error mb-5">
-                <i class="ph-fill ph-warning-circle text-red-500" style="font-size:16px; flex-shrink:0;"></i>
+            <div class="bg-red-50 border border-red-200 text-red-600 text-[12px] rounded-lg px-4 py-3 mb-5 flex items-center gap-2">
+                <i class="ph-fill ph-warning-circle text-red-500 text-[16px] shrink-0"></i>
                 <?php echo htmlspecialchars($error); ?>
             </div>
             <?php endif; ?>
 
             <?php if ($success): ?>
-            <div class="alert-success mb-5">
-                <i class="ph-fill ph-check-circle text-green-600" style="font-size:16px; flex-shrink:0;"></i>
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-600 text-[12px] rounded-lg px-4 py-3 mb-5 flex items-center gap-2">
+                <i class="ph-fill ph-check-circle text-green-600 text-[16px] shrink-0"></i>
                 <?php echo $success; ?>
             </div>
             <?php endif; ?>
@@ -198,14 +107,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <!-- Email -->
                 <div class="mb-5">
-                    <label for="email" class="form-label">
+                    <label for="email" class="text-[12px] font-semibold text-gray-500 mb-1.5 block">
                         Email address<span class="text-primary ml-0.5">*</span>
                     </label>
                     <input
                         type="email"
                         id="email"
                         name="email"
-                        class="form-input"
+                        class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[13px] text-gray-700 bg-gray-50 outline-none transition-all focus:border-primary focus:ring-[3px] focus:ring-primary/10 focus:bg-white placeholder:text-gray-400"
                         placeholder=""
                         value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
                         required
@@ -214,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <!-- Submit -->
-                <button type="submit" id="send-btn" class="btn-primary">
+                <button type="submit" id="send-btn" class="w-full bg-primary text-white font-bold py-3 rounded-lg transition-all hover:bg-dark active:scale-[0.98]">
                     Send email
                 </button>
             </form>

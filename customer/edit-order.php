@@ -101,35 +101,14 @@ include __DIR__ . '/../includes/header-customer.php';
 ?>
 
 <style>
-    .form-select, .form-input {
-        width: 100%; border: 1px solid #e2e8f0; border-radius: 8px;
-        padding: 9px 12px; font-size: 13px; font-family: inherit;
-        color: #374151; background: #fff; outline: none;
-        transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .form-select:focus, .form-input:focus {
-        border-color: #E02424; box-shadow: 0 0 0 3px rgba(224,36,36,.08);
-    }
-    .form-select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
-        background-repeat: no-repeat; background-position: right 12px center;
-        background-size: 14px; padding-right: 36px; cursor: pointer;
-    }
-    .section-card { background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
-    .product-row { background: #fafafa; border: 1px solid #f1f5f9; border-radius: 10px; padding: 12px 14px; transition: outline 0.1s; }
-    .product-row.selected { outline: 2px solid #E02424; }
-    .icon-btn { width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; color: #9ca3af; cursor: pointer; }
-    .icon-btn:hover { background: #f1f5f9; }
-    .icon-btn.danger:hover { background: #fef2f2; color: #E02424; }
-    .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 8px; padding: 10px 14px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
-    .badge-amber { background: #fff7ed; color: #d97706; border: 1px solid #ffedd5; }
+    /* KEEP — JS-toggled selected state */
+    .product-row.selected { outline: 2px solid #E02424; outline-offset: -2px; background-color: #fef2f2; }
 </style>
 
 <?php echo renderFlash(); ?>
 
 <?php if (!empty($formErrors)): ?>
-<div class="alert-error mb-5">
+<div class="bg-red-50 border border-red-200 text-red-800 rounded-lg px-3.5 py-2.5 text-[13px] flex items-center gap-2 mb-5">
     <i class="ph-fill ph-warning-circle text-red-500" style="font-size:16px; flex-shrink:0;"></i>
     <ul class="list-disc ml-3">
         <?php foreach ($formErrors as $err): ?>
@@ -155,7 +134,7 @@ include __DIR__ . '/../includes/header-customer.php';
     <div id="form-items-container"></div>
 </form>
 
-<div class="section-card mb-5">
+<div class="bg-white border border-gray-100 rounded-xl shadow-sm mb-5">
     <div class="flex items-center gap-2 px-5 py-4 border-b border-gray-50">
         <i class="ph-bold ph-storefront text-gray-300 text-base"></i>
         <div>
@@ -166,7 +145,7 @@ include __DIR__ . '/../includes/header-customer.php';
 
     <div class="p-5">
         <div class="flex items-center gap-1 mb-3">
-            <button type="button" class="icon-btn danger" title="Hapus baris" onclick="deleteSelected()">
+            <button type="button" class="w-7 h-7 rounded-md inline-flex items-center justify-center text-gray-400 hover:bg-red-50 hover:text-primary transition-colors cursor-pointer" title="Hapus baris" onclick="deleteSelected()">
                 <i class="ph-bold ph-trash text-xs"></i>
             </button>
         </div>
@@ -181,7 +160,7 @@ include __DIR__ . '/../includes/header-customer.php';
             <?php foreach ($order['items'] as $item): ?>
             <div class="product-row grid grid-cols-12 gap-3 items-start" onclick="selectRow(this)">
                 <div class="col-span-5">
-                    <select class="form-select prod-select" onchange="recalc(this)">
+                    <select class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none appearance-none cursor-pointer focus:border-primary prod-select" style="background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px" onchange="recalc(this)">
                         <option value="" disabled>Select an option</option>
                         <?php foreach ($products as $p): ?>
                         <option value="<?php echo $p['id']; ?>" data-price="<?php echo $p['price']; ?>"
@@ -194,7 +173,7 @@ include __DIR__ . '/../includes/header-customer.php';
                 <div class="col-span-4">
                     <div class="relative">
                         <input type="number" value="<?php echo $item['quantity']; ?>" min="100" max="3000"
-                               class="form-input prod-qty pr-14" oninput="recalc(this)">
+                               class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none focus:border-primary prod-qty pr-14" oninput="recalc(this)">
                         <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-gray-400 pointer-events-none">kaleng</span>
                     </div>
                     <p class="text-[10px] text-gray-400 mt-0.5 ml-1">Min: 100, Max: 3000</p>
@@ -202,7 +181,7 @@ include __DIR__ . '/../includes/header-customer.php';
                 <div class="col-span-3">
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 pointer-events-none">Rp</span>
-                        <input type="text" class="form-input prod-sub pl-8" readonly
+                        <input type="text" class="w-full border border-gray-200 rounded-lg py-2 px-3 pl-8 text-[13px] text-gray-700 bg-white outline-none prod-sub" readonly
                                value="<?php echo number_format($item['subtotal'], 0, ',', '.'); ?>">
                     </div>
                 </div>
@@ -260,7 +239,12 @@ include __DIR__ . '/../includes/header-customer.php';
         var col5 = document.createElement('div');
         col5.className = 'col-span-5';
         var sel = document.createElement('select');
-        sel.className = 'form-select prod-select';
+        sel.className = 'w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none appearance-none cursor-pointer focus:border-primary prod-select';
+        sel.style.backgroundImage = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 16\'%3E%3Cpath fill=\'none\' stroke=\'%239ca3af\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M2 5l6 6 6-6\'/%3E%3C/svg%3E")';
+        sel.style.backgroundRepeat = 'no-repeat';
+        sel.style.backgroundPosition = 'right 12px center';
+        sel.style.backgroundSize = '14px';
+        sel.style.paddingRight = '36px';
         sel.onchange = function() { recalc(sel); };
         var defOpt = document.createElement('option');
         defOpt.value = ''; defOpt.disabled = true; defOpt.selected = true;
@@ -281,7 +265,7 @@ include __DIR__ . '/../includes/header-customer.php';
         qtyWrap.className = 'relative';
         var qtyInput = document.createElement('input');
         qtyInput.type = 'number'; qtyInput.value = '100'; qtyInput.min = '100'; qtyInput.max = '3000';
-        qtyInput.className = 'form-input prod-qty pr-14';
+        qtyInput.className = 'w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none focus:border-primary prod-qty pr-14';
         qtyInput.oninput = function() { recalc(qtyInput); };
         var qtySpan = document.createElement('span');
         qtySpan.className = 'absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-gray-400 pointer-events-none';
@@ -303,7 +287,7 @@ include __DIR__ . '/../includes/header-customer.php';
         rpSpan.className = 'absolute left-3 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 pointer-events-none';
         rpSpan.textContent = 'Rp';
         var subInput = document.createElement('input');
-        subInput.type = 'text'; subInput.className = 'form-input prod-sub pl-8';
+        subInput.type = 'text'; subInput.className = 'w-full border border-gray-200 rounded-lg py-2 px-3 pl-8 text-[13px] text-gray-700 bg-white outline-none prod-sub';
         subInput.readOnly = true; subInput.value = '0';
         subWrap.appendChild(rpSpan);
         subWrap.appendChild(subInput);

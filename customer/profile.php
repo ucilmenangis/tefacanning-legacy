@@ -72,42 +72,7 @@ $currentPage = 'profile';
 include __DIR__ . '/../includes/header-customer.php';
 ?>
 
-<style>
-    .form-card {
-        background: white; border-radius: 12px; border: 1px solid #f1f5f9;
-        box-shadow: 0 1px 3px rgba(0,0,0,.04); margin-bottom: 24px;
-    }
-    .input-group { margin-bottom: 16px; }
-    .label-text {
-        display: block; font-size: 13px; font-weight: 600;
-        color: #1a202c; margin-bottom: 6px;
-    }
-    .input-box {
-        width: 100%; background: white; border: 1px solid #e2e8f0; border-radius: 8px;
-        padding: 10px 12px 10px 42px; font-size: 13px; color: #374151;
-        transition: border-color 0.15s, box-shadow 0.15s; outline: none;
-        font-family: inherit;
-    }
-    .input-box:focus {
-        border-color: #E02424; box-shadow: 0 0 0 3px rgba(224,36,36,.08);
-    }
-    .input-box:disabled {
-        background: #f8fafc; color: #94a3b8; cursor: not-allowed;
-    }
-    .input-box.no-icon { padding-left: 12px; }
-    .alert-box {
-        background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;
-        padding: 16px 20px; display: flex; gap: 16px; margin-bottom: 24px;
-    }
-    .btn-submit {
-        background: white; border: 1px solid #e2e8f0; color: #1a202c;
-        padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
-        display: inline-flex; align-items: center; gap: 8px;
-        transition: all 0.15s; box-shadow: 0 1px 2px rgba(0,0,0,.05);
-        cursor: pointer; font-family: inherit;
-    }
-    .btn-submit:hover { background: #f9fafb; border-color: #cbd5e1; }
-</style>
+
 
 <?php echo renderFlash(); ?>
 
@@ -115,7 +80,7 @@ include __DIR__ . '/../includes/header-customer.php';
 
 <?php if ($hasActive): ?>
 <!-- Active order lock warning -->
-<div class="alert-box">
+<div class="bg-amber-50 border border-amber-200 text-amber-600 text-[12px] rounded-xl px-5 py-4 flex items-center gap-4 mb-6">
     <div class="text-navy">
         <i class="ph-bold ph-warning-circle text-xl"></i>
     </div>
@@ -130,7 +95,7 @@ include __DIR__ . '/../includes/header-customer.php';
 <?php endif; ?>
 
 <!-- Informasi Pribadi -->
-<div class="form-card overflow-hidden">
+<div class="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden mb-6">
     <form method="POST" action="">
         <?php echo csrfField(); ?>
         <input type="hidden" name="action" value="profile">
@@ -149,49 +114,49 @@ include __DIR__ . '/../includes/header-customer.php';
         </div>
 
         <div class="p-5 space-y-4">
-            <div class="input-group">
-                <label class="label-text">Nama Lengkap</label>
+            <div class="mb-4">
+                <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">Nama Lengkap</label>
                 <div class="relative">
                     <i class="ph ph-user absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="text" name="name" class="input-box"
+                    <input type="text" name="name" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 pl-[42px] text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
                            value="<?php echo htmlspecialchars($customer['name']); ?>"
                            <?php echo $hasActive ? 'disabled' : ''; ?> required>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label class="label-text">Email</label>
+            <div class="mb-4">
+                <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">Email</label>
                 <div class="relative">
                     <i class="ph ph-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="email" class="input-box"
+                    <input type="email" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 pl-[42px] text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
                            value="<?php echo htmlspecialchars($customer['email']); ?>" disabled>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label class="label-text">No. Telepon</label>
+            <div class="mb-4">
+                <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">No. Telepon</label>
                 <div class="relative">
                     <i class="ph ph-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="text" name="phone" class="input-box"
+                    <input type="text" name="phone" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 pl-[42px] text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
                            value="<?php echo htmlspecialchars($customer['phone'] ?? ''); ?>"
                            <?php echo $hasActive ? 'disabled' : ''; ?>>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label class="label-text">Organisasi / Instansi</label>
+            <div class="mb-4">
+                <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">Organisasi / Instansi</label>
                 <div class="relative">
                     <i class="ph ph-buildings absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="text" name="organization" class="input-box"
+                    <input type="text" name="organization" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 pl-[42px] text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
                            value="<?php echo htmlspecialchars($customer['organization'] ?? ''); ?>"
                            <?php echo $hasActive ? 'disabled' : ''; ?>>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label class="label-text">Alamat</label>
+            <div class="mb-4">
+                <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">Alamat</label>
                 <textarea name="address" rows="3"
-                          class="w-full border border-e2e8f0 rounded-lg p-3 text-[13px] outline-none focus:border-[#E02424] focus:shadow-[0_0_0_3px_rgba(224,36,36,.08)]"
+                          class="w-full border border-gray-200 rounded-lg p-3 text-[13px] outline-none transition-all focus:border-primary focus:ring-[3px] focus:ring-primary/5 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
                           <?php echo $hasActive ? 'disabled' : ''; ?>
                           style="font-family:inherit; resize:vertical;"><?php echo htmlspecialchars($customer['address'] ?? ''); ?></textarea>
             </div>
@@ -199,7 +164,7 @@ include __DIR__ . '/../includes/header-customer.php';
 
         <?php if (!$hasActive): ?>
         <div class="px-5 pb-5 flex justify-end">
-            <button type="submit" class="btn-submit">
+            <button type="submit" class="bg-primary text-white text-[13px] font-bold px-6 py-2.5 rounded-lg transition-all hover:bg-dark shadow-sm">
                 <i class="ph ph-floppy-disk text-base"></i>
                 Simpan Perubahan
             </button>
@@ -209,7 +174,7 @@ include __DIR__ . '/../includes/header-customer.php';
 </div>
 
 <!-- Ubah Password -->
-<div class="form-card">
+<div class="bg-white border border-gray-100 rounded-xl shadow-sm mb-6">
     <form method="POST" action="">
         <?php echo csrfField(); ?>
         <input type="hidden" name="action" value="password">
@@ -223,33 +188,33 @@ include __DIR__ . '/../includes/header-customer.php';
         </div>
 
         <div class="p-5 space-y-4">
-            <div class="input-group">
-                <label class="label-text">Password Saat Ini <span class="text-[#E02424]">*</span></label>
+            <div class="mb-4">
+                <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">Password Saat Ini <span class="text-primary">*</span></label>
                 <div class="relative">
                     <i class="ph ph-key absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="password" name="current_password" class="input-box" placeholder="••••••••" required>
+                    <input type="password" name="current_password" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 pl-[42px] text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5" placeholder="••••••••" required>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label class="label-text">Password Baru <span class="text-[#E02424]">*</span></label>
+            <div class="mb-4">
+                <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">Password Baru <span class="text-primary">*</span></label>
                 <div class="relative">
                     <i class="ph ph-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="password" name="new_password" class="input-box" placeholder="••••••••" required minlength="8">
+                    <input type="password" name="new_password" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 pl-[42px] text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5" placeholder="••••••••" required minlength="8">
                 </div>
             </div>
 
-            <div class="input-group">
-                <label class="label-text">Konfirmasi Password Baru <span class="text-[#E02424]">*</span></label>
+            <div class="mb-4">
+                <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">Konfirmasi Password Baru <span class="text-primary">*</span></label>
                 <div class="relative">
                     <i class="ph ph-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="password" name="new_password_confirm" class="input-box" placeholder="••••••••" required minlength="8">
+                    <input type="password" name="new_password_confirm" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 pl-[42px] text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5" placeholder="••••••••" required minlength="8">
                 </div>
             </div>
         </div>
 
         <div class="px-5 pb-5 flex justify-end">
-            <button type="submit" class="btn-submit">
+            <button type="submit" class="bg-primary text-white text-[13px] font-bold px-6 py-2.5 rounded-lg transition-all hover:bg-dark shadow-sm">
                 <i class="ph ph-lock-key text-base"></i>
                 Ubah Password
             </button>

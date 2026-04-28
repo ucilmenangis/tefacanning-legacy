@@ -66,112 +66,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    <style>
-        body { background-color: #f1f5f9; }
-
-        .auth-card {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 24px rgba(0,0,0,0.06);
-            border: 1px solid rgba(0,0,0,0.04);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #1e293b;
-            background: #ffffff;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-        }
-        .form-input:focus {
-            border-color: #E02424;
-            box-shadow: 0 0 0 3px rgba(224,36,36,0.08);
-        }
-        .form-input::placeholder { color: #94a3b8; }
-
-        .input-wrapper { position: relative; }
-
-        .toggle-password {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #94a3b8;
-            font-size: 18px;
-            background: none;
-            border: none;
-            padding: 0;
-            transition: color 0.2s;
-        }
-        .toggle-password:hover { color: #64748b; }
-
-        .btn-primary {
-            width: 100%;
-            padding: 11px 20px;
-            background: #E02424;
-            color: #ffffff;
-            font-weight: 600;
-            font-size: 14px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-        .btn-primary:hover {
-            background: #c81e1e;
-            box-shadow: 0 4px 12px rgba(224,36,36,0.25);
-        }
-        .btn-primary:active { transform: translateY(1px); }
-
-        .form-label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 6px;
-        }
-
-        .checkbox-custom {
-            width: 15px;
-            height: 15px;
-            border: 1.5px solid #cbd5e1;
-            border-radius: 4px;
-            cursor: pointer;
-            accent-color: #E02424;
-        }
-
-        .alert-error {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .link-red {
-            color: #E02424;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.15s;
-        }
-        .link-red:hover { color: #9B1C1C; text-decoration: underline; }
-    </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex items-center justify-center p-4">
+<body class="font-sans antialiased min-h-screen flex items-center justify-center p-4 bg-[#f8f9fb]">
 
     <div class="w-full max-w-[420px]">
-        <div class="auth-card px-10 py-10">
+        <div class="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06),0_4px_24px_rgba(0,0,0,0.06)] border border-black/[0.04] px-10 py-10">
 
             <!-- Logo -->
             <div class="flex flex-col items-center mb-5">
@@ -187,13 +86,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Title -->
             <h1 class="text-[22px] font-bold text-navy text-center mb-1">Sign in</h1>
             <p class="text-center text-[13px] text-gray-400 mb-6">
-                or <a href="register.php" class="link-red">sign up for an account</a>
+                or <a href="register.php" class="text-primary font-semibold hover:text-dark transition-colors">sign up for an account</a>
             </p>
 
             <!-- Error Alert -->
             <?php if ($error): ?>
-            <div class="alert-error mb-5">
-                <i class="ph-fill ph-warning-circle text-red-500" style="font-size:16px; flex-shrink:0;"></i>
+            <div class="bg-red-50 border border-red-200 text-red-600 text-[12px] rounded-lg px-4 py-3 mb-5 flex items-center gap-2">
+                <i class="ph-fill ph-warning-circle text-red-500 text-[16px] shrink-0"></i>
                 <?php echo htmlspecialchars($error); ?>
             </div>
             <?php endif; ?>
@@ -203,15 +102,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <!-- Email -->
                 <div class="mb-4">
-                    <label for="email" class="form-label">
+                    <label for="email" class="text-[12px] font-semibold text-gray-500 mb-1.5 block">
                         Email address<span class="text-primary ml-0.5">*</span>
                     </label>
-                    <div class="input-wrapper">
+                    <div class="relative">
                         <input
                             type="email"
                             id="email"
                             name="email"
-                            class="form-input"
+                            class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[13px] text-gray-700 bg-gray-50 outline-none transition-all focus:border-primary focus:ring-[3px] focus:ring-primary/10 focus:bg-white placeholder:text-gray-400"
                             placeholder=""
                             value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>"
                             required
@@ -223,23 +122,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <!-- Password -->
                 <div class="mb-4">
                     <div class="flex items-center justify-between mb-1.5">
-                        <label for="password" class="form-label mb-0">
+                        <label for="password" class="text-[12px] font-semibold text-gray-500 block">
                             Password<span class="text-primary ml-0.5">*</span>
                         </label>
-                        <a href="forgot-password.php" class="text-[12px] link-red">Forgot password?</a>
+                        <a href="forgot-password.php" class="text-[12px] text-primary font-semibold hover:text-dark transition-colors">Forgot password?</a>
                     </div>
-                    <div class="input-wrapper">
+                    <div class="relative">
                         <input
                             type="password"
                             id="password"
                             name="password"
-                            class="form-input"
+                            class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[13px] text-gray-700 bg-gray-50 outline-none transition-all focus:border-primary focus:ring-[3px] focus:ring-primary/10 focus:bg-white placeholder:text-gray-400 pr-[42px]"
                             placeholder=""
                             required
                             autocomplete="current-password"
-                            style="padding-right: 42px;"
                         >
-                        <button type="button" class="toggle-password" onclick="togglePassword('password', this)" aria-label="Tampilkan/Sembunyikan password">
+                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors bg-transparent border-none cursor-pointer" onclick="togglePassword('password', this)" aria-label="Tampilkan/Sembunyikan password">
                             <i class="ph ph-eye"></i>
                         </button>
                     </div>
@@ -247,12 +145,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <!-- Remember Me -->
                 <div class="flex items-center gap-2 mb-6">
-                    <input type="checkbox" id="remember" name="remember" class="checkbox-custom">
+                    <input type="checkbox" id="remember" name="remember" class="w-4 h-4 accent-primary cursor-pointer">
                     <label for="remember" class="text-[13px] text-gray-600 cursor-pointer select-none">Remember me</label>
                 </div>
 
                 <!-- Submit -->
-                <button type="submit" id="login-btn" class="btn-primary">
+                <button type="submit" id="login-btn" class="w-full bg-primary text-white font-bold py-3 rounded-lg transition-all hover:bg-dark active:scale-[0.98]">
                     Sign in
                 </button>
             </form>

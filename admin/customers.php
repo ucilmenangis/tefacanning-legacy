@@ -28,107 +28,72 @@ include __DIR__ . '/../includes/header-admin.php';
 $customers = $customerAdminService->getAll();
 ?>
 
-<style>
-.page-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-.breadcrumb  { font-size:12px; color:#9ca3af; margin-bottom:4px; }
-.breadcrumb span { color:#374151; }
 
-.btn-primary { display:inline-flex; align-items:center; gap:6px; background:#E02424; color:#fff;
-    font-size:13px; font-weight:700; padding:8px 18px; border-radius:8px;
-    border:none; cursor:pointer; transition:background .15s; text-decoration:none; }
-.btn-primary:hover { background:#9B1C1C; }
-
-.table-wrap    { background:#fff; border:1px solid #f1f5f9; border-radius:12px; overflow:visible; }
-.table-toolbar { display:flex; align-items:center; justify-content:flex-end; gap:8px; padding:12px 16px; border-bottom:1px solid #f8fafc; }
-.mini-search { border:1px solid #e5e7eb; border-radius:7px; padding:6px 10px 6px 30px; font-size:12px; outline:none; background:#f9fafb; width:200px; transition:border-color .15s; }
-.mini-search:focus { border-color:#E02424; background:#fff; }
-.icon-btn-sm { width:30px; height:30px; border-radius:6px; border:1px solid #e5e7eb; background:#fff;
-    display:inline-flex; align-items:center; justify-content:center; color:#9ca3af; cursor:pointer; transition:background .15s; }
-.icon-btn-sm:hover { background:#f8fafc; color:#374151; }
-
-.data-table { width:100%; text-align:left; font-size:12.5px; border-collapse:collapse; }
-.data-table th { font-size:11.5px; font-weight:600; color:#9ca3af; padding:10px 14px; border-bottom:1px solid #f1f5f9; white-space:nowrap; background:#fafafa; }
-.data-table td { padding:14px 14px; border-bottom:1px solid #f8fafc; color:#374151; vertical-align:middle; }
-.data-table tr:last-child td { border-bottom:none; }
-.data-table tbody tr:hover td { background:#fafafa; }
-
-.cb-cell { width:36px; }
-.cb { width:15px; height:15px; accent-color:#E02424; cursor:pointer; }
-
-.order-badge { display:inline-flex; align-items:center; justify-content:center;
-    min-width:22px; height:22px; border-radius:999px; background:#fef2f2;
-    color:#E02424; font-size:11px; font-weight:700; padding:0 6px; }
-
-.table-footer { padding:12px 16px; border-top:1px solid #f8fafc; display:flex; align-items:center;
-    justify-content:space-between; font-size:12px; color:#9ca3af; gap:12px; flex-wrap:wrap; }
-.per-page-select { border:1px solid #e5e7eb; border-radius:6px; padding:4px 24px 4px 8px; font-size:12px;
-    outline:none; background:#fff; appearance:none; cursor:pointer; }
-</style>
 
 <!-- Page Header -->
-<div class="breadcrumb">Pelanggan &rsaquo; <span>List</span></div>
-<div class="page-header">
+<div class="text-[12px] text-gray-400 mb-1">Pelanggan &rsaquo; <span class="text-gray-700">List</span></div>
+<div class="flex items-center justify-between mb-5">
     <h1 class="text-[22px] font-extrabold text-navy">Pelanggan</h1>
-    <a href="create-customer.php" class="btn-primary" id="btn-new-customer">
+    <a href="create-customer.php" class="inline-flex items-center gap-1.5 bg-primary text-white text-[13px] font-bold px-4 py-2 rounded-lg transition-colors hover:bg-dark" id="btn-new-customer">
         <i class="ph-bold ph-plus text-sm"></i> New Pelanggan
     </a>
 </div>
 
 <!-- Table -->
-<div class="table-wrap">
+<div class="bg-white border border-gray-100 rounded-xl overflow-visible">
     <!-- Toolbar -->
-    <div class="table-toolbar">
+    <div class="flex items-center justify-end gap-2 px-4 py-3 border-b border-gray-50">
         <div class="relative">
             <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-            <input type="text" placeholder="Search" class="mini-search" id="customer-search">
+            <input type="text" placeholder="Search" class="border border-gray-200 rounded-lg py-1.5 pl-[30px] pr-3 text-[12px] outline-none bg-gray-50 w-[200px] transition-colors focus:border-primary focus:bg-white" id="customer-search">
         </div>
-        <button class="icon-btn-sm" title="Filter">
+        <button class="w-[30px] h-[30px] rounded-md border border-gray-200 bg-white inline-flex items-center justify-center text-gray-400 cursor-pointer transition-colors hover:bg-gray-50 hover:text-gray-700" title="Filter">
             <i class="ph ph-funnel text-sm"></i>
         </button>
-        <button class="icon-btn-sm" title="Kolom" style="color:#E02424;">
+        <button class="w-[30px] h-[30px] rounded-md border border-gray-200 bg-white inline-flex items-center justify-center text-primary cursor-pointer transition-colors hover:bg-gray-50" title="Kolom">
             <i class="ph-bold ph-squares-four text-sm"></i>
         </button>
     </div>
 
     <!-- Data Table -->
     <div class="overflow-x-auto">
-        <table class="data-table">
+        <table class="w-full text-left text-[12.5px] border-collapse">
             <thead>
                 <tr>
-                    <th class="cb-cell"><input type="checkbox" class="cb" id="cb-all" onchange="toggleAll(this)"></th>
-                    <th>Nama <i class="ph ph-caret-up-down text-[10px]"></i></th>
-                    <th>WhatsApp</th>
-                    <th>Email</th>
-                    <th>Pesanan <i class="ph ph-caret-up-down text-[10px]"></i></th>
-                    <th></th>
+                    <th class="w-9 text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap bg-gray-50/50"><input type="checkbox" class="w-[15px] h-[15px] accent-primary cursor-pointer" id="cb-all" onchange="toggleAll(this)"></th>
+                    <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap bg-gray-50/50">Nama <i class="ph ph-caret-up-down text-[10px]"></i></th>
+                    <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap bg-gray-50/50">WhatsApp</th>
+                    <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap bg-gray-50/50">Email</th>
+                    <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap bg-gray-50/50">Pesanan <i class="ph ph-caret-up-down text-[10px]"></i></th>
+                    <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap bg-gray-50/50"></th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($customers as $row): ?>
                 <tr>
-                    <td class="cb-cell"><input type="checkbox" class="cb cb-row"></td>
-                    <td>
-                        <div class="font-bold text-[13px]" style="color:#E02424"><?php echo htmlspecialchars($row['name']); ?></div>
+                    <td class="w-9 px-3.5 py-3 border-b border-gray-50/50 text-gray-700 align-middle"><input type="checkbox" class="w-[15px] h-[15px] accent-primary cursor-pointer cb-row"></td>
+                    <td class="px-3.5 py-3 border-b border-gray-50/50 text-gray-700 align-middle">
+                        <div class="font-bold text-[13px] text-primary"><?php echo htmlspecialchars($row['name']); ?></div>
                         <div class="text-[11px] text-gray-400"><?php echo htmlspecialchars($row['organization']); ?></div>
                     </td>
-                    <td>
+                    <td class="px-3.5 py-3 border-b border-gray-50/50 text-gray-700 align-middle">
                         <span class="flex items-center gap-1.5 text-gray-500">
                             <i class="ph ph-phone text-gray-300 text-sm"></i>
                             <?php echo htmlspecialchars($row['phone']); ?>
                         </span>
                     </td>
-                    <td>
+                    <td class="px-3.5 py-3 border-b border-gray-50/50 text-gray-700 align-middle">
                         <span class="flex items-center gap-1.5 text-gray-400">
                             <i class="ph ph-envelope text-gray-300 text-sm"></i>
                             <?php echo htmlspecialchars($row['email']); ?>
                         </span>
                     </td>
-                    <td>
-                        <span class="order-badge"><?php echo $row['order_count']; ?></span>
+                    <td class="px-3.5 py-3 border-b border-gray-50/50 text-gray-700 align-middle">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-600"><?php echo $row['order_count']; ?></span>
                     </td>
-                    <td class="text-right">
+                    <td class="text-right px-3.5 py-3 border-b border-gray-50/50 align-middle">
                         <div class="relative inline-block text-left dropdown-container">
-                            <button type="button" class="icon-btn-sm dropdown-trigger" title="Opsi lainnya" onclick="toggleDropdown(event, this)">
+                            <button type="button" class="w-[30px] h-[30px] rounded-md border border-gray-200 bg-white inline-flex items-center justify-center text-gray-400 cursor-pointer transition-colors hover:bg-gray-50 hover:text-gray-700 dropdown-trigger" title="Opsi lainnya" onclick="toggleDropdown(event, this)">
                                 <i class="ph ph-dots-three-vertical text-sm pointer-events-none"></i>
                             </button>
                             <div class="hidden absolute right-0 mt-2 w-32 bg-white border border-gray-100 rounded-lg shadow-lg z-50 dropdown-menu text-left">
@@ -153,12 +118,12 @@ $customers = $customerAdminService->getAll();
     </div>
 
     <!-- Footer -->
-    <div class="table-footer">
+    <div class="px-4 py-3 border-t border-gray-50 flex items-center justify-between text-[12px] text-gray-400 gap-3 flex-wrap">
         <span>Showing <?php echo count($customers); ?> result<?php echo count($customers) > 1 ? 's' : ''; ?></span>
         <div class="flex items-center gap-2">
             <span>Per page</span>
             <div class="relative">
-                <select class="per-page-select">
+                <select class="border border-gray-200 rounded-md px-2 py-1 text-[12px] outline-none bg-white appearance-none cursor-pointer">
                     <option>10</option>
                     <option>25</option>
                     <option>50</option>

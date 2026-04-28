@@ -31,46 +31,19 @@ $currentPage = 'orders';
 include __DIR__ . '/../includes/header-customer.php';
 ?>
 
-<style>
-    .table-container {
-        background: white; border-radius: 12px; border: 1px solid #f1f5f9;
-        box-shadow: 0 1px 3px rgba(0,0,0,.04); overflow: hidden;
-    }
-    .search-input {
-        border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px 8px 36px;
-        font-size: 13px; color: #374151; width: 240px; outline: none;
-        transition: border-color 0.15s;
-    }
-    .search-input:focus { border-color: #E02424; }
-    .badge-blue  { background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; }
-    .badge-amber { background: #fff7ed; color: #d97706; border: 1px solid #ffedd5; }
-    .badge-green { background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; }
-    .badge-gray  { background: #f9fafb; color: #6b7280; border: 1px solid #e5e7eb; }
-    .page-select {
-        border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 8px;
-        font-size: 12px; color: #64748b; background: white; outline: none;
-    }
-    .action-link {
-        transition: color 0.15s; display: inline-flex; align-items: center; gap: 4px;
-    }
-    .alert-error {
-        background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;
-        border-radius: 8px; padding: 10px 14px; font-size: 13px;
-        display: flex; align-items: center; gap: 8px;
-    }
-</style>
+
 
 <?php echo renderFlash(); ?>
 
 <h1 class="text-[22px] font-bold text-navy mb-6">Riwayat Pesanan</h1>
 
-<div class="table-container">
+<div class="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
 
     <!-- Search -->
     <div class="p-4 flex justify-end border-b border-gray-50">
         <div class="relative">
             <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" id="search-input" placeholder="Cari no. pesanan..." class="search-input" oninput="filterTable()">
+            <input type="text" id="search-input" placeholder="Cari no. pesanan..." class="border border-gray-200 rounded-lg py-2 pl-9 pr-3 text-[13px] text-gray-700 w-60 outline-none transition-colors focus:border-primary" oninput="filterTable()">
         </div>
     </div>
 
@@ -119,18 +92,18 @@ include __DIR__ . '/../includes/header-customer.php';
                     </td>
                     <td class="px-6 py-5 text-right whitespace-nowrap">
                         <div class="flex items-center gap-4 justify-end">
-                            <a href="../api/download-pdf.php?id=<?php echo $order['id']; ?>" class="action-link text-emerald-600 hover:text-emerald-700" title="Download PDF">
+                            <a href="../api/download-pdf.php?id=<?php echo $order['id']; ?>" class="inline-flex items-center gap-1 transition-colors text-emerald-600 hover:text-emerald-700" title="Download PDF">
                                 <i class="ph ph-file-pdf text-base"></i> PDF
                             </a>
                             <?php if ($order['status'] === 'pending'): ?>
-                            <a href="edit-order.php?id=<?php echo $order['id']; ?>" class="action-link text-[#d97706] hover:text-amber-700">
+                            <a href="edit-order.php?id=<?php echo $order['id']; ?>" class="inline-flex items-center gap-1 transition-colors text-amber-600 hover:text-amber-700">
                                 <i class="ph ph-note-pencil text-base"></i> Edit
                             </a>
                             <form method="POST" action="" onsubmit="return confirm('Batalkan pesanan ini?')">
                                 <input type="hidden" name="action" value="cancel">
                                 <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
                                 <?php echo csrfField(); ?>
-                                <button type="submit" class="action-link text-[#E02424] hover:text-dark bg-transparent border-0 cursor-pointer p-0 font-inherit text-[13px]">
+                                <button type="submit" class="inline-flex items-center gap-1 transition-colors text-primary hover:text-dark bg-transparent border-0 cursor-pointer p-0 font-inherit text-[13px]">
                                     <i class="ph ph-trash text-base"></i> Hapus
                                 </button>
                             </form>

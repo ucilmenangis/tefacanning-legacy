@@ -104,64 +104,27 @@ $recentOrders = db_fetch_all(
     [$customerId]
 );
 
-
 $pageTitle = 'Pre-Order Sarden';
 $currentPage = 'preorder';
 include __DIR__ . '/../includes/header-customer.php';
 ?>
 
 <style>
-    .form-select, .form-input {
-        width: 100%; border: 1px solid #e2e8f0; border-radius: 8px;
-        padding: 9px 12px; font-size: 13px; font-family: inherit;
-        color: #374151; background: #fff; outline: none;
-        transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .form-select:focus, .form-input:focus {
-        border-color: #E02424; box-shadow: 0 0 0 3px rgba(224,36,36,.08);
-    }
-    .form-select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
-        background-repeat: no-repeat; background-position: right 12px center;
-        background-size: 14px; padding-right: 36px; cursor: pointer;
-    }
-    .section-card {
-        background: #fff; border: 1px solid #f1f5f9; border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0,0,0,.04);
-    }
-    .product-row {
-        background: #fafafa; border: 1px solid #f1f5f9; border-radius: 10px;
-        padding: 12px 14px; transition: outline 0.1s;
-    }
-    .product-row.selected { outline: 2px solid #E02424; }
-    .icon-btn {
-        width: 28px; height: 28px; border-radius: 6px;
-        display: inline-flex; align-items: center; justify-content: center;
-        transition: background 0.15s, color 0.15s;
-        color: #9ca3af; cursor: pointer;
-    }
-    .icon-btn:hover { background: #f1f5f9; }
-    .icon-btn.danger:hover { background: #fef2f2; color: #E02424; }
+    /* KEEP — JS-toggled accordion animation */
     #catatan-body { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
     #catatan-body.open { max-height: 200px; }
     #catatan-caret { transition: transform 0.2s ease; }
     #catatan-caret.open { transform: rotate(180deg); }
-    .badge-blue   { color: #2563eb; background: #eff6ff; border: 1px solid #dbeafe; }
-    .badge-amber  { color: #d97706; background: #fffbeb; border: 1px solid #fde68a; }
-    .badge-green  { color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; }
-    .badge-gray   { color: #6b7280; background: #f9fafb; border: 1px solid #e5e7eb; }
-    .alert-error {
-        background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;
-        border-radius: 8px; padding: 10px 14px; font-size: 13px;
-        display: flex; align-items: center; gap: 8px;
-    }
+    /* KEEP — JS-toggled selected state */
+    .product-row.selected { outline: 2px solid #E02424; outline-offset: -2px; background-color: #fef2f2; }
 </style>
+
+
 
 <?php echo renderFlash(); ?>
 
 <?php if (!empty($formErrors)): ?>
-<div class="alert-error mb-5">
+<div class="bg-red-50 border border-red-200 text-red-800 rounded-lg px-3.5 py-2.5 text-[13px] flex items-center gap-2 mb-5">
     <i class="ph-fill ph-warning-circle text-red-500" style="font-size:16px; flex-shrink:0;"></i>
     <ul class="list-disc ml-3">
         <?php foreach ($formErrors as $err): ?>
@@ -182,7 +145,7 @@ include __DIR__ . '/../includes/header-customer.php';
 </form>
 
 <!-- Intro Card -->
-<div class="section-card p-5 mb-4">
+<div class="bg-white border border-gray-100 rounded-xl shadow-sm p-5 mb-4">
     <p class="text-[14px] font-semibold text-navy mb-1">Pre-Order Sarden Kaleng</p>
     <p class="text-[12px] text-gray-500 mb-3">
         Selamat datang, <span class="font-semibold text-[#E02424]"><?php echo htmlspecialchars($customer['name']); ?></span>!
@@ -206,7 +169,7 @@ include __DIR__ . '/../includes/header-customer.php';
 </div>
 
 <!-- Batch Selection -->
-<div class="section-card mb-4">
+<div class="bg-white border border-gray-100 rounded-xl shadow-sm mb-4">
     <div class="flex items-center gap-2 px-5 py-4 border-b border-gray-50">
         <i class="ph-bold ph-calendar-dots text-gray-300 text-base"></i>
         <div>
@@ -218,7 +181,7 @@ include __DIR__ . '/../includes/header-customer.php';
         <label class="block text-[12px] font-semibold text-navy mb-1.5">
             Batch Produksi <span class="text-[#E02424]">*</span>
         </label>
-        <select id="batch-select" class="form-select">
+        <select id="batch-select" class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none appearance-none cursor-pointer transition-colors focus:border-primary" style="background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px">
             <option value="" disabled selected>Pilih batch produksi…</option>
             <?php foreach ($batches as $b): ?>
             <option value="<?php echo $b['id']; ?>">
@@ -235,7 +198,7 @@ include __DIR__ . '/../includes/header-customer.php';
 </div>
 
 <!-- Product Selection -->
-<div class="section-card mb-4">
+<div class="bg-white border border-gray-100 rounded-xl shadow-sm mb-4">
     <div class="flex items-center gap-2 px-5 py-4 border-b border-gray-50">
         <i class="ph-bold ph-storefront text-gray-300 text-base"></i>
         <div>
@@ -250,17 +213,17 @@ include __DIR__ . '/../includes/header-customer.php';
 
     <div class="p-5">
         <div class="flex items-center gap-1 mb-3">
-            <button type="button" class="icon-btn" title="Ke atas" onclick="moveSelected('up')">
+            <button type="button" class="w-7 h-7 rounded-md inline-flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors cursor-pointer" title="Ke atas" onclick="moveSelected('up')">
                 <i class="ph-bold ph-arrow-up text-xs"></i>
             </button>
-            <button type="button" class="icon-btn" title="Ke bawah" onclick="moveSelected('down')">
+            <button type="button" class="w-7 h-7 rounded-md inline-flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors cursor-pointer" title="Ke bawah" onclick="moveSelected('down')">
                 <i class="ph-bold ph-arrow-down text-xs"></i>
             </button>
             <span class="flex-1"></span>
-            <button type="button" class="icon-btn danger" title="Hapus baris" onclick="deleteSelected()">
+            <button type="button" class="w-7 h-7 rounded-md inline-flex items-center justify-center text-gray-400 hover:bg-red-50 hover:text-primary transition-colors cursor-pointer" title="Hapus baris" onclick="deleteSelected()">
                 <i class="ph-bold ph-trash text-xs"></i>
             </button>
-            <button type="button" class="icon-btn" title="Ciutkan" onclick="toggleProductSection()">
+            <button type="button" class="w-7 h-7 rounded-md inline-flex items-center justify-center text-gray-400 hover:bg-gray-100 transition-colors cursor-pointer" title="Ciutkan" onclick="toggleProductSection()">
                 <i class="ph-bold ph-caret-up text-xs" id="prod-caret"></i>
             </button>
         </div>
@@ -278,8 +241,8 @@ include __DIR__ . '/../includes/header-customer.php';
         <div id="product-rows" class="space-y-2">
             <div class="product-row grid grid-cols-12 gap-3 items-start" onclick="selectRow(this)">
                 <div class="col-span-5">
-                    <select class="form-select prod-select" onchange="recalc(this)">
-                        <option value="" disabled selected>Select an option</option>
+                    <select class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none appearance-none cursor-pointer focus:border-primary prod-select" onchange="recalc(this)">
+                        <option value="" disabled selected>Pilih produk…</option>
                         <?php foreach ($products as $p): ?>
                         <option value="<?php echo $p['id']; ?>" data-price="<?php echo $p['price']; ?>">
                             <?php echo htmlspecialchars($p['name']); ?>
@@ -290,7 +253,7 @@ include __DIR__ . '/../includes/header-customer.php';
                 <div class="col-span-4">
                     <div class="relative">
                         <input type="number" value="100" min="100" max="3000"
-                               class="form-input prod-qty pr-14" oninput="recalc(this)">
+                               class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none focus:border-primary prod-qty pr-14" oninput="recalc(this)">
                         <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-gray-400 pointer-events-none">kaleng</span>
                     </div>
                     <p class="text-[10px] text-gray-400 mt-0.5 ml-1">Min: 100, Max: 3000</p>
@@ -298,7 +261,7 @@ include __DIR__ . '/../includes/header-customer.php';
                 <div class="col-span-3">
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 pointer-events-none">Rp</span>
-                        <input type="text" class="form-input prod-sub pl-8" readonly value="0">
+                        <input type="text" class="w-full border border-gray-200 rounded-lg py-2 px-3 pl-8 text-[13px] text-gray-700 bg-white outline-none prod-sub" readonly value="0">
                     </div>
                 </div>
             </div>
@@ -313,7 +276,7 @@ include __DIR__ . '/../includes/header-customer.php';
 </div>
 
 <!-- Catatan -->
-<div class="section-card mb-5">
+<div class="bg-white border border-gray-100 rounded-xl shadow-sm mb-5">
     <button type="button" onclick="toggleCatatan()"
             class="w-full flex items-center gap-2 px-5 py-4 text-left">
         <i class="ph-bold ph-chat-dots text-gray-300 text-base"></i>
@@ -322,7 +285,7 @@ include __DIR__ . '/../includes/header-customer.php';
     </button>
     <div id="catatan-body">
         <div class="px-5 pb-5">
-            <textarea rows="3" id="catatan-area" class="form-input resize-none"
+            <textarea rows="3" id="catatan-area" class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none resize-none focus:border-primary"
                       placeholder="Tambahkan catatan untuk pesanan Anda (opsional)…"></textarea>
         </div>
     </div>
@@ -347,7 +310,7 @@ include __DIR__ . '/../includes/header-customer.php';
     </div>
 
     <?php if (empty($recentOrders)): ?>
-    <div class="section-card p-6 text-center">
+    <div class="bg-white border border-gray-100 rounded-xl shadow-sm p-6 text-center">
         <i class="ph-bold ph-bag text-gray-300 text-2xl mb-2"></i>
         <p class="text-[12px] text-gray-400">Belum ada pesanan</p>
     </div>
@@ -356,7 +319,7 @@ include __DIR__ . '/../includes/header-customer.php';
         <?php foreach ($recentOrders as $order):
             $s = FormatHelper::orderStatus($order['status']);
         ?>
-        <div class="section-card px-5 py-4 flex items-center gap-4">
+    <div class="bg-white border border-gray-100 rounded-xl shadow-sm px-5 py-4 flex items-center gap-4">
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2.5 mb-1 flex-wrap">
                     <span class="text-[13px] font-semibold text-navy"><?php echo htmlspecialchars($order['order_number']); ?></span>
@@ -425,17 +388,17 @@ include __DIR__ . '/../includes/header-customer.php';
         ).join('');
 
         const div = document.createElement('div');
-        div.className = 'product-row grid grid-cols-12 gap-3 items-start';
+        div.className = 'product-row flex items-center gap-3 px-4 py-3 border border-gray-100 rounded-lg cursor-pointer transition-colors hover:bg-gray-50';
         div.onclick = function() { selectRow(div); };
-        div.innerHTML = '<div class="col-span-5"><select class="form-select prod-select" onchange="recalc(this)">' +
-            '<option value="" disabled selected>Select an option</option>' + optionsHtml + '</select></div>' +
-            '<div class="col-span-4"><div class="relative">' +
-            '<input type="number" value="100" min="100" max="3000" class="form-input prod-qty pr-14" oninput="recalc(this)">' +
+        div.innerHTML = '<div class="col-span-5 flex-1"><select class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none appearance-none cursor-pointer focus:border-primary prod-select" style="background-image:url(\'data:image/svg+xml,%3Csvg xmlns=\\\'http://www.w3.org/2000/svg\\\' viewBox=\\\'0 0 16 16\\\'%3E%3Cpath fill=\\\'none\\\' stroke=\\\'%239ca3af\\\' stroke-linecap=\\\'round\\\' stroke-linejoin=\\\'round\\\' stroke-width=\\\'2\\\' d=\\\'M2 5l6 6 6-6\\\'/%3E%3C/svg%3E\');background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px" onchange="recalc(this)">' +
+            '<option value="" disabled selected>Pilih produk…</option>' + optionsHtml + '</select></div>' +
+            '<div class="col-span-4 w-32 shrink-0"><div class="relative">' +
+            '<input type="number" value="100" min="100" max="3000" class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none focus:border-primary prod-qty pr-14" oninput="recalc(this)">' +
             '<span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-gray-400 pointer-events-none">kaleng</span>' +
-            '</div><p class="text-[10px] text-gray-400 mt-0.5 ml-1">Min: 100, Max: 3000</p></div>' +
-            '<div class="col-span-3"><div class="relative">' +
+            '</div></div>' +
+            '<div class="col-span-3 w-32 shrink-0"><div class="relative">' +
             '<span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 pointer-events-none">Rp</span>' +
-            '<input type="text" class="form-input prod-sub pl-8" readonly value="0"></div></div>';
+            '<input type="text" class="w-full border border-gray-200 rounded-lg py-2 px-3 pl-8 text-[13px] text-gray-700 bg-white outline-none prod-sub" readonly value="0"></div></div>';
         container.appendChild(div);
         selectRow(div);
     }

@@ -52,41 +52,14 @@ $stats = [
 ];
 
 $statusMap = [
-    'processing' => ['label' => 'Processing', 'class' => 'badge-processing'],
-    'pending'    => ['label' => 'Pending',    'class' => 'badge-pending'],
-    'ready'      => ['label' => 'Ready',      'class' => 'badge-ready'],
-    'picked_up'  => ['label' => 'Picked Up',  'class' => 'badge-pickedup'],
+    'processing' => ['label' => 'Processing', 'class' => 'bg-amber-50 text-amber-600 border border-amber-100'],
+    'pending'    => ['label' => 'Pending',    'class' => 'bg-slate-50 text-slate-500 border border-slate-100'],
+    'ready'      => ['label' => 'Ready',      'class' => 'bg-emerald-50 text-emerald-600 border border-emerald-100'],
+    'picked_up'  => ['label' => 'Picked Up',  'class' => 'bg-blue-50 text-blue-600 border border-blue-100'],
 ];
 ?>
 
-<style>
-/* ── Stat Cards ── */
-.stat-card { background:#fff; border:1px solid #f1f5f9; border-radius:12px; padding:20px 24px; position:relative; overflow:hidden; }
 
-/* ── Badges ── */
-.badge-processing { background:#eff6ff; color:#2563eb; border:1px solid #dbeafe; }
-.badge-pending    { background:#fffbeb; color:#d97706; border:1px solid #fde68a; }
-.badge-ready      { background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; }
-.badge-pickedup   { background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb; }
-
-.status-badge { display:inline-flex; align-items:center; gap:4px; padding:2px 9px; border-radius:999px; font-size:11px; font-weight:600; }
-.dot-status   { width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
-
-/* ── Tables ── */
-.data-table { width:100%; text-align:left; font-size:12.5px; border-collapse:collapse; }
-.data-table th { font-size:11.5px; font-weight:600; color:#9ca3af; padding:10px 14px; border-bottom:1px solid #f1f5f9; white-space:nowrap; }
-.data-table td { padding:12px 14px; border-bottom:1px solid #f8fafc; color:#374151; vertical-align:middle; }
-.data-table tr:last-child td { border-bottom:none; }
-.data-table tbody tr:hover td { background:#fafafa; }
-
-/* ── Sections ── */
-.section-card { background:#fff; border:1px solid #f1f5f9; border-radius:12px; overflow:hidden; margin-bottom:20px; }
-.section-head { padding:14px 18px; border-bottom:1px solid #f8fafc; font-size:13px; font-weight:700; color:#111827; }
-
-/* ── Search box ── */
-.mini-search { border:1px solid #e5e7eb; border-radius:7px; padding:6px 10px 6px 30px; font-size:12px; outline:none; background:#f9fafb; width:190px; transition:border-color .15s; }
-.mini-search:focus { border-color:#E02424; background:#fff; }
-</style>
 
 <!-- ── Welcome Banner ── -->
 <div class="bg-white border border-gray-100 rounded-xl px-6 py-4 mb-5 flex items-center justify-between shadow-sm">
@@ -111,7 +84,7 @@ $statusMap = [
         $s = $stats[$key];
         $wc = $waveColors[$s['color']] ?? '#E02424';
     ?>
-    <div class="stat-card">
+<div class="bg-white border border-gray-100 rounded-xl p-5 relative overflow-hidden">
         <p class="text-[11px] font-semibold text-gray-400 flex items-center gap-1.5 mb-2">
             <i class="ph ph-chart-line text-sm" style="color:<?php echo $wc;?>"></i>
             <?php echo $s['label']; ?>
@@ -131,7 +104,7 @@ $statusMap = [
         $s = $stats[$key];
         $wc = $waveColors[$s['color']] ?? '#E02424';
     ?>
-    <div class="stat-card">
+<div class="bg-white border border-gray-100 rounded-xl p-5 relative overflow-hidden">
         <p class="text-[11px] font-semibold text-gray-400 flex items-center gap-1.5 mb-2">
             <i class="ph ph-trend-up text-sm" style="color:<?php echo $wc;?>"></i>
             <?php echo $s['label']; ?>
@@ -144,38 +117,38 @@ $statusMap = [
 </div>
 
 <!-- ── Ringkasan Produksi Batch Aktif ── -->
-<div class="section-card">
+<div class="bg-white border border-gray-100 rounded-xl overflow-hidden mb-5">
     <div class="flex items-center justify-between px-5 py-3.5 border-b border-gray-50">
         <p class="text-[13px] font-bold text-navy">Ringkasan Produksi Batch Aktif</p>
         <div class="relative">
             <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-            <input type="text" placeholder="Search" class="mini-search">
+            <input type="text" placeholder="Search" class="border border-gray-200 rounded-lg py-1.5 pl-[30px] pr-3 text-[12px] outline-none bg-gray-50 w-[190px] transition-colors focus:border-primary focus:bg-white">
         </div>
     </div>
-    <table class="data-table">
+    <table class="w-full text-left text-[12.5px] border-collapse">
         <thead>
             <tr>
-                <th>No. Pesanan</th>
-                <th>Pelanggan</th>
-                <th>Status</th>
-                <th>Kode Pickup</th>
-                <th>Diambil</th>
-                <th>Tanggal Order</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">No. Pesanan</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Pelanggan</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Status</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Kode Pickup</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Diambil</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Tanggal Order</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($batch_orders as $row): $st = $statusMap[$row['status']] ?? ['label'=>$row['status'],'class'=>'badge-pending']; ?>
             <tr>
-                <td class="font-semibold text-navy"><?php echo htmlspecialchars($row['order_number']); ?></td>
-                <td class="text-gray-500"><?php echo htmlspecialchars($row['customer_name']); ?></td>
-                <td>
-                    <span class="status-badge <?php echo $st['class']; ?>">
-                        <span class="dot-status"></span><?php echo $st['label']; ?>
+                <td class="font-semibold text-navy px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo htmlspecialchars($row['order_number']); ?></td>
+                <td class="text-gray-500 px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo htmlspecialchars($row['customer_name']); ?></td>
+                <td class="px-3.5 py-3 border-b border-gray-50 align-middle">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold <?php echo $st['class']; ?>">
+                        <span class="w-1.5 h-1.5 rounded-full bg-current flex-shrink-0"></span><?php echo $st['label']; ?>
                     </span>
                 </td>
-                <td class="font-mono text-[12px] text-gray-500"><?php echo htmlspecialchars($row['pickup_code']); ?></td>
-                <td class="text-primary text-[12px] font-semibold"><?php echo $row['picked_up_at'] ? FormatHelper::tanggal($row['picked_up_at']) : 'Belum'; ?></td>
-                <td class="text-gray-400"><?php echo FormatHelper::tanggal($row['created_at']); ?></td>
+                <td class="font-mono text-[12px] text-gray-500 px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo htmlspecialchars($row['pickup_code']); ?></td>
+                <td class="text-primary text-[12px] font-semibold px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo $row['picked_up_at'] ? FormatHelper::tanggal($row['picked_up_at']) : 'Belum'; ?></td>
+                <td class="text-gray-400 px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo FormatHelper::tanggal($row['created_at']); ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
@@ -183,26 +156,26 @@ $statusMap = [
 </div>
 
 <!-- ── Ringkasan Produk Batch Aktif ── -->
-<div class="section-card">
+<div class="bg-white border border-gray-100 rounded-xl overflow-hidden mb-5">
     <div class="px-5 py-3.5 border-b border-gray-50">
         <p class="text-[13px] font-bold text-navy">Ringkasan Produk – Batch Aktif</p>
     </div>
-    <table class="data-table">
+    <table class="w-full text-left text-[12.5px] border-collapse">
         <thead>
             <tr>
-                <th>Produk</th>
-                <th>SKU</th>
-                <th>Total Kuantitas <i class="ph ph-caret-down text-[10px]"></i></th>
-                <th>Satuan</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Produk</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">SKU</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Total Kuantitas <i class="ph ph-caret-down text-[10px]"></i></th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Satuan</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($batch_products as $prod): ?>
             <tr>
-                <td class="font-semibold" style="color:#E02424"><?php echo htmlspecialchars($prod['produk']); ?></td>
-                <td class="text-gray-400 font-mono text-[12px]"><?php echo htmlspecialchars($prod['sku']); ?></td>
-                <td class="font-bold text-navy"><?php echo $prod['qty']; ?></td>
-                <td class="text-gray-500"><?php echo $prod['satuan']; ?></td>
+                <td class="font-semibold text-primary px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo htmlspecialchars($prod['produk']); ?></td>
+                <td class="text-gray-400 font-mono text-[12px] px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo htmlspecialchars($prod['sku']); ?></td>
+                <td class="font-bold text-navy px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo $prod['qty']; ?></td>
+                <td class="text-gray-500 px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo $prod['satuan']; ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
@@ -210,43 +183,43 @@ $statusMap = [
 </div>
 
 <!-- ── Pesanan Terbaru ── -->
-<div class="section-card">
+<div class="bg-white border border-gray-100 rounded-xl overflow-hidden mb-5">
     <div class="flex items-center justify-between px-5 py-3.5 border-b border-gray-50">
         <p class="text-[13px] font-bold text-navy">Pesanan Terbaru</p>
         <div class="relative">
             <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-            <input type="text" placeholder="Search" class="mini-search">
+            <input type="text" placeholder="Search" class="border border-gray-200 rounded-lg py-1.5 pl-[30px] pr-3 text-[12px] outline-none bg-gray-50 w-[190px] transition-colors focus:border-primary focus:bg-white">
         </div>
     </div>
-    <table class="data-table">
+    <table class="w-full text-left text-[12.5px] border-collapse">
         <thead>
             <tr>
-                <th>No. Pesanan</th>
-                <th>Pelanggan</th>
-                <th>Batch</th>
-                <th>Status</th>
-                <th>Total</th>
-                <th>Tanggal <i class="ph ph-caret-down text-[10px]"></i></th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">No. Pesanan</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Pelanggan</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Batch</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Status</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Total</th>
+                <th class="text-[11.5px] font-semibold text-gray-400 px-3.5 py-2.5 border-b border-gray-100 whitespace-nowrap">Tanggal <i class="ph ph-caret-down text-[10px]"></i></th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($recent_orders as $row): $st = $statusMap[$row['status']] ?? ['label'=>$row['status'],'class'=>'badge-pending']; ?>
             <tr>
-                <td class="font-bold text-navy"><?php echo htmlspecialchars($row['order_number']); ?></td>
-                <td>
-                    <div class="font-semibold text-[12px]" style="color:#E02424"><?php echo htmlspecialchars($row['customer_name']); ?></div>
+                <td class="font-bold text-navy px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo htmlspecialchars($row['order_number']); ?></td>
+                <td class="px-3.5 py-3 border-b border-gray-50 align-middle">
+                    <div class="font-semibold text-[12px] text-primary"><?php echo htmlspecialchars($row['customer_name']); ?></div>
                     <div class="text-[11px] text-gray-400"><?php echo htmlspecialchars($row['customer_phone'] ?? '-'); ?></div>
                 </td>
-                <td>
+                <td class="px-3.5 py-3 border-b border-gray-50 align-middle">
                     <span class="text-[11px] bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded font-semibold"><?php echo htmlspecialchars($row['batch_name']); ?></span>
                 </td>
-                <td>
-                    <span class="status-badge <?php echo $st['class']; ?>">
-                        <span class="dot-status"></span><?php echo $st['label']; ?>
+                <td class="px-3.5 py-3 border-b border-gray-50 align-middle">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold <?php echo $st['class']; ?>">
+                        <span class="w-1.5 h-1.5 rounded-full bg-current flex-shrink-0"></span><?php echo $st['label']; ?>
                     </span>
                 </td>
-                <td class="font-semibold" style="color:#E02424"><?php echo FormatHelper::rupiah($row['total_amount']); ?></td>
-                <td class="text-primary font-semibold text-[12px]"><?php echo FormatHelper::tanggal($row['created_at']); ?></td>
+                <td class="font-semibold text-primary px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo FormatHelper::rupiah($row['total_amount']); ?></td>
+                <td class="text-primary font-semibold text-[12px] px-3.5 py-3 border-b border-gray-50 align-middle"><?php echo FormatHelper::tanggal($row['created_at']); ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>

@@ -104,55 +104,14 @@ $batches = db_fetch_all(
 include __DIR__ . '/../includes/header-admin.php';
 ?>
 
-<style>
-    .card { background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
-    .card-title { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .card-subtitle { font-size: 11px; color: #94a3b8; font-weight: 500; margin-top: -12px; margin-bottom: 20px; display: block; }
 
-    .label { font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 6px; display: block; }
-    .label .required { color: #E02424; margin-left: 2px; }
-
-    .input { width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #1e293b; background: #fff; transition: all 0.2s; outline: none; }
-    .input:focus { border-color: #E02424; box-shadow: 0 0 0 3px rgba(224, 36, 36, 0.05); }
-
-    .select-wrapper { position: relative; }
-    .select-wrapper::after { content: "\e8d3"; font-family: "Phosphor"; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 12px; color: #94a3b8; pointer-events: none; }
-    .select { appearance: none; cursor: pointer; padding-right: 36px !important; }
-
-    .table-items { width: 100%; font-size: 12.5px; border-collapse: separate; border-spacing: 0 12px; margin-top: -12px; }
-    .table-items th { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; text-align: left; padding: 0 14px; }
-    .table-items td { background: #fff; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9; padding: 16px 14px; }
-    .table-items td:first-child { border-left: 1px solid #f1f5f9; border-radius: 10px 0 0 10px; }
-    .table-items td:last-child { border-right: 1px solid #f1f5f9; border-radius: 0 10px 10px 0; }
-
-    .btn-save { background: #E02424; color: #fff; font-size: 13px; font-weight: 700; padding: 10px 24px; border-radius: 8px; transition: all 0.2s; border: none; cursor: pointer; }
-    .btn-save:hover { background: #9B1C1C; transform: translateY(-1px); }
-
-    .btn-cancel { background: #fff; border: 1px solid #e2e8f0; color: #64748b; font-size: 13px; font-weight: 600; padding: 10px 20px; border-radius: 8px; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
-    .btn-cancel:hover { background: #f8fafc; color: #1e293b; }
-
-    .btn-add { display: inline-flex; align-items: center; gap: 6px; background: #fff; border: 1px solid #e2e8f0; color: #475569; font-size: 12px; font-weight: 600; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s; margin-top: 4px; }
-    .btn-add:hover { background: #f8fafc; border-color: #cbd5e1; }
-
-    .btn-delete-item { color: #f87171; transition: color 0.2s; background: none; border: none; cursor: pointer; }
-    .btn-delete-item:hover { color: #ef4444; }
-
-    .breadcrumb { font-size: 12px; color: #94a3b8; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .breadcrumb a { color: #94a3b8; text-decoration: none; }
-    .breadcrumb a:hover { color: #E02424; }
-    .breadcrumb .active { color: #475569; font-weight: 500; }
-
-    .input-group { position: relative; display: flex; align-items: center; }
-    .input-prefix { position: absolute; left: 14px; font-size: 12px; color: #94a3b8; font-weight: 600; pointer-events: none; }
-    .input-with-prefix { padding-left: 36px !important; }
-</style>
 
 <!-- Header -->
 <div class="mb-2">
-    <div class="breadcrumb">
-        <a href="orders.php">Pesanan</a>
+    <div class="text-[12px] text-gray-400 mb-3 flex items-center gap-2">
+        <a href="orders.php" class="text-gray-400 hover:text-primary transition-colors">Pesanan</a>
         <i class="ph ph-caret-right text-[10px]"></i>
-        <span class="active">Buat Pesanan Baru</span>
+        <span class="text-gray-600 font-medium">Buat Pesanan Baru</span>
     </div>
     <h1 class="text-[24px] font-extrabold text-navy">Buat Pesanan</h1>
 </div>
@@ -161,34 +120,36 @@ include __DIR__ . '/../includes/header-admin.php';
     <?php echo csrfField(); ?>
 
     <!-- Informasi Pesanan -->
-    <div class="card shadow-sm">
-        <div class="card-title">
+    <div class="bg-white border border-gray-100 rounded-xl p-6 mb-6 shadow-sm">
+        <div class="text-[14px] font-bold text-gray-800 mb-4 flex items-center gap-2">
             <i class="ph ph-article-ny-times text-lg text-slate-400"></i>
             Informasi Pesanan
         </div>
-        <span class="card-subtitle">Pilih pelanggan dan batch</span>
+        <span class="text-[11px] text-gray-400 font-medium -mt-3 mb-5 block">Pilih pelanggan dan batch</span>
 
         <div class="grid grid-cols-2 gap-x-6 gap-y-5">
             <div>
-                <label class="label">Pelanggan<span class="required">*</span></label>
-                <div class="select-wrapper">
-                    <select name="customer_id" class="input select" required>
+                <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">Pelanggan<span class="text-primary ml-0.5">*</span></label>
+                <div class="relative">
+                    <select name="customer_id" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 appearance-none cursor-pointer pr-9" required>
                         <option value="" disabled selected>Pilih Pelanggan</option>
                         <?php foreach ($customers as $c): ?>
                         <option value="<?php echo $c['id']; ?>"><?php echo htmlspecialchars($c['name'] . ($c['phone'] ? ' — ' . $c['phone'] : '')); ?></option>
                         <?php endforeach; ?>
                     </select>
+                    <i class="ph ph-caret-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
                 </div>
             </div>
             <div>
-                <label class="label">Batch<span class="required">*</span></label>
-                <div class="select-wrapper">
-                    <select name="batch_id" class="input select" required>
+                <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">Batch<span class="text-primary ml-0.5">*</span></label>
+                <div class="relative">
+                    <select name="batch_id" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 appearance-none cursor-pointer pr-9" required>
                         <option value="" disabled selected>Pilih Batch</option>
                         <?php foreach ($batches as $b): ?>
                         <option value="<?php echo $b['id']; ?>"><?php echo htmlspecialchars($b['name'] . ' — ' . $b['event_name']); ?></option>
                         <?php endforeach; ?>
                     </select>
+                    <i class="ph ph-caret-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
                 </div>
                 <span class="text-[10px] text-slate-400 mt-1 block italic">Hanya batch dengan status Open yang tersedia</span>
             </div>
@@ -196,53 +157,54 @@ include __DIR__ . '/../includes/header-admin.php';
     </div>
 
     <!-- Item Pesanan -->
-    <div class="card shadow-sm">
-        <div class="card-title">
+    <div class="bg-white border border-gray-100 rounded-xl p-6 mb-6 shadow-sm">
+        <div class="text-[14px] font-bold text-gray-800 mb-4 flex items-center gap-2">
             <i class="ph ph-shopping-cart text-lg text-slate-400"></i>
             Item Pesanan
         </div>
-        <span class="card-subtitle">Tambahkan produk ke pesanan</span>
+        <span class="text-[11px] text-gray-400 font-medium -mt-3 mb-5 block">Tambahkan produk ke pesanan</span>
 
         <div id="product-list-container">
-            <table class="table-items">
+            <table class="w-full text-[12.5px]" style="border-collapse:separate;border-spacing:0 12px;margin-top:-12px;">
                 <thead>
                     <tr>
-                        <th style="width: 45%;">Produk<span class="required">*</span></th>
-                        <th style="width: 10%;">Qty<span class="required">*</span></th>
-                        <th style="width: 20%;">Harga</th>
-                        <th style="width: 20%;">Subtotal</th>
-                        <th style="width: 5%;"></th>
+                        <th class="text-[11px] font-bold text-gray-400 uppercase text-left px-3.5" style="width: 45%;">Produk<span class="text-primary ml-0.5">*</span></th>
+                        <th class="text-[11px] font-bold text-gray-400 uppercase text-left px-3.5" style="width: 10%;">Qty<span class="text-primary ml-0.5">*</span></th>
+                        <th class="text-[11px] font-bold text-gray-400 uppercase text-left px-3.5" style="width: 20%;">Harga</th>
+                        <th class="text-[11px] font-bold text-gray-400 uppercase text-left px-3.5" style="width: 20%;">Subtotal</th>
+                        <th class="text-[11px] font-bold text-gray-400 uppercase text-left px-3.5" style="width: 5%;"></th>
                     </tr>
                 </thead>
                 <tbody id="product-tbody">
                     <tr>
-                        <td>
-                            <div class="select-wrapper">
-                                <select name="products[]" class="input select product-select" required>
+                        <td class="bg-white border-t border-b border-l border-gray-100 py-4 px-3.5 rounded-l-lg">
+                            <div class="relative">
+                                <select name="products[]" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 appearance-none cursor-pointer pr-9 product-select" required>
                                     <option value="" disabled selected>Pilih Produk</option>
                                     <?php foreach ($products as $p): ?>
                                     <option value="<?php echo $p['id']; ?>" data-price="<?php echo $p['price']; ?>"><?php echo htmlspecialchars($p['name']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
+                                <i class="ph ph-caret-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
                             </div>
                         </td>
-                        <td>
-                            <input type="number" name="qty[]" class="input text-center qty-input" value="1" required min="1">
+                        <td class="bg-white border-t border-b border-gray-100 py-4 px-3.5">
+                            <input type="number" name="qty[]" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 text-center qty-input" value="1" required min="1">
                         </td>
-                        <td>
-                            <div class="input-group">
-                                <span class="input-prefix">Rp</span>
-                                <input type="text" class="input input-with-prefix text-right price-display" value="0" disabled>
+                        <td class="bg-white border-t border-b border-gray-100 py-4 px-3.5">
+                            <div class="relative flex items-center">
+                                <span class="absolute left-3.5 text-[12px] text-gray-400 font-semibold pointer-events-none">Rp</span>
+                                <input type="text" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 pl-9 text-right price-display" value="0" disabled>
                             </div>
                         </td>
-                        <td>
-                            <div class="input-group">
-                                <span class="input-prefix">Rp</span>
-                                <input type="text" class="input input-with-prefix text-right font-semibold subtotal-display" value="0" disabled>
+                        <td class="bg-white border-t border-b border-gray-100 py-4 px-3.5">
+                            <div class="relative flex items-center">
+                                <span class="absolute left-3.5 text-[12px] text-gray-400 font-semibold pointer-events-none">Rp</span>
+                                <input type="text" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 pl-9 text-right font-semibold subtotal-display" value="0" disabled>
                             </div>
                         </td>
-                        <td class="text-right">
-                            <button type="button" class="btn-delete-item" onclick="removeItem(this)">
+                        <td class="bg-white border-t border-b border-r border-gray-100 py-4 px-3.5 rounded-r-lg text-right">
+                            <button type="button" class="text-red-400 transition-colors bg-transparent border-0 cursor-pointer hover:text-red-500" onclick="removeItem(this)">
                                 <i class="ph ph-trash text-lg"></i>
                             </button>
                         </td>
@@ -251,15 +213,15 @@ include __DIR__ . '/../includes/header-admin.php';
             </table>
         </div>
 
-        <button type="button" class="btn-add" id="add-product-btn">
+        <button type="button" class="inline-flex items-center gap-1.5 bg-white border border-gray-200 text-gray-600 text-[12px] font-semibold px-3.5 py-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-50 mt-1" id="add-product-btn">
             <i class="ph ph-plus"></i> Tambah Produk
         </button>
     </div>
 
     <!-- Form Actions -->
     <div class="flex items-center gap-3 mt-4">
-        <button type="submit" class="btn-save shadow-sm shadow-red-100">Buat Pesanan</button>
-        <a href="orders.php" class="btn-cancel">Cancel</a>
+        <button type="submit" class="bg-primary text-white text-[13px] font-bold px-6 py-2.5 rounded-lg transition-all hover:bg-dark hover:-translate-y-px shadow-sm shadow-red-100">Buat Pesanan</button>
+        <a href="orders.php" class="bg-white border border-gray-200 text-gray-500 text-[13px] font-semibold px-5 py-2.5 rounded-lg transition-colors hover:bg-gray-50 hover:text-gray-800">Cancel</a>
     </div>
 </form>
 
@@ -281,35 +243,41 @@ include __DIR__ . '/../includes/header-admin.php';
     function createRow() {
         var tr = document.createElement('tr');
         var td1 = document.createElement('td');
+        td1.className = 'bg-white border-t border-b border-l border-gray-100 py-4 px-3.5 rounded-l-lg';
         var wrap = document.createElement('div');
-        wrap.className = 'select-wrapper';
+        wrap.className = 'relative';
         var sel = document.createElement('select');
         sel.name = 'products[]';
-        sel.className = 'input select product-select';
+        sel.className = 'w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 appearance-none cursor-pointer pr-9 product-select';
         sel.required = true;
         sel.innerHTML = buildProductOptions();
+        var caret = document.createElement('i');
+        caret.className = 'ph ph-caret-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none';
         wrap.appendChild(sel);
+        wrap.appendChild(caret);
         td1.appendChild(wrap);
 
         var td2 = document.createElement('td');
+        td2.className = 'bg-white border-t border-b border-gray-100 py-4 px-3.5';
         var qtyInput = document.createElement('input');
         qtyInput.type = 'number';
         qtyInput.name = 'qty[]';
-        qtyInput.className = 'input text-center qty-input';
+        qtyInput.className = 'w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 text-center qty-input';
         qtyInput.value = '1';
         qtyInput.required = true;
         qtyInput.min = '1';
         td2.appendChild(qtyInput);
 
         var td3 = document.createElement('td');
+        td3.className = 'bg-white border-t border-b border-gray-100 py-4 px-3.5';
         var ig3 = document.createElement('div');
-        ig3.className = 'input-group';
+        ig3.className = 'relative flex items-center';
         var pre3 = document.createElement('span');
-        pre3.className = 'input-prefix';
+        pre3.className = 'absolute left-3.5 text-[12px] text-gray-400 font-semibold pointer-events-none';
         pre3.textContent = 'Rp';
         var inp3 = document.createElement('input');
         inp3.type = 'text';
-        inp3.className = 'input input-with-prefix text-right price-display';
+        inp3.className = 'w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 pl-9 text-right price-display';
         inp3.value = '0';
         inp3.disabled = true;
         ig3.appendChild(pre3);
@@ -317,14 +285,15 @@ include __DIR__ . '/../includes/header-admin.php';
         td3.appendChild(ig3);
 
         var td4 = document.createElement('td');
+        td4.className = 'bg-white border-t border-b border-gray-100 py-4 px-3.5';
         var ig4 = document.createElement('div');
-        ig4.className = 'input-group';
+        ig4.className = 'relative flex items-center';
         var pre4 = document.createElement('span');
-        pre4.className = 'input-prefix';
+        pre4.className = 'absolute left-3.5 text-[12px] text-gray-400 font-semibold pointer-events-none';
         pre4.textContent = 'Rp';
         var inp4 = document.createElement('input');
         inp4.type = 'text';
-        inp4.className = 'input input-with-prefix text-right font-semibold subtotal-display';
+        inp4.className = 'w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 pl-9 text-right font-semibold subtotal-display';
         inp4.value = '0';
         inp4.disabled = true;
         ig4.appendChild(pre4);
@@ -332,10 +301,10 @@ include __DIR__ . '/../includes/header-admin.php';
         td4.appendChild(ig4);
 
         var td5 = document.createElement('td');
-        td5.className = 'text-right';
+        td5.className = 'bg-white border-t border-b border-r border-gray-100 py-4 px-3.5 rounded-r-lg text-right';
         var btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'btn-delete-item';
+        btn.className = 'text-red-400 transition-colors bg-transparent border-0 cursor-pointer hover:text-red-500';
         var icon = document.createElement('i');
         icon.className = 'ph ph-trash text-lg';
         btn.appendChild(icon);

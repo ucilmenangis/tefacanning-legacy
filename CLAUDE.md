@@ -119,20 +119,15 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `classes/PdfService.php` — PDF generation: `generateOrderPdf()`, `download()`
 
 **Priority 4 (Admin Panel): DONE (wired to DB)**
-- `admin/dashboard.php` — stats, active batch summary, recent orders (all from DB)
-- `admin/products.php` — list, create, delete (inline POST)
-- `admin/batches.php` — list, create, delete (inline POST)
-- `admin/customers.php` — list, delete (inline POST)
-- `admin/orders.php` — list, delete (inline POST)
-- `admin/edit-customer.php` — edit, delete (inline POST + activity log)
-- `admin/edit-order.php` — edit status/items, delete (inline POST + activity log)
-- `admin/create-product.php` — new product form (RBAC price protection)
-- `admin/create-batch.php` — new batch form
-- `admin/create-order.php` — new order form (select customer, batch, products)
-- `admin/view-order.php` — read-only order detail page
-- `admin/edit-product.php` — edit product form (RBAC price protection)
-- `admin/pengaturan.php` — user list from DB (super_admin only)
 - `admin/activity-log.php` — real logs from activity_log table (super_admin only)
+
+**Frontend Migration (Native CSS → Tailwind): IN PROGRESS**
+- **Phase 1 (Auth Pages):** ✅ 100% (login-admin, login-customer, register, forgot-password)
+- **Phase 2 (Admin List Pages):** ✅ 100% (orders, products, batches, customers)
+- **Phase 3 (Admin Form Pages):** ✅ 100% (edit-product, create-product, create-batch, edit-customer, create-order, edit-order, view-order)
+- **Phase 4 (Admin Special Pages):** ✅ 100% (dashboard, pengaturan, activity-log)
+- **Phase 5 (Customer Pages):** ✅ 100% (dashboard, preorder, orders, edit-order, profile)
+- **Cleanup:** ✅ 100% (dashboard status badges fixed)
 
 **Not yet built:** FonnteService (WhatsApp notifications).
 

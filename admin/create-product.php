@@ -63,40 +63,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include __DIR__ . '/../includes/header-admin.php';
 ?>
 
-<style>
-    .card { background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
-    .card-title { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .card-subtitle { font-size: 11px; color: #94a3b8; font-weight: 500; margin-top: -12px; margin-bottom: 20px; display: block; }
 
-    .label { font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 6px; display: block; }
-    .label .required { color: #E02424; margin-left: 2px; }
-
-    .input { width: 100%; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #1e293b; background: #fff; transition: all 0.2s; outline: none; }
-    .input:focus { border-color: #E02424; box-shadow: 0 0 0 3px rgba(224, 36, 36, 0.05); }
-    .input:disabled { background: #f1f5f9; color: #64748b; cursor: not-allowed; }
-
-    .btn-save { background: #E02424; color: #fff; font-size: 13px; font-weight: 700; padding: 10px 24px; border-radius: 8px; transition: all 0.2s; border: none; cursor: pointer; }
-    .btn-save:hover { background: #9B1C1C; transform: translateY(-1px); }
-
-    .btn-cancel { background: #fff; border: 1px solid #e2e8f0; color: #64748b; font-size: 13px; font-weight: 600; padding: 10px 20px; border-radius: 8px; transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
-    .btn-cancel:hover { background: #f8fafc; color: #1e293b; }
-
-    .breadcrumb { font-size: 12px; color: #94a3b8; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .breadcrumb a { color: #94a3b8; text-decoration: none; }
-    .breadcrumb a:hover { color: #E02424; }
-    .breadcrumb .active { color: #475569; font-weight: 500; }
-
-    .input-prefix { position: absolute; left: 14px; font-size: 12px; color: #94a3b8; font-weight: 600; pointer-events: none; }
-    .input-with-prefix { padding-left: 36px !important; }
-</style>
 
 <!-- Breadcrumb & Header -->
 <div class="flex items-center justify-between mb-2">
     <div>
-        <div class="breadcrumb">
-            <a href="products.php">Produk</a>
+        <div class="flex items-center gap-2 text-[12px] text-gray-400 mb-3">
+            <a href="products.php" class="hover:text-primary transition-colors">Produk</a>
             <i class="ph ph-caret-right text-[10px]"></i>
-            <span class="active">Create</span>
+            <span class="text-slate-600 font-medium">Create</span>
         </div>
         <h1 class="text-[24px] font-extrabold text-navy">New Produk</h1>
     </div>
@@ -105,37 +80,37 @@ include __DIR__ . '/../includes/header-admin.php';
 <form action="create-product.php" method="POST">
     <?php echo csrfField(); ?>
 
-    <div class="card shadow-sm">
-        <div class="card-title">
+    <div class="bg-white border border-gray-100 rounded-xl p-6 mb-6 shadow-sm">
+        <div class="text-[14px] font-bold text-navy mb-1 flex items-center gap-2">
             <i class="ph ph-package text-lg text-slate-400"></i>
             Informasi Produk
         </div>
-        <span class="card-subtitle">Data produk baru</span>
+        <span class="text-[11px] text-gray-400 font-medium block mb-5">Data produk baru</span>
 
         <div class="grid grid-cols-2 gap-x-6 gap-y-5">
             <div>
-                <label class="label">Nama Produk<span class="required">*</span></label>
-                <input type="text" name="name" class="input" placeholder="Contoh: Sarden SIP Asin" required>
+                <label class="block text-[12px] font-semibold text-slate-600 mb-1.5">Nama Produk<span class="text-primary ml-0.5">*</span></label>
+                <input type="text" name="name" class="w-full border border-gray-200 rounded-lg py-2.5 px-3.5 text-[13px] text-navy bg-white outline-none transition-all focus:border-primary" placeholder="Contoh: Sarden SIP Asin" required>
             </div>
             <div>
-                <label class="label">SKU<span class="required">*</span></label>
-                <input type="text" name="sku" class="input" placeholder="Contoh: TEFA-ASN-001" required>
+                <label class="block text-[12px] font-semibold text-slate-600 mb-1.5">SKU<span class="text-primary ml-0.5">*</span></label>
+                <input type="text" name="sku" class="w-full border border-gray-200 rounded-lg py-2.5 px-3.5 text-[13px] text-navy bg-white outline-none transition-all focus:border-primary" placeholder="Contoh: TEFA-ASN-001" required>
             </div>
             <div>
-                <label class="label">Harga (Rp)</label>
+                <label class="block text-[12px] font-semibold text-slate-600 mb-1.5">Harga (Rp)</label>
                 <?php if ($adminService->canEditPrice()): ?>
-                <input type="number" name="price" class="input" value="0" min="0" step="1000">
+                <input type="number" name="price" class="w-full border border-gray-200 rounded-lg py-2.5 px-3.5 text-[13px] text-navy bg-white outline-none transition-all focus:border-primary" value="0" min="0" step="1000">
                 <?php else: ?>
-                <input type="number" name="price" class="input" value="0" disabled>
+                <input type="number" name="price" class="w-full border border-gray-100 rounded-lg py-2.5 px-3.5 text-[13px] bg-gray-100 text-slate-500 cursor-not-allowed outline-none" value="0" disabled>
                 <p class="text-[10px] text-slate-400 mt-1">Hanya Super Admin yang dapat mengatur harga.</p>
                 <?php endif; ?>
             </div>
             <div>
-                <label class="label">Stok</label>
-                <input type="number" name="stock" class="input" value="0" min="0">
+                <label class="block text-[12px] font-semibold text-slate-600 mb-1.5">Stok</label>
+                <input type="number" name="stock" class="w-full border border-gray-200 rounded-lg py-2.5 px-3.5 text-[13px] text-navy bg-white outline-none transition-all focus:border-primary" value="0" min="0">
             </div>
             <div>
-                <label class="label">Aktif</label>
+                <label class="block text-[12px] font-semibold text-slate-600 mb-1.5">Aktif</label>
                 <label class="flex items-center gap-2 mt-1">
                     <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#E02424]">
                     <span class="text-[12px] text-slate-600">Produk aktif dan terlihat di katalog</span>
@@ -146,8 +121,8 @@ include __DIR__ . '/../includes/header-admin.php';
 
     <!-- Form Actions -->
     <div class="flex items-center gap-3 mt-4">
-        <button type="submit" class="btn-save shadow-sm shadow-red-100">Create Produk</button>
-        <a href="products.php" class="btn-cancel">Cancel</a>
+        <button type="submit" class="bg-primary text-white text-[13px] font-bold px-6 py-2.5 rounded-lg transition-colors hover:bg-dark shadow-sm shadow-red-100 border-none cursor-pointer">Create Produk</button>
+        <a href="products.php" class="inline-flex items-center justify-center bg-white border border-gray-200 text-slate-500 text-[13px] font-semibold px-5 py-2.5 rounded-lg transition-colors hover:bg-gray-50 hover:text-navy">Cancel</a>
     </div>
 </form>
 

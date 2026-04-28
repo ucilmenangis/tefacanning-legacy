@@ -32,6 +32,43 @@ Use `text-primary`, `bg-primary`, `text-navy`, `bg-navy`, `text-dark`, etc.
 
 ---
 
+## Progress Tracker
+
+### Phase 1 — Auth Pages
+- [x] `auth/login-admin.php`
+- [x] `auth/login-customer.php`
+- [x] `auth/register.php`
+- [x] `auth/forgot-password.php`
+
+### Phase 2 — Admin List Pages
+- [x] `admin/orders.php`
+- [x] `admin/products.php`
+- [x] `admin/batches.php`
+- [x] `admin/customers.php`
+
+### Phase 3 — Admin Form Pages
+- [x] `admin/edit-product.php`
+- [x] `admin/create-product.php`
+- [x] `admin/create-batch.php`
+- [x] `admin/edit-customer.php`
+- [x] `admin/create-order.php`
+- [x] `admin/edit-order.php`
+- [x] `admin/view-order.php`
+
+### Phase 4 — Admin Special Pages
+- [x] `admin/dashboard.php`
+- [x] `admin/pengaturan.php`
+- [x] `admin/activity-log.php`
+
+### Phase 5 — Customer Pages
+- [x] `customer/dashboard.php`
+- [x] `customer/preorder.php`
+- [x] `customer/orders.php`
+- [x] `customer/edit-order.php`
+- [x] `customer/profile.php`
+
+---
+
 ## Phase 1 — Auth Pages (4 files, ~402 lines to remove)
 
 All 4 files share 90%+ identical CSS. Convert each one.

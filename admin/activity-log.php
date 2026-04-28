@@ -66,47 +66,24 @@ function getActionClass($action)
 }
 ?>
 
-<style>
-    .breadcrumb-item { font-size: 11px; color: #94a3b8; }
-    .breadcrumb-item.active { color: #1e293b; font-weight: 500; }
 
-    .table-container { background: #fff; border: 1px solid #f1f5f9; border-radius: 12px; overflow: hidden; }
-    .table-toolbar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 12px 20px; border-bottom: 1px solid #f8fafc; }
-
-    .search-input { border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 12px 6px 32px; font-size: 12px; color: #374151; background: #f9fafb; outline: none; width: 180px; }
-    .search-input:focus { border-color: #E02424; background: #fff; }
-
-    .data-table { width: 100%; text-align: left; font-size: 13px; border-collapse: collapse; }
-    .data-table th { font-size: 11px; font-weight: 700; color: #1e293b; padding: 12px 20px; border-bottom: 1px solid #f1f5f9; text-transform: none; }
-    .data-table td { padding: 14px 20px; border-bottom: 1px solid #f8fafc; color: #334155; vertical-align: middle; }
-    .data-table tr:hover td { background: #fafafa; }
-
-    .badge-action { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 6px; font-size: 10px; font-weight: 600; border: 1px solid; }
-    .badge-target { display: flex; flex-direction: column; line-height: 1.2; }
-    .badge-target .type { font-size: 9px; color: #94a3b8; font-weight: 500; }
-    .badge-target .id { font-size: 11px; color: #334155; font-weight: 600; }
-
-    .pagination-btn { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 12px; color: #64748b; border: 1px solid #e2e8f0; transition: all 0.2s; }
-    .pagination-btn.active { background: #fef2f2; border-color: #fecaca; color: #E02424; font-weight: 600; }
-    .pagination-btn:hover:not(.active) { background: #f8fafc; }
-</style>
 
 <!-- Header & Breadcrumb -->
 <div class="mb-6">
     <div class="flex items-center gap-2 mb-1">
-        <span class="breadcrumb-item">Log Aktivitas</span>
+        <span class="text-[11px] text-slate-400">Log Aktivitas</span>
         <i class="ph ph-caret-right text-[10px] text-slate-400"></i>
-        <span class="breadcrumb-item active">List</span>
+        <span class="text-[11px] text-slate-700 font-medium">List</span>
     </div>
     <h1 class="text-2xl font-extrabold text-slate-800">Log Aktivitas</h1>
 </div>
 
 <!-- Table Section -->
-<div class="table-container shadow-sm">
-    <div class="table-toolbar">
+<div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+    <div class="flex items-center justify-end gap-2.5 px-5 py-3 border-b border-gray-50">
         <div class="relative">
             <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-            <input type="text" placeholder="Search" class="search-input" id="log-search-input">
+            <input type="text" placeholder="Search" class="border border-gray-200 rounded-lg py-1.5 pl-8 pr-3 text-[12px] outline-none bg-gray-50 w-[180px] transition-colors focus:border-primary focus:bg-white" id="log-search-input">
         </div>
         <button class="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
             <i class="ph ph-funnel text-base"></i>
@@ -117,55 +94,62 @@ function getActionClass($action)
     </div>
 
     <div class="overflow-x-auto">
-        <table class="data-table">
+        <table class="w-full text-left text-[13px] border-collapse">
             <thead>
                 <tr>
+<<<<<<< Updated upstream
                     <th>Waktu <i class="ph ph-caret-down text-[10px] ml-1"></i></th>
                     <th>Aktor <i class="ph ph-caret-down text-[10px] ml-1"></i></th>
                     <th>Aksi</th>
                     <th>Target</th>
                     <th>Deskripsi</th>
+=======
+                    <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100">Waktu <i class="ph ph-caret-down text-[10px] ml-1"></i></th>
+                    <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100">Aktor <i class="ph ph-caret-down text-[10px] ml-1"></i></th>
+                    <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100">Aksi</th>
+                    <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100">Target</th>
+                    <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100">Deskripsi</th>
+                    <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100"></th>
+>>>>>>> Stashed changes
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($logs as $log): ?>
                 <tr>
-                    <td>
-                        <div class="font-semibold text-slate-700"><?php echo $log[
-                          "waktu"
-                        ]; ?></div>
-                        <div class="text-[11px] text-slate-400 mt-0.5"><?php echo $log[
-                          "ago"
-                        ]; ?></div>
+                    <td class="px-5 py-3.5 border-b border-gray-50 align-middle">
+                        <div class="font-semibold text-slate-700"><?php echo $log['waktu']; ?></div>
+                        <div class="text-[11px] text-slate-400 mt-0.5"><?php echo $log['ago']; ?></div>
                     </td>
-                    <td>
+                    <td class="px-5 py-3.5 border-b border-gray-50 align-middle">
                         <div class="flex items-center gap-2">
                             <i class="ph ph-user text-slate-300 text-lg"></i>
-                            <span class="font-medium"><?php echo $log[
-                              "aktor"
-                            ]; ?></span>
+                            <span class="font-medium"><?php echo $log['aktor']; ?></span>
                         </div>
                     </td>
-                    <td>
-                        <span class="badge-action <?php echo getActionClass(
-                          $log["aksi"],
-                        ); ?>">
-                            <?php echo $log["aksi"]; ?>
+                    <td class="px-5 py-3.5 border-b border-gray-50 align-middle">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-semibold border <?php echo getActionClass($log['aksi']); ?>">
+                            <?php echo $log['aksi']; ?>
                         </span>
                     </td>
-                    <td>
-                        <div class="badge-target border border-slate-100 bg-slate-50 px-2 py-1 rounded-md w-fit min-w-[70px]">
-                            <span class="type uppercase tracking-wider"><?php echo $log[
-                              "target_type"
-                            ]; ?></span>
-                            <span class="id">ID: <?php echo $log[
-                              "target_id"
-                            ]; ?></span>
+                    <td class="px-5 py-3.5 border-b border-gray-50 align-middle">
+                        <div class="flex flex-col leading-snug border border-slate-100 bg-slate-50 px-2 py-1 rounded-md w-fit min-w-[70px]">
+                            <span class="text-[9px] text-slate-400 font-medium uppercase tracking-wider"><?php echo $log['target_type']; ?></span>
+                            <span class="text-[11px] text-slate-700 font-semibold">ID: <?php echo $log['target_id']; ?></span>
                         </div>
                     </td>
+<<<<<<< Updated upstream
                     <td class="text-slate-500 italic"><?php echo $log[
                       "deskripsi"
                     ]; ?></td>
+=======
+                    <td class="text-slate-500 italic px-5 py-3.5 border-b border-gray-50 align-middle"><?php echo $log['deskripsi']; ?></td>
+                    <td class="text-right px-5 py-3.5 border-b border-gray-50 align-middle">
+                        <button class="text-[12px] font-bold text-slate-600 hover:text-navy flex items-center gap-1.5 ml-auto group">
+                            <i class="ph ph-eye text-base text-slate-400 group-hover:text-navy"></i>
+                            View
+                        </button>
+                    </td>
+>>>>>>> Stashed changes
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -190,9 +174,9 @@ function getActionClass($action)
                 </select>
             </div>
             <div class="flex items-center gap-1">
-                <button class="pagination-btn active">1</button>
-                <button class="pagination-btn">2</button>
-                <button class="pagination-btn">
+                <button class="w-7 h-7 inline-flex items-center justify-center rounded-md text-[12px] text-primary font-semibold border border-red-200 bg-red-50 hover:bg-red-100 transition-colors">1</button>
+                <button class="w-7 h-7 inline-flex items-center justify-center rounded-md text-[12px] text-slate-500 border border-gray-200 hover:bg-gray-50 transition-colors">2</button>
+                <button class="w-7 h-7 inline-flex items-center justify-center rounded-md text-[12px] text-slate-500 border border-gray-200 hover:bg-gray-50 transition-colors">
                     <i class="ph ph-caret-right"></i>
                 </button>
             </div>
