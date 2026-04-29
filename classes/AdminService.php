@@ -124,7 +124,7 @@ class AdminService extends BaseService
       "SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders WHERE deleted_at IS NULL",
     );
     $profit = $this->fetch(
-      "SELECT COALESCE(SUM(profit), 0) AS total FROM orders WHERE deleted_at IS NULL",
+      "SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders WHERE status = 'picked_up' AND deleted_at IS NULL",
     );
     $readyCount = $this->fetch(
       "SELECT COUNT(*) AS total FROM orders WHERE status = 'ready' AND deleted_at IS NULL",

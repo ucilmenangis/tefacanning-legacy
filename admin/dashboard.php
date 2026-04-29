@@ -37,8 +37,8 @@ $sparkCustomers = Database::getInstance()->fetchAll(
      GROUP BY month ORDER BY month ASC"
 );
 $sparkProfit = Database::getInstance()->fetchAll(
-    "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COALESCE(SUM(profit), 0) as amount
-     FROM orders WHERE deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+    "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COALESCE(SUM(total_amount), 0) as amount
+     FROM orders WHERE status = 'picked_up' AND deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
      GROUP BY month ORDER BY month ASC"
 );
 
