@@ -10,16 +10,18 @@
  *   update($id, $data)   — update product
  *   softDelete($id)      — set deleted_at
  */
-require_once __DIR__ . '/../includes/functions.php';
 
-class ProductService
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/BaseService.php';
+
+class ProductService extends BaseService
 {
     /**
      * Get all active products ordered by name.
      */
     public function getAll(): array
     {
-        return db_fetch_all(
+        return $this->fetchAll(
             "SELECT id, name, sku, price, stock, is_active
              FROM products
              WHERE deleted_at IS NULL
@@ -32,7 +34,7 @@ class ProductService
      */
     public function getById(int $id): ?array
     {
-        return db_fetch(
+        return $this->fetch(
             "SELECT id, name, sku, price, stock, is_active
              FROM products
              WHERE id = ? AND deleted_at IS NULL",
@@ -45,7 +47,7 @@ class ProductService
      */
     public function create(array $data): int
     {
-        return db_insert(
+        return $this->insert(
             "INSERT INTO products (name, sku, price, stock, is_active, created_at, updated_at)
              VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
             [
@@ -63,7 +65,7 @@ class ProductService
      */
     public function update(int $id, array $data): void
     {
-        db_update(
+        $this->db->update(
             "UPDATE products SET name = ?, sku = ?, price = ?, stock = ?, is_active = ?, updated_at = NOW()
              WHERE id = ? AND deleted_at IS NULL",
             [
@@ -82,7 +84,7 @@ class ProductService
      */
     public function softDelete(int $id): void
     {
-        db_update(
+        $this->db->update(
             "UPDATE products SET deleted_at = NOW(), updated_at = NOW() WHERE id = ?",
             [$id]
         );

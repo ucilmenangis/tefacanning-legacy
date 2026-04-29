@@ -2,8 +2,8 @@
 $pageTitle   = 'Pengguna';
 $currentPage = 'users';
 require_once __DIR__ . '/../includes/auth.php';
-requireAdmin();
-requireSuperAdmin();
+Auth::admin()->requireAuth();
+Auth::admin()->requireSuperAdmin();
 include __DIR__ . '/../includes/header-admin.php';
 
 require_once __DIR__ . '/../classes/AdminService.php';

@@ -1,9 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
 
 // Redirect if already logged in
-if (isCustomerLoggedIn()) {
+if (Auth::customer()->isLoggedIn()) {
     header('Location: ../customer/dashboard.php');
     exit;
 }
@@ -17,13 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email) || empty($password)) {
         $error = 'Email dan password wajib diisi.';
     } else {
-        $customer = db_fetch(
+        $customer = Database::getInstance()->fetch(
             "SELECT * FROM customers WHERE email = ? AND deleted_at IS NULL LIMIT 1",
             [$email]
         );
 
         if ($customer && password_verify($password, $customer['password'])) {
-            loginCustomer($customer['id']);
+            Auth::customer()->login($customer['id']);
             header('Location: ../customer/dashboard.php');
             exit;
         } else {

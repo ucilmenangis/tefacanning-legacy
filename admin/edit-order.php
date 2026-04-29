@@ -7,8 +7,7 @@ $pageTitle   = 'Edit Order';
 $currentPage = 'orders';
 
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/AdminService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
@@ -20,13 +19,13 @@ $activityLogService = new ActivityLogService();
 // Validate ID parameter
 $id = intval($_GET['id'] ?? 0);
 if (!$id) {
-    setFlash('error', 'ID pesanan tidak valid.');
+    FlashMessage::set('error', 'ID pesanan tidak valid.');
     header('Location: orders.php');
     exit;
 }
 
 // Fetch order with customer + batch info
-$orderRaw = db_fetch(
+$orderRaw = Database::getInstance()->fetch(
     "SELECT o.id, o.order_number, o.pickup_code, o.status, o.total_amount, o.profit, o.picked_up_at, o.created_at,
             o.customer_id, o.batch_id,
             c.name AS customer_name, b.name AS batch_name
@@ -38,13 +37,13 @@ $orderRaw = db_fetch(
 );
 
 if (!$orderRaw) {
-    setFlash('error', 'Pesanan tidak ditemukan.');
+    FlashMessage::set('error', 'Pesanan tidak ditemukan.');
     header('Location: orders.php');
     exit;
 }
 
 // Fetch order items
-$items = db_fetch_all(
+$items = Database::getInstance()->fetchAll(
     "SELECT op.id, op.product_id, op.quantity, op.unit_price, op.subtotal, p.name AS product_name
      FROM order_product op
      JOIN products p ON p.id = op.product_id
@@ -53,14 +52,14 @@ $items = db_fetch_all(
 );
 
 // Fetch all active products for dropdown
-$allProducts = db_fetch_all(
+$allProducts = Database::getInstance()->fetchAll(
     "SELECT id, name, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name ASC"
 );
 
 // ── POST Handlers ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verifyCsrf()) {
-        setFlash('error', 'Token CSRF tidak valid.');
+    if (!CsrfService::verify()) {
+        FlashMessage::set('error', 'Token CSRF tidak valid.');
         header('Location: edit-order.php?id=' . $id);
         exit;
     }
@@ -68,9 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_GET['action'] ?? '';
 
     if ($action === 'delete') {
-        db_update("UPDATE orders SET deleted_at = NOW() WHERE id = ?", [$id]);
+        Database::getInstance()->update("UPDATE orders SET deleted_at = NOW() WHERE id = ?", [$id]);
         $activityLogService->log('deleted', 'App\Models\Order', $id, 'deleted');
-        setFlash('success', 'Pesanan berhasil dihapus.');
+        FlashMessage::set('success', 'Pesanan berhasil dihapus.');
         header('Location: orders.php');
         exit;
     }
@@ -93,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Delete existing order_product rows and recalculate
-    db_delete("DELETE FROM order_product WHERE order_id = ?", [$id]);
+    Database::getInstance()->delete("DELETE FROM order_product WHERE order_id = ?", [$id]);
 
     $totalAmount = 0;
     foreach ($productIds as $i => $productId) {
@@ -105,14 +104,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $subtotal = $price * $qty;
         $totalAmount += $subtotal;
 
-        db_insert(
+        Database::getInstance()->insert(
             "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
              VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
             [$id, $productId, $qty, $price, $subtotal]
         );
     }
 
-    db_update(
+    Database::getInstance()->update(
         "UPDATE orders SET status = ?, total_amount = ?, picked_up_at = ?, updated_at = NOW() WHERE id = ?",
         [$status, $totalAmount, $pickedUpAt, $id]
     );
@@ -122,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'total' => $totalAmount,
     ]);
 
-    setFlash('success', 'Pesanan berhasil diperbarui.');
+    FlashMessage::set('success', 'Pesanan berhasil diperbarui.');
     header('Location: edit-order.php?id=' . $id);
     exit;
 }
@@ -186,7 +185,7 @@ include __DIR__ . '/../includes/header-admin.php';
 </div>
 
 <form action="edit-order.php?id=<?php echo $id; ?>" method="POST" id="edit-order-form">
-    <?php echo csrfField(); ?>
+    <?php echo CsrfService::field(); ?>
     <input type="hidden" name="order_id" value="<?php echo $id; ?>">
 
     <div class="grid grid-cols-[1fr_300px] gap-6 items-start">

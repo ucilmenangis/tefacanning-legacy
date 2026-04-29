@@ -11,18 +11,23 @@
  *   getAll($limit, $offset, $filters)
  *   countAll($filters)
  */
-require_once __DIR__ . '/../includes/functions.php';
 
-class ActivityLogService
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/BaseService.php';
+require_once __DIR__ . '/Auth.php';
+require_once __DIR__ . '/AdminGuard.php';
+require_once __DIR__ . '/SessionGuard.php';
+
+class ActivityLogService extends BaseService
 {
     /**
      * Log an activity.
      */
     public function log(string $event, string $subjectType, int $subjectId, string $description, array $properties = []): void
     {
-        $adminId = getAdminId();
+        $adminId = Auth::admin()->getId();
 
-        db_insert(
+        $this->insert(
             "INSERT INTO activity_log (log_name, description, subject_type, subject_id, causer_type, causer_id, properties, created_at, updated_at)
              VALUES ('default', ?, ?, ?, 'App\\\\Models\\\\User', ?, ?, NOW(), NOW())",
             [
@@ -57,7 +62,7 @@ class ActivityLogService
         $limit = (int) $limit;
         $offset = (int) $offset;
 
-        return db_fetch_all(
+        return $this->fetchAll(
             "SELECT al.*, u.name AS causer_name
              FROM activity_log al
              LEFT JOIN users u ON u.id = al.causer_id AND al.causer_type = 'App\\\\Models\\\\User'
@@ -88,7 +93,7 @@ class ActivityLogService
 
         $whereClause = implode(' AND ', $where);
 
-        $row = db_fetch(
+        $row = $this->fetch(
             "SELECT COUNT(*) AS total FROM activity_log WHERE {$whereClause}",
             $params
         );

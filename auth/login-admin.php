@@ -1,9 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
 
 // Redirect if already logged in
-if (isAdminLoggedIn()) {
+if (Auth::admin()->isLoggedIn()) {
     header('Location: ../admin/dashboard.php');
     exit;
 }
@@ -17,13 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email) || empty($password)) {
         $error = 'Email dan password wajib diisi.';
     } else {
-        $user = db_fetch(
+        $user = Database::getInstance()->fetch(
             "SELECT * FROM users WHERE email = ? LIMIT 1",
             [$email]
         );
 
         if ($user && password_verify($password, $user['password'])) {
-            loginAdmin($user['id']);
+            Auth::admin()->login($user['id']);
             header('Location: ../admin/dashboard.php');
             exit;
         } else {

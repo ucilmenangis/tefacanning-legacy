@@ -6,12 +6,13 @@
  * Methods:
  *   getRole($userId)           — check role from DB (super_admin or teknisi)
  *   isSuperAdmin($userId)      — true if super_admin
- *   requireSuperAdmin()        — redirect if not super_admin (call at top of restricted pages)
  *   getById($userId)           — get admin user data
  */
-require_once __DIR__ . '/../includes/functions.php';
 
-class AdminService
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/BaseService.php';
+
+class AdminService extends BaseService
 {
   /**
    * Get the role name for a user from model_has_roles table.
@@ -19,7 +20,7 @@ class AdminService
    */
   public function getRole(int $userId): ?string
   {
-    $row = db_fetch(
+    $row = $this->fetch(
       "SELECT r.name
              FROM roles r
              JOIN model_has_roles mhr ON mhr.role_id = r.id
@@ -39,26 +40,11 @@ class AdminService
   }
 
   /**
-   * Protect page — only super_admin can access.
-   * Call at top of restricted pages after requireAdmin().
-   * Redirects to dashboard with flash message if not authorized.
-   */
-  public function requireSuperAdmin(): void
-  {
-    $adminId = getAdminId();
-    if (!$adminId || !$this->isSuperAdmin($adminId)) {
-      setFlash("error", "Anda tidak memiliki akses ke halaman tersebut.");
-      header("Location: dashboard.php");
-      exit();
-    }
-  }
-
-  /**
    * Get admin user data by ID.
    */
   public function getById(int $userId): ?array
   {
-    return db_fetch("SELECT id, name, email FROM users WHERE id = ?", [
+    return $this->fetch("SELECT id, name, email FROM users WHERE id = ?", [
       $userId,
     ]);
   }
@@ -68,7 +54,7 @@ class AdminService
    */
   public function getAll(): array
   {
-    return db_fetch_all(
+    return $this->fetchAll(
       "SELECT u.id, u.name, u.email, u.created_at, r.name as role
              FROM users u
              LEFT JOIN model_has_roles mhr ON mhr.model_id = u.id AND mhr.model_type = 'App\\\\Models\\\\User'
@@ -84,7 +70,7 @@ class AdminService
    */
   public function verifyProductPrice(int $productId): float
   {
-    $product = db_fetch(
+    $product = $this->fetch(
       "SELECT price FROM products WHERE id = ? AND is_active = 1 AND deleted_at IS NULL",
       [$productId],
     );
@@ -104,7 +90,10 @@ class AdminService
    */
   public function canEditPrice(): bool
   {
-    $adminId = getAdminId();
+    require_once __DIR__ . '/Auth.php';
+    require_once __DIR__ . '/AdminGuard.php';
+    require_once __DIR__ . '/SessionGuard.php';
+    $adminId = Auth::admin()->getId();
     return $adminId && $this->isSuperAdmin($adminId);
   }
 
@@ -116,7 +105,7 @@ class AdminService
   {
     $coreSkus = ["TEFA-ASN-001", "TEFA-SSC-001", "TEFA-SST-001"];
 
-    $product = db_fetch("SELECT sku FROM products WHERE id = ?", [$productId]);
+    $product = $this->fetch("SELECT sku FROM products WHERE id = ?", [$productId]);
 
     return $product && in_array($product["sku"], $coreSkus);
   }
@@ -128,16 +117,16 @@ class AdminService
    */
   public function getDashboardStats(): array
   {
-    $customerCount = db_fetch(
+    $customerCount = $this->fetch(
       "SELECT COUNT(*) AS total FROM customers WHERE deleted_at IS NULL",
     );
-    $omset = db_fetch(
+    $omset = $this->fetch(
       "SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders WHERE deleted_at IS NULL",
     );
-    $profit = db_fetch(
+    $profit = $this->fetch(
       "SELECT COALESCE(SUM(profit), 0) AS total FROM orders WHERE deleted_at IS NULL",
     );
-    $readyCount = db_fetch(
+    $readyCount = $this->fetch(
       "SELECT COUNT(*) AS total FROM orders WHERE status = 'ready' AND deleted_at IS NULL",
     );
 
@@ -154,7 +143,7 @@ class AdminService
    */
   public function getActiveBatch(): ?array
   {
-    return db_fetch(
+    return $this->fetch(
       "SELECT id, name, event_name, event_date, status
              FROM batches
              WHERE status IN ('open', 'processing') AND deleted_at IS NULL
@@ -169,7 +158,7 @@ class AdminService
   public function getRecentOrders(int $limit = 5): array
   {
     $limit = (int) $limit;
-    return db_fetch_all(
+    return $this->fetchAll(
       "SELECT o.id, o.order_number, o.status, o.total_amount, o.pickup_code, o.created_at,
                     c.name AS customer_name, c.phone AS customer_phone,
                     b.name AS batch_name
@@ -187,7 +176,7 @@ class AdminService
    */
   public function getBatchOrders(int $batchId): array
   {
-    return db_fetch_all(
+    return $this->fetchAll(
       "SELECT o.id, o.order_number, o.status, o.pickup_code, o.picked_up_at, o.created_at,
                     c.name AS customer_name
              FROM orders o
@@ -203,7 +192,7 @@ class AdminService
    */
   public function getBatchProducts(int $batchId): array
   {
-    return db_fetch_all(
+    return $this->fetchAll(
       "SELECT p.name AS produk, p.sku, SUM(op.quantity) AS qty, 'kaleng' AS satuan
              FROM order_product op
              JOIN orders o ON o.id = op.order_id
@@ -220,7 +209,7 @@ class AdminService
    */
   public function getBatchOrderCount(int $batchId): int
   {
-    $row = db_fetch(
+    $row = $this->fetch(
       "SELECT COUNT(*) AS total FROM orders WHERE batch_id = ? AND deleted_at IS NULL",
       [$batchId],
     );

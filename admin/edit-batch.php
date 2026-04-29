@@ -7,8 +7,7 @@ $pageTitle   = 'Edit Batch';
 $currentPage = 'batches';
 
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/BatchService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
@@ -19,22 +18,22 @@ $activityLogService = new ActivityLogService();
 
 $id = intval($_GET['id'] ?? 0);
 if (!$id) {
-    setFlash('error', 'ID batch tidak valid.');
+    FlashMessage::set('error', 'ID batch tidak valid.');
     header('Location: batches.php');
     exit;
 }
 
 $batch = $batchService->getById($id);
 if (!$batch) {
-    setFlash('error', 'Batch tidak ditemukan.');
+    FlashMessage::set('error', 'Batch tidak ditemukan.');
     header('Location: batches.php');
     exit;
 }
 
 // ── POST Handler ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verifyCsrf()) {
-        setFlash('error', 'Token CSRF tidak valid.');
+    if (!CsrfService::verify()) {
+        FlashMessage::set('error', 'Token CSRF tidak valid.');
         header('Location: edit-batch.php?id=' . $id);
         exit;
     }
@@ -43,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['_action']) && $_POST['_action'] === 'delete') {
         $batchService->softDelete($id);
         $activityLogService->log('deleted', 'App\Models\Batch', $id, 'deleted');
-        setFlash('success', 'Batch berhasil dihapus.');
+        FlashMessage::set('success', 'Batch berhasil dihapus.');
         header('Location: batches.php');
         exit;
     }
@@ -54,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = trim($_POST['status'] ?? $batch['status']);
 
     if (empty($name) || empty($eventDate)) {
-        setFlash('error', 'Nama batch dan tanggal event wajib diisi.');
+        FlashMessage::set('error', 'Nama batch dan tanggal event wajib diisi.');
         header('Location: edit-batch.php?id=' . $id);
         exit;
     }
@@ -76,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'name' => $name, 'status' => $status,
     ]);
 
-    setFlash('success', 'Batch berhasil diperbarui.');
+    FlashMessage::set('success', 'Batch berhasil diperbarui.');
     header('Location: edit-batch.php?id=' . $id);
     exit;
 }
@@ -134,7 +133,7 @@ $statusOptions = [
 </div>
 
 <form action="edit-batch.php?id=<?php echo $id; ?>" method="POST">
-    <?php echo csrfField(); ?>
+    <?php echo CsrfService::field(); ?>
 
     <div class="card shadow-sm">
         <div class="card-title">
@@ -181,7 +180,7 @@ $statusOptions = [
 
 <!-- Hidden delete form -->
 <form id="delete-form" method="POST" action="edit-batch.php?id=<?php echo $id; ?>">
-    <?php echo csrfField(); ?>
+    <?php echo CsrfService::field(); ?>
     <input type="hidden" name="_action" value="delete">
 </form>
 

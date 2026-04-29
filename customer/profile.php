@@ -1,16 +1,15 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../classes/CustomerService.php';
-requireCustomer();
+Auth::customer()->requireAuth();
 
-$customerId = getCustomerId();
+$customerId = Auth::customer()->getId();
 $service = new CustomerService();
 
 // Handle profile update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'profile') {
-    if (!verifyCsrf()) {
-        setFlash('error', 'Token keamanan tidak valid.');
+    if (!CsrfService::verify()) {
+        FlashMessage::set('error', 'Token keamanan tidak valid.');
         header('Location: profile.php');
         exit;
     }
@@ -21,9 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'profi
     $address      = trim($_POST['address'] ?? '');
 
     if (empty($name)) {
-        setFlash('error', 'Nama wajib diisi.');
+        FlashMessage::set('error', 'Nama wajib diisi.');
     } elseif ($service->hasActiveOrders($customerId)) {
-        setFlash('error', 'Profil tidak dapat diubah karena ada pesanan yang sedang diproses.');
+        FlashMessage::set('error', 'Profil tidak dapat diubah karena ada pesanan yang sedang diproses.');
     } else {
         $service->updateProfile($customerId, [
             'name'         => $name,
@@ -31,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'profi
             'organization' => $organization,
             'address'      => $address,
         ]);
-        setFlash('success', 'Profil berhasil diperbarui.');
+        FlashMessage::set('success', 'Profil berhasil diperbarui.');
     }
     header('Location: profile.php');
     exit;
@@ -39,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'profi
 
 // Handle password change
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'password') {
-    if (!verifyCsrf()) {
-        setFlash('error', 'Token keamanan tidak valid.');
+    if (!CsrfService::verify()) {
+        FlashMessage::set('error', 'Token keamanan tidak valid.');
         header('Location: profile.php');
         exit;
     }
@@ -50,15 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'passw
     $newConfirm     = $_POST['new_password_confirm'] ?? '';
 
     if (empty($current) || empty($new)) {
-        setFlash('error', 'Semua field password wajib diisi.');
+        FlashMessage::set('error', 'Semua field password wajib diisi.');
     } elseif (strlen($new) < 8) {
-        setFlash('error', 'Password baru minimal 8 karakter.');
+        FlashMessage::set('error', 'Password baru minimal 8 karakter.');
     } elseif ($new !== $newConfirm) {
-        setFlash('error', 'Konfirmasi password tidak cocok.');
+        FlashMessage::set('error', 'Konfirmasi password tidak cocok.');
     } elseif (!$service->changePassword($customerId, $current, $new)) {
-        setFlash('error', 'Password saat ini salah.');
+        FlashMessage::set('error', 'Password saat ini salah.');
     } else {
-        setFlash('success', 'Password berhasil diubah.');
+        FlashMessage::set('success', 'Password berhasil diubah.');
     }
     header('Location: profile.php');
     exit;
@@ -74,7 +73,7 @@ include __DIR__ . '/../includes/header-customer.php';
 
 
 
-<?php echo renderFlash(); ?>
+<?php echo FlashMessage::render(); ?>
 
 <h1 class="text-[22px] font-bold text-navy mb-6">Edit Profil</h1>
 
@@ -97,7 +96,7 @@ include __DIR__ . '/../includes/header-customer.php';
 <!-- Informasi Pribadi -->
 <div class="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden mb-6">
     <form method="POST" action="">
-        <?php echo csrfField(); ?>
+        <?php echo CsrfService::field(); ?>
         <input type="hidden" name="action" value="profile">
 
         <div class="px-5 py-4 border-b border-gray-50 flex items-center gap-2.5 mb-2">
@@ -176,7 +175,7 @@ include __DIR__ . '/../includes/header-customer.php';
 <!-- Ubah Password -->
 <div class="bg-white border border-gray-100 rounded-xl shadow-sm mb-6">
     <form method="POST" action="">
-        <?php echo csrfField(); ?>
+        <?php echo CsrfService::field(); ?>
         <input type="hidden" name="action" value="password">
 
         <div class="px-5 py-4 border-b border-gray-50 mb-2 flex items-center gap-2.5">

@@ -1,11 +1,10 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../classes/OrderService.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
-requireCustomer();
+Auth::customer()->requireAuth();
 
-$customerId = getCustomerId();
+$customerId = Auth::customer()->getId();
 $orderService = new OrderService();
 
 // Handle cancel action
@@ -13,9 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'cance
     $cancelId = (int) ($_POST['order_id'] ?? 0);
     if ($cancelId > 0) {
         if ($orderService->cancel($cancelId, $customerId)) {
-            setFlash('success', 'Pesanan berhasil dibatalkan.');
+            FlashMessage::set('success', 'Pesanan berhasil dibatalkan.');
         } else {
-            setFlash('error', 'Pesanan tidak bisa dibatalkan. Hanya pesanan berstatus Menunggu yang bisa dibatalkan.');
+            FlashMessage::set('error', 'Pesanan tidak bisa dibatalkan. Hanya pesanan berstatus Menunggu yang bisa dibatalkan.');
         }
     }
     header('Location: orders.php');
@@ -33,7 +32,7 @@ include __DIR__ . '/../includes/header-customer.php';
 
 
 
-<?php echo renderFlash(); ?>
+<?php echo FlashMessage::render(); ?>
 
 <h1 class="text-[22px] font-bold text-navy mb-6">Riwayat Pesanan</h1>
 
@@ -102,7 +101,7 @@ include __DIR__ . '/../includes/header-customer.php';
                             <form method="POST" action="" onsubmit="return confirm('Batalkan pesanan ini?')">
                                 <input type="hidden" name="action" value="cancel">
                                 <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
-                                <?php echo csrfField(); ?>
+                                <?php echo CsrfService::field(); ?>
                                 <button type="submit" class="inline-flex items-center gap-1 transition-colors text-primary hover:text-dark bg-transparent border-0 cursor-pointer p-0 font-inherit text-[13px]">
                                     <i class="ph ph-trash text-base"></i> Hapus
                                 </button>

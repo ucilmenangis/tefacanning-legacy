@@ -2,7 +2,7 @@
 $pageTitle   = 'Dashboard';
 $currentPage = 'dashboard';
 require_once __DIR__ . '/../includes/auth.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 include __DIR__ . '/../includes/header-admin.php';
 
 require_once __DIR__ . '/../classes/AdminService.php';
@@ -16,27 +16,27 @@ $batch_products = $activeBatch ? $adminService->getBatchProducts($activeBatch['i
 $recent_orders = $adminService->getRecentOrders(5);
 
 // Monthly data for sparkline charts (last 6 months)
-$sparkOrders = db_fetch_all(
+$sparkOrders = Database::getInstance()->fetchAll(
     "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
      FROM orders WHERE deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
      GROUP BY month ORDER BY month ASC"
 );
-$sparkOmset = db_fetch_all(
+$sparkOmset = Database::getInstance()->fetchAll(
     "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COALESCE(SUM(total_amount), 0) as amount
      FROM orders WHERE deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
      GROUP BY month ORDER BY month ASC"
 );
-$sparkReady = db_fetch_all(
+$sparkReady = Database::getInstance()->fetchAll(
     "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
      FROM orders WHERE status = 'ready' AND deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
      GROUP BY month ORDER BY month ASC"
 );
-$sparkCustomers = db_fetch_all(
+$sparkCustomers = Database::getInstance()->fetchAll(
     "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
      FROM customers WHERE deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
      GROUP BY month ORDER BY month ASC"
 );
-$sparkProfit = db_fetch_all(
+$sparkProfit = Database::getInstance()->fetchAll(
     "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COALESCE(SUM(profit), 0) as amount
      FROM orders WHERE deleted_at IS NULL AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
      GROUP BY month ORDER BY month ASC"
@@ -67,7 +67,7 @@ $statusMap = [
         <div class="w-9 h-9 rounded-full bg-navy flex items-center justify-center text-white text-[13px] font-bold">SA</div>
         <div>
             <p class="text-[14px] font-bold text-navy">Welcome</p>
-            <p class="text-[11px] text-gray-400"><?php echo htmlspecialchars(isSuperAdmin() ? 'Super Admin' : 'Teknisi'); ?></p>
+            <p class="text-[11px] text-gray-400"><?php echo htmlspecialchars(Auth::admin()->isSuperAdmin() ? 'Super Admin' : 'Teknisi'); ?></p>
         </div>
     </div>
     <a href="../auth/logout.php?type=admin" class="inline-flex items-center gap-1.5 text-[12px] text-gray-400 hover:text-navy border border-gray-200 px-3 py-1.5 rounded-lg transition-colors">

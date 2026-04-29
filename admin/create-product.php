@@ -7,8 +7,7 @@ $pageTitle   = 'New Produk';
 $currentPage = 'products';
 
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/ProductService.php';
 require_once __DIR__ . '/../classes/AdminService.php';
@@ -20,8 +19,8 @@ $activityLogService = new ActivityLogService();
 
 // ── POST Handler ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verifyCsrf()) {
-        setFlash('error', 'Token CSRF tidak valid.');
+    if (!CsrfService::verify()) {
+        FlashMessage::set('error', 'Token CSRF tidak valid.');
         header('Location: create-product.php');
         exit;
     }
@@ -33,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $isActive = isset($_POST['is_active']) ? 1 : 0;
 
     if (empty($name) || empty($sku)) {
-        setFlash('error', 'Nama dan SKU produk wajib diisi.');
+        FlashMessage::set('error', 'Nama dan SKU produk wajib diisi.');
         header('Location: create-product.php');
         exit;
     }
@@ -55,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'name' => $name, 'sku' => $sku, 'price' => $price,
     ]);
 
-    setFlash('success', 'Produk berhasil ditambahkan.');
+    FlashMessage::set('success', 'Produk berhasil ditambahkan.');
     header('Location: products.php');
     exit;
 }
@@ -78,7 +77,7 @@ include __DIR__ . '/../includes/header-admin.php';
 </div>
 
 <form action="create-product.php" method="POST">
-    <?php echo csrfField(); ?>
+    <?php echo CsrfService::field(); ?>
 
     <div class="bg-white border border-gray-100 rounded-xl p-6 mb-6 shadow-sm">
         <div class="text-[14px] font-bold text-navy mb-1 flex items-center gap-2">

@@ -11,16 +11,18 @@
  *   update($id, $data)   — update batch
  *   softDelete($id)      — set deleted_at
  */
-require_once __DIR__ . '/../includes/functions.php';
 
-class BatchService
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/BaseService.php';
+
+class BatchService extends BaseService
 {
     /**
      * Get all batches with order count, ordered by newest first.
      */
     public function getAll(): array
     {
-        return db_fetch_all(
+        return $this->fetchAll(
             "SELECT b.id, b.name, b.event_name, b.event_date, b.status, b.created_at,
                     COUNT(DISTINCT o.id) AS order_count
              FROM batches b
@@ -36,7 +38,7 @@ class BatchService
      */
     public function getById(int $id): ?array
     {
-        return db_fetch(
+        return $this->fetch(
             "SELECT id, name, event_name, event_date, status, created_at
              FROM batches
              WHERE id = ? AND deleted_at IS NULL",
@@ -49,7 +51,7 @@ class BatchService
      */
     public function getOpenBatches(): array
     {
-        return db_fetch_all(
+        return $this->fetchAll(
             "SELECT id, name, event_name, event_date, status
              FROM batches
              WHERE status = 'open' AND deleted_at IS NULL
@@ -62,7 +64,7 @@ class BatchService
      */
     public function create(array $data): int
     {
-        return db_insert(
+        return $this->insert(
             "INSERT INTO batches (name, event_name, event_date, status, created_at, updated_at)
              VALUES (?, ?, ?, 'open', NOW(), NOW())",
             [
@@ -103,7 +105,7 @@ class BatchService
         $fields[] = 'updated_at = NOW()';
         $params[] = $id;
 
-        db_update(
+        $this->db->update(
             "UPDATE batches SET " . implode(', ', $fields) . " WHERE id = ? AND deleted_at IS NULL",
             $params
         );
@@ -114,7 +116,7 @@ class BatchService
      */
     public function softDelete(int $id): void
     {
-        db_update(
+        $this->db->update(
             "UPDATE batches SET deleted_at = NOW(), updated_at = NOW() WHERE id = ?",
             [$id]
         );

@@ -4,12 +4,12 @@ require_once __DIR__ . "/includes/functions.php";
 require_once __DIR__ . "/classes/FormatHelper.php";
 
 // Active products from DB
-$products = db_fetch_all(
+$products = Database::getInstance()->fetchAll(
   "SELECT id, name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name",
 );
 
 // Open batches from DB with order counts
-$batches = db_fetch_all(
+$batches = Database::getInstance()->fetchAll(
   "SELECT b.id, b.name, b.event_name, b.event_date, b.status,
             (SELECT COUNT(*) FROM orders WHERE batch_id = b.id AND deleted_at IS NULL) as order_count
      FROM batches b

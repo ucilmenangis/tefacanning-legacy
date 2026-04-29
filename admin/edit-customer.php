@@ -7,8 +7,7 @@ $pageTitle   = 'Edit Customer';
 $currentPage = 'customers';
 
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/CustomerAdminService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
@@ -20,14 +19,14 @@ $activityLogService = new ActivityLogService();
 // Validate ID parameter
 $id = intval($_GET['id'] ?? 0);
 if (!$id) {
-    setFlash('error', 'ID pelanggan tidak valid.');
+    FlashMessage::set('error', 'ID pelanggan tidak valid.');
     header('Location: customers.php');
     exit;
 }
 
 $customer = $customerAdminService->getById($id);
 if (!$customer) {
-    setFlash('error', 'Pelanggan tidak ditemukan.');
+    FlashMessage::set('error', 'Pelanggan tidak ditemukan.');
     header('Location: customers.php');
     exit;
 }
@@ -36,8 +35,8 @@ $stats = $customerAdminService->getStats($id);
 
 // ── POST Handlers ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verifyCsrf()) {
-        setFlash('error', 'Token CSRF tidak valid.');
+    if (!CsrfService::verify()) {
+        FlashMessage::set('error', 'Token CSRF tidak valid.');
         header('Location: edit-customer.php?id=' . $id);
         exit;
     }
@@ -47,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'delete') {
         $customerAdminService->softDelete($id);
         $activityLogService->log('deleted', 'App\Models\Customer', $id, 'deleted', ['old' => $customer]);
-        setFlash('success', 'Pelanggan berhasil dihapus.');
+        FlashMessage::set('success', 'Pelanggan berhasil dihapus.');
         header('Location: customers.php');
         exit;
     }
@@ -62,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     if (empty($data['name'])) {
-        setFlash('error', 'Nama pelanggan wajib diisi.');
+        FlashMessage::set('error', 'Nama pelanggan wajib diisi.');
         header('Location: edit-customer.php?id=' . $id);
         exit;
     }
@@ -70,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customerAdminService->update($id, $data);
     $activityLogService->log('updated', 'App\Models\Customer', $id, 'updated', ['new' => $data, 'old' => $customer]);
 
-    setFlash('success', 'Data pelanggan berhasil diperbarui.');
+    FlashMessage::set('success', 'Data pelanggan berhasil diperbarui.');
     header('Location: edit-customer.php?id=' . $id);
     exit;
 }
@@ -113,7 +112,7 @@ include __DIR__ . '/../includes/header-admin.php';
 </div>
 
 <form action="edit-customer.php?id=<?php echo $id; ?>" method="POST" id="edit-customer-form">
-    <?php echo csrfField(); ?>
+    <?php echo CsrfService::field(); ?>
     <input type="hidden" name="customer_id" value="<?php echo $id; ?>">
 
     <div class="grid grid-cols-[1fr_300px] gap-6 items-start">

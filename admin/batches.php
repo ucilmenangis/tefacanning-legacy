@@ -2,8 +2,7 @@
 $pageTitle   = 'Batches';
 $currentPage = 'batches';
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/BatchService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
@@ -15,10 +14,10 @@ $activityLogService = new ActivityLogService();
 // ── POST: Delete ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete') {
     $deleteId = intval($_GET['id'] ?? 0);
-    if ($deleteId && verifyCsrf()) {
+    if ($deleteId && CsrfService::verify()) {
         $batchService->softDelete($deleteId);
         $activityLogService->log('deleted', 'App\Models\Batch', $deleteId, 'deleted');
-        setFlash('success', 'Batch berhasil dihapus.');
+        FlashMessage::set('success', 'Batch berhasil dihapus.');
     }
     header('Location: batches.php');
     exit;
@@ -141,7 +140,7 @@ $statusMap = [
 </div>
 
 <!-- Hidden CSRF for JS actions -->
-<div class="hidden"><?php echo csrfField(); ?></div>
+<div class="hidden"><?php echo CsrfService::field(); ?></div>
 
 <script>
     function toggleAll(master) {

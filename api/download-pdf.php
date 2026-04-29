@@ -7,9 +7,8 @@
  */
 
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
 
-startSession();
+Auth::startSession();
 
 $orderId = intval($_GET['id'] ?? 0);
 if (!$orderId) {
@@ -18,14 +17,14 @@ if (!$orderId) {
 }
 
 // Check which guard is active
-$adminId = getAdminId();
-$customerId = getCustomerId();
+$adminId = Auth::admin()->getId();
+$customerId = Auth::customer()->getId();
 
 if ($adminId) {
     // Admin can access any order — no ownership check
 } elseif ($customerId) {
     // Customer: verify order belongs to them
-    $order = db_fetch(
+    $order = Database::getInstance()->fetch(
         "SELECT customer_id FROM orders WHERE id = ? AND deleted_at IS NULL",
         [$orderId]
     );

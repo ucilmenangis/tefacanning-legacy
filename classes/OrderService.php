@@ -3,25 +3,24 @@
 /**
  * OrderService — handles all order-related database operations.
  *
- * This class groups order queries together so they're easy to find and reuse.
- * Uses the global db() PDO connection from functions.php.
- *
  * Usage:
  *   $service = new OrderService();
  *   $orders  = $service->getByCustomer($customerId);
  *   $order   = $service->getById($orderId);
  */
-class OrderService
+
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/BaseService.php';
+
+class OrderService extends BaseService
 {
     /**
      * Get all orders for a customer, newest first.
      * Includes batch name and item count.
-     *
-     * @return array<array{id:int, order_number:string, status:string, total_amount:string, created_at:string, batch_name:string, item_count:int}>
      */
     public function getByCustomer(int $customerId, int $limit = 20): array
     {
-        return db_fetch_all(
+        return $this->fetchAll(
             "SELECT o.id, o.order_number, o.status, o.total_amount, o.created_at,
                     b.name as batch_name,
                     (SELECT COUNT(*) FROM order_product WHERE order_id = o.id) as item_count
@@ -40,7 +39,7 @@ class OrderService
      */
     public function getById(int $orderId, int $customerId): ?array
     {
-        $order = db_fetch(
+        $order = $this->fetch(
             "SELECT o.*, b.name as batch_name, b.event_name, b.event_date
              FROM orders o
              JOIN batches b ON o.batch_id = b.id
@@ -53,7 +52,7 @@ class OrderService
         }
 
         // Attach order items with product names
-        $order['items'] = db_fetch_all(
+        $order['items'] = $this->fetchAll(
             "SELECT op.*, p.name as product_name, p.sku
              FROM order_product op
              JOIN products p ON op.product_id = p.id
@@ -67,12 +66,10 @@ class OrderService
     /**
      * Cancel (soft-delete) a pending order.
      * Only pending orders can be cancelled.
-     *
-     * @return bool true if cancelled, false if not allowed
      */
     public function cancel(int $orderId, int $customerId): bool
     {
-        $order = db_fetch(
+        $order = $this->fetch(
             "SELECT id, status FROM orders WHERE id = ? AND customer_id = ? AND deleted_at IS NULL",
             [$orderId, $customerId]
         );
@@ -81,7 +78,7 @@ class OrderService
             return false;
         }
 
-        db()->prepare("UPDATE orders SET deleted_at = NOW(), updated_at = NOW() WHERE id = ?")
+        $this->db->getPdo()->prepare("UPDATE orders SET deleted_at = NOW(), updated_at = NOW() WHERE id = ?")
             ->execute([$orderId]);
 
         return true;
@@ -93,24 +90,24 @@ class OrderService
      */
     public function getStats(int $customerId): array
     {
-        $total = db_fetch(
+        $total = $this->fetch(
             "SELECT COUNT(*) as count FROM orders WHERE customer_id = ? AND deleted_at IS NULL",
             [$customerId]
         )['count'];
 
-        $spent = db_fetch(
+        $spent = $this->fetch(
             "SELECT COALESCE(SUM(total_amount), 0) as total FROM orders
              WHERE customer_id = ? AND deleted_at IS NULL AND status != 'pending'",
             [$customerId]
         )['total'];
 
-        $pending = db_fetch(
+        $pending = $this->fetch(
             "SELECT COUNT(*) as count FROM orders
              WHERE customer_id = ? AND status = 'pending' AND deleted_at IS NULL",
             [$customerId]
         )['count'];
 
-        $ready = db_fetch(
+        $ready = $this->fetch(
             "SELECT COUNT(*) as count FROM orders
              WHERE customer_id = ? AND status = 'ready' AND deleted_at IS NULL",
             [$customerId]

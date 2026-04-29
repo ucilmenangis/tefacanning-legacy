@@ -9,15 +9,14 @@
  *   include __DIR__ . '/../includes/header-customer.php';
  */
 require_once __DIR__ . '/auth.php';
-require_once __DIR__ . '/functions.php';
 
 if (!isset($pageTitle))
     $pageTitle = 'Customer Panel';
 if (!isset($currentPage))
     $currentPage = '';
 
-$customerId = getCustomerId();
-$customerData = $customerId ? db_fetch("SELECT name, email, phone, organization, created_at FROM customers WHERE id = ? AND deleted_at IS NULL", [$customerId]) : null;
+$customerId = Auth::customer()->getId();
+$customerData = $customerId ? Database::getInstance()->fetch("SELECT name, email, phone, organization, created_at FROM customers WHERE id = ? AND deleted_at IS NULL", [$customerId]) : null;
 $customerInitial = $customerData ? strtoupper(substr($customerData['name'], 0, 1)) : 'C';
 $basePath = dirname($_SERVER['SCRIPT_NAME']);
 ?>
@@ -209,4 +208,4 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
      MAIN CONTENT
 ════════════════════════════════════════════ -->
     <main id="main-content" class="min-h-screen pt-[60px] p-8">
-        <?php echo renderFlash(); ?>
+        <?php echo FlashMessage::render(); ?>

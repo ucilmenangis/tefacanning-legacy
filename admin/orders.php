@@ -2,8 +2,7 @@
 $pageTitle   = 'Pesanan';
 $currentPage = 'orders';
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/FormatHelper.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
@@ -13,10 +12,10 @@ $activityLogService = new ActivityLogService();
 // ── POST: Delete ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete') {
     $deleteId = intval($_GET['id'] ?? 0);
-    if ($deleteId && verifyCsrf()) {
-        db_update("UPDATE orders SET deleted_at = NOW() WHERE id = ?", [$deleteId]);
+    if ($deleteId && CsrfService::verify()) {
+        Database::getInstance()->update("UPDATE orders SET deleted_at = NOW() WHERE id = ?", [$deleteId]);
         $activityLogService->log('deleted', 'App\Models\Order', $deleteId, 'deleted');
-        setFlash('success', 'Pesanan berhasil dihapus.');
+        FlashMessage::set('success', 'Pesanan berhasil dihapus.');
     }
     header('Location: orders.php');
     exit;
@@ -24,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete
 
 include __DIR__ . '/../includes/header-admin.php';
 
-$orders = db_fetch_all(
+$orders = Database::getInstance()->fetchAll(
     "SELECT o.id, o.order_number, o.status, o.pickup_code, o.total_amount, o.picked_up_at, o.created_at,
             c.name AS customer_name, c.phone AS customer_phone,
             b.name AS batch_name
@@ -162,7 +161,7 @@ $statusMap = [
 </div>
 
 <!-- Hidden CSRF for JS actions -->
-<div class="hidden"><?php echo csrfField(); ?></div>
+<div class="hidden"><?php echo CsrfService::field(); ?></div>
 
 <script>
     function toggleAll(master) {

@@ -1,9 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
 
 // Redirect if already logged in
-if (isCustomerLoggedIn()) {
+if (Auth::customer()->isLoggedIn()) {
     header('Location: ../customer/dashboard.php');
     exit;
 }
@@ -30,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Konfirmasi password tidak cocok.';
     } else {
         // Check duplicate email
-        $existing = db_fetch(
+        $existing = Database::getInstance()->fetch(
             "SELECT id FROM customers WHERE email = ? AND deleted_at IS NULL LIMIT 1",
             [$email]
         );
@@ -40,14 +39,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $hashed = password_hash($password, PASSWORD_BCRYPT);
 
-            $newId = db_insert(
+            $newId = Database::getInstance()->insert(
                 "INSERT INTO customers (name, email, password, phone, organization, address, created_at, updated_at)
                  VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())",
                 [$name, $email, $hashed, $phone, $organization, $address]
             );
 
             if ($newId) {
-                loginCustomer($newId);
+                Auth::customer()->login($newId);
                 header('Location: ../customer/dashboard.php');
                 exit;
             } else {

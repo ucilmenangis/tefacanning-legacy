@@ -7,8 +7,7 @@ $pageTitle   = 'Buat Pesanan';
 $currentPage = 'orders';
 
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/AdminService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
@@ -18,7 +17,7 @@ $adminService = new AdminService();
 $activityLogService = new ActivityLogService();
 
 // Build JS-safe product data for dynamic add row
-$products = db_fetch_all(
+$products = Database::getInstance()->fetchAll(
     "SELECT id, name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name ASC"
 );
 $productJson = json_encode(array_map(function($p) {
@@ -27,8 +26,8 @@ $productJson = json_encode(array_map(function($p) {
 
 // ── POST Handler ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verifyCsrf()) {
-        setFlash('error', 'Token CSRF tidak valid.');
+    if (!CsrfService::verify()) {
+        FlashMessage::set('error', 'Token CSRF tidak valid.');
         header('Location: create-order.php');
         exit;
     }
@@ -39,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantities = $_POST['qty'] ?? [];
 
     if (!$customerId || !$batchId || empty($productIds)) {
-        setFlash('error', 'Pelanggan, batch, dan minimal 1 produk wajib diisi.');
+        FlashMessage::set('error', 'Pelanggan, batch, dan minimal 1 produk wajib diisi.');
         header('Location: create-order.php');
         exit;
     }
@@ -62,13 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($orderItems)) {
-        setFlash('error', 'Tidak ada produk valid yang dipilih.');
+        FlashMessage::set('error', 'Tidak ada produk valid yang dipilih.');
         header('Location: create-order.php');
         exit;
     }
 
     // Insert order
-    $orderId = db_insert(
+    $orderId = Database::getInstance()->insert(
         "INSERT INTO orders (customer_id, batch_id, order_number, pickup_code, status, total_amount, profit, created_at, updated_at)
          VALUES (?, ?, ?, ?, 'pending', ?, 0, NOW(), NOW())",
         [$customerId, $batchId, $orderNumber, $pickupCode, $totalAmount]
@@ -76,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insert order items
     foreach ($orderItems as $item) {
-        db_insert(
+        Database::getInstance()->insert(
             "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
              VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
             [$orderId, $item[0], $item[1], $item[2], $item[3]]
@@ -88,16 +87,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'total' => $totalAmount,
     ]);
 
-    setFlash('success', 'Pesanan berhasil dibuat.');
+    FlashMessage::set('success', 'Pesanan berhasil dibuat.');
     header('Location: view-order.php?id=' . $orderId);
     exit;
 }
 
 // Fetch data for form
-$customers = db_fetch_all(
+$customers = Database::getInstance()->fetchAll(
     "SELECT id, name, phone FROM customers WHERE deleted_at IS NULL ORDER BY name ASC"
 );
-$batches = db_fetch_all(
+$batches = Database::getInstance()->fetchAll(
     "SELECT id, name, event_name, event_date FROM batches WHERE status = 'open' AND deleted_at IS NULL ORDER BY created_at DESC"
 );
 
@@ -117,7 +116,7 @@ include __DIR__ . '/../includes/header-admin.php';
 </div>
 
 <form action="create-order.php" method="POST">
-    <?php echo csrfField(); ?>
+    <?php echo CsrfService::field(); ?>
 
     <!-- Informasi Pesanan -->
     <div class="bg-white border border-gray-100 rounded-xl p-6 mb-6 shadow-sm">

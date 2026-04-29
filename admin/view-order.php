@@ -7,20 +7,19 @@ $pageTitle   = 'Detail Pesanan';
 $currentPage = 'orders';
 
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/AdminService.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
 
 $id = intval($_GET['id'] ?? 0);
 if (!$id) {
-    setFlash('error', 'ID pesanan tidak valid.');
+    FlashMessage::set('error', 'ID pesanan tidak valid.');
     header('Location: orders.php');
     exit;
 }
 
-$order = db_fetch(
+$order = Database::getInstance()->fetch(
     "SELECT o.id, o.order_number, o.pickup_code, o.status, o.total_amount, o.profit,
             o.picked_up_at, o.created_at, o.updated_at,
             c.name AS customer_name, c.phone AS customer_phone, c.email AS customer_email,
@@ -34,12 +33,12 @@ $order = db_fetch(
 );
 
 if (!$order) {
-    setFlash('error', 'Pesanan tidak ditemukan.');
+    FlashMessage::set('error', 'Pesanan tidak ditemukan.');
     header('Location: orders.php');
     exit;
 }
 
-$items = db_fetch_all(
+$items = Database::getInstance()->fetchAll(
     "SELECT op.quantity, op.unit_price, op.subtotal, p.name AS product_name, p.sku
      FROM order_product op
      JOIN products p ON p.id = op.product_id

@@ -7,8 +7,7 @@ $pageTitle   = 'New Batch';
 $currentPage = 'batches';
 
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/BatchService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
@@ -18,8 +17,8 @@ $activityLogService = new ActivityLogService();
 
 // ── POST Handler ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verifyCsrf()) {
-        setFlash('error', 'Token CSRF tidak valid.');
+    if (!CsrfService::verify()) {
+        FlashMessage::set('error', 'Token CSRF tidak valid.');
         header('Location: create-batch.php');
         exit;
     }
@@ -29,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $eventDate = trim($_POST['event_date'] ?? '');
 
     if (empty($name) || empty($eventDate)) {
-        setFlash('error', 'Nama batch dan tanggal event wajib diisi.');
+        FlashMessage::set('error', 'Nama batch dan tanggal event wajib diisi.');
         header('Location: create-batch.php');
         exit;
     }
@@ -44,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'name' => $name, 'event_date' => $eventDate,
     ]);
 
-    setFlash('success', 'Batch berhasil ditambahkan.');
+    FlashMessage::set('success', 'Batch berhasil ditambahkan.');
     header('Location: batches.php');
     exit;
 }
@@ -67,7 +66,7 @@ include __DIR__ . '/../includes/header-admin.php';
 </div>
 
 <form action="create-batch.php" method="POST">
-    <?php echo csrfField(); ?>
+    <?php echo CsrfService::field(); ?>
 
     <div class="bg-white border border-gray-100 rounded-xl p-6 mb-6 shadow-sm">
         <div class="text-[14px] font-bold text-navy mb-1 flex items-center gap-2">

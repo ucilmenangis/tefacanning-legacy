@@ -1,31 +1,30 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../classes/OrderService.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
-requireCustomer();
+Auth::customer()->requireAuth();
 
-$customerId = getCustomerId();
+$customerId = Auth::customer()->getId();
 $orderService = new OrderService();
 $orderId = (int) ($_GET['id'] ?? 0);
 
 $order = $orderService->getById($orderId, $customerId);
 
 if (!$order) {
-    setFlash('error', 'Pesanan tidak ditemukan.');
+    FlashMessage::set('error', 'Pesanan tidak ditemukan.');
     header('Location: orders.php');
     exit;
 }
 
 if ($order['status'] !== 'pending') {
-    setFlash('error', 'Hanya pesanan berstatus Menunggu yang dapat diedit.');
+    FlashMessage::set('error', 'Hanya pesanan berstatus Menunggu yang dapat diedit.');
     header('Location: orders.php');
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!verifyCsrf()) {
-        setFlash('error', 'Token keamanan tidak valid.');
+    if (!CsrfService::verify()) {
+        FlashMessage::set('error', 'Token keamanan tidak valid.');
         header('Location: edit-order.php?id=' . $orderId);
         exit;
     }
@@ -47,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             continue;
         }
 
-        $product = db_fetch(
+        $product = Database::getInstance()->fetch(
             "SELECT id, name, price FROM products WHERE id = ? AND is_active = 1 AND deleted_at IS NULL",
             [$productId]
         );
@@ -68,19 +67,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors) && !empty($validItems)) {
         $totalAmount = array_sum(array_column($validItems, 'subtotal'));
 
-        db()->prepare("UPDATE orders SET total_amount = ?, updated_at = NOW() WHERE id = ?")
+        Database::getInstance()->getPdo()->prepare("UPDATE orders SET total_amount = ?, updated_at = NOW() WHERE id = ?")
             ->execute([$totalAmount, $orderId]);
-        db()->prepare("DELETE FROM order_product WHERE order_id = ?")->execute([$orderId]);
+        Database::getInstance()->getPdo()->prepare("DELETE FROM order_product WHERE order_id = ?")->execute([$orderId]);
 
         foreach ($validItems as $vi) {
-            db_insert(
+            Database::getInstance()->insert(
                 "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
                  VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
                 [$orderId, $vi['product_id'], $vi['quantity'], $vi['unit_price'], $vi['subtotal']]
             );
         }
 
-        setFlash('success', 'Pesanan berhasil diperbarui.');
+        FlashMessage::set('success', 'Pesanan berhasil diperbarui.');
         header('Location: orders.php');
         exit;
     }
@@ -88,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formErrors = $errors;
 }
 
-$products = db_fetch_all(
+$products = Database::getInstance()->fetchAll(
     "SELECT id, name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name"
 );
 
@@ -105,7 +104,7 @@ include __DIR__ . '/../includes/header-customer.php';
     .product-row.selected { outline: 2px solid #E02424; outline-offset: -2px; background-color: #fef2f2; }
 </style>
 
-<?php echo renderFlash(); ?>
+<?php echo FlashMessage::render(); ?>
 
 <?php if (!empty($formErrors)): ?>
 <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg px-3.5 py-2.5 text-[13px] flex items-center gap-2 mb-5">
@@ -130,7 +129,7 @@ include __DIR__ . '/../includes/header-customer.php';
 </p>
 
 <form id="edit-form" method="POST" action="">
-    <?php echo csrfField(); ?>
+    <?php echo CsrfService::field(); ?>
     <div id="form-items-container"></div>
 </form>
 

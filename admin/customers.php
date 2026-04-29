@@ -2,8 +2,7 @@
 $pageTitle   = 'Pelanggan';
 $currentPage = 'customers';
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/CustomerAdminService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
@@ -14,10 +13,10 @@ $activityLogService = new ActivityLogService();
 // ── POST: Delete ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete') {
     $deleteId = intval($_GET['id'] ?? 0);
-    if ($deleteId && verifyCsrf()) {
+    if ($deleteId && CsrfService::verify()) {
         $customerAdminService->softDelete($deleteId);
         $activityLogService->log('deleted', 'App\Models\Customer', $deleteId, 'deleted');
-        setFlash('success', 'Pelanggan berhasil dihapus.');
+        FlashMessage::set('success', 'Pelanggan berhasil dihapus.');
     }
     header('Location: customers.php');
     exit;
@@ -135,7 +134,7 @@ $customers = $customerAdminService->getAll();
 </div>
 
 <!-- Hidden CSRF for JS actions -->
-<div class="hidden"><?php echo csrfField(); ?></div>
+<div class="hidden"><?php echo CsrfService::field(); ?></div>
 
 <script>
     function toggleAll(master) {

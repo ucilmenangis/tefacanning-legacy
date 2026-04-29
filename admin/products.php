@@ -2,8 +2,7 @@
 $pageTitle   = 'Produk';
 $currentPage = 'products';
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
-requireAdmin();
+Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/ProductService.php';
 require_once __DIR__ . '/../classes/AdminService.php';
@@ -17,13 +16,13 @@ $activityLogService = new ActivityLogService();
 // ── POST: Delete ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete') {
     $deleteId = intval($_GET['id'] ?? 0);
-    if ($deleteId && verifyCsrf()) {
+    if ($deleteId && CsrfService::verify()) {
         if ($adminService->isCoreProduct($deleteId)) {
-            setFlash('error', 'Produk inti tidak dapat dihapus.');
+            FlashMessage::set('error', 'Produk inti tidak dapat dihapus.');
         } else {
             $productService->softDelete($deleteId);
             $activityLogService->log('deleted', 'App\Models\Product', $deleteId, 'deleted');
-            setFlash('success', 'Produk berhasil dihapus.');
+            FlashMessage::set('success', 'Produk berhasil dihapus.');
         }
     }
     header('Location: products.php');
@@ -143,7 +142,7 @@ $products = $productService->getAll();
 </div>
 
 <!-- Hidden CSRF for JS actions -->
-<div class="hidden"><?php echo csrfField(); ?></div>
+<div class="hidden"><?php echo CsrfService::field(); ?></div>
 
 <script>
     function toggleAll(master) {

@@ -10,16 +10,18 @@
  *   update($id, $data)   — update customer profile
  *   softDelete($id)      — soft delete customer
  */
-require_once __DIR__ . '/../includes/functions.php';
 
-class CustomerAdminService
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/BaseService.php';
+
+class CustomerAdminService extends BaseService
 {
     /**
      * Get all customers with order counts.
      */
     public function getAll(): array
     {
-        return db_fetch_all(
+        return $this->fetchAll(
             "SELECT c.id, c.name, c.organization, c.phone, c.email, c.address, c.created_at,
                     COUNT(DISTINCT o.id) AS order_count
              FROM customers c
@@ -35,7 +37,7 @@ class CustomerAdminService
      */
     public function getById(int $id): ?array
     {
-        return db_fetch(
+        return $this->fetch(
             "SELECT id, name, organization, phone, email, address, created_at
              FROM customers
              WHERE id = ? AND deleted_at IS NULL",
@@ -48,7 +50,7 @@ class CustomerAdminService
      */
     public function getStats(int $id): array
     {
-        $stats = db_fetch(
+        $stats = $this->fetch(
             "SELECT COUNT(o.id) AS total_orders,
                     COALESCE(SUM(o.total_amount), 0) AS total_spent
              FROM orders o
@@ -70,7 +72,7 @@ class CustomerAdminService
      */
     public function update(int $id, array $data): void
     {
-        db_update(
+        $this->db->update(
             "UPDATE customers SET name = ?, organization = ?, phone = ?, email = ?, address = ?, updated_at = NOW()
              WHERE id = ? AND deleted_at IS NULL",
             [
@@ -89,7 +91,7 @@ class CustomerAdminService
      */
     public function softDelete(int $id): void
     {
-        db_update(
+        $this->db->update(
             "UPDATE customers SET deleted_at = NOW() WHERE id = ?",
             [$id]
         );

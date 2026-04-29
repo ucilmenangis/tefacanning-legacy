@@ -1,11 +1,10 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
-requireCustomer();
+Auth::customer()->requireAuth();
 
-$customerId = getCustomerId();
-$customer = db_fetch("SELECT name FROM customers WHERE id = ? AND deleted_at IS NULL", [$customerId]);
+$customerId = Auth::customer()->getId();
+$customer = Database::getInstance()->fetch("SELECT name FROM customers WHERE id = ? AND deleted_at IS NULL", [$customerId]);
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -14,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $items   = $_POST['items'] ?? [];
 
     // Validate batch
-    $batch = db_fetch(
+    $batch = Database::getInstance()->fetch(
         "SELECT id, name FROM batches WHERE id = ? AND status = 'open' AND deleted_at IS NULL",
         [$batchId]
     );
@@ -38,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             continue;
         }
 
-        $product = db_fetch(
+        $product = Database::getInstance()->fetch(
             "SELECT id, name, price FROM products WHERE id = ? AND is_active = 1 AND deleted_at IS NULL",
             [$productId]
         );
@@ -61,21 +60,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pickupCode  = strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
         $totalAmount = array_sum(array_column($validItems, 'subtotal'));
 
-        $orderId = db_insert(
+        $orderId = Database::getInstance()->insert(
             "INSERT INTO orders (customer_id, batch_id, order_number, pickup_code, status, total_amount, profit, notes, created_at, updated_at)
              VALUES (?, ?, ?, ?, 'pending', ?, 0, ?, NOW(), NOW())",
             [$customerId, $batchId, $orderNumber, $pickupCode, $totalAmount, $notes ?: null]
         );
 
         foreach ($validItems as $vi) {
-            db_insert(
+            Database::getInstance()->insert(
                 "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
                  VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
                 [$orderId, $vi['product_id'], $vi['quantity'], $vi['unit_price'], $vi['subtotal']]
             );
         }
 
-        setFlash('success', 'Pre-Order berhasil dikirim! Order: ' . $orderNumber);
+        FlashMessage::set('success', 'Pre-Order berhasil dikirim! Order: ' . $orderNumber);
         header('Location: preorder.php');
         exit;
     }
@@ -84,16 +83,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Data for form
-$batches = db_fetch_all(
+$batches = Database::getInstance()->fetchAll(
     "SELECT id, name, event_name, event_date FROM batches WHERE status = 'open' AND deleted_at IS NULL ORDER BY created_at DESC"
 );
 
-$products = db_fetch_all(
+$products = Database::getInstance()->fetchAll(
     "SELECT id, name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name"
 );
 
 // Recent orders
-$recentOrders = db_fetch_all(
+$recentOrders = Database::getInstance()->fetchAll(
     "SELECT o.order_number, o.status, o.total_amount, o.created_at,
             b.name as batch_name,
             (SELECT COUNT(*) FROM order_product WHERE order_id = o.id) as item_count
@@ -121,7 +120,7 @@ include __DIR__ . '/../includes/header-customer.php';
 
 
 
-<?php echo renderFlash(); ?>
+<?php echo FlashMessage::render(); ?>
 
 <?php if (!empty($formErrors)): ?>
 <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg px-3.5 py-2.5 text-[13px] flex items-center gap-2 mb-5">
@@ -138,7 +137,7 @@ include __DIR__ . '/../includes/header-customer.php';
 
 <!-- Hidden form for POST submission -->
 <form id="preorder-form" method="POST" action="">
-    <?php echo csrfField(); ?>
+    <?php echo CsrfService::field(); ?>
     <input type="hidden" name="batch_id" id="form-batch-id">
     <input type="hidden" name="notes" id="form-notes">
     <div id="form-items-container"></div>

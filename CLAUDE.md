@@ -87,9 +87,9 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 
 ## Current Implementation Status
 
-**Priority 1 (Core Infrastructure): DONE**
-- `includes/functions.php` — Query helpers, CSRF, flash messages
-- `includes/auth.php` — Session management, dual guard, middleware
+**Priority 1 (Core Infrastructure): DONE (OOP refactored)**
+- `includes/auth.php` — OOP bootstrap (loads classes + starts session)
+- `includes/functions.php` — OOP bootstrap (loads Database + BaseService)
 - `includes/header-admin.php` + `footer-admin.php` — Admin layout
 - `includes/header-customer.php` + `footer-customer.php` — Customer layout
 
@@ -107,16 +107,38 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `customer/edit-order.php` — ✅ wired to DB (edit pending order items, price from DB)
 - `customer/profile.php` — ✅ wired to DB (edit profile, change password, active order lock)
 
-**OOP Classes:**
+**OOP Classes (all extend BaseService unless noted):**
+
+Core (no parent):
+- `classes/Database.php` — Singleton PDO wrapper: `getInstance()`, `fetch()`, `fetchAll()`, `insert()`, `update()`, `delete()`, `getPdo()`
 - `classes/FormatHelper.php` — static helpers: `rupiah()`, `tanggal()`, `orderStatus()`, `batchStatus()`
+
+Services (extend BaseService):
+- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `getAll()`, dashboard methods
 - `classes/OrderService.php` — order operations: `getByCustomer()`, `getById()`, `cancel()`, `getStats()`
 - `classes/CustomerService.php` — customer operations: `getById()`, `updateProfile()`, `changePassword()`, `hasActiveOrders()`
-- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `requireSuperAdmin()`, `getAll()`, `getDashboardStats()`, `getActiveBatch()`, `getRecentOrders()`, `getBatchOrders()`, `getBatchProducts()`, `getBatchOrderCount()`, `verifyProductPrice()`, `canEditPrice()`, `isCoreProduct()`
 - `classes/ProductService.php` — product CRUD: `getAll()`, `getById()`, `create()`, `update()`, `softDelete()`
 - `classes/BatchService.php` — batch CRUD: `getAll()`, `getById()`, `getOpenBatches()`, `create()`, `update()`, `softDelete()`
 - `classes/CustomerAdminService.php` — customer admin CRUD: `getAll()`, `getById()`, `getStats()`, `update()`, `softDelete()`
 - `classes/ActivityLogService.php` — activity log: `log()`, `getAll()`, `countAll()`
 - `classes/PdfService.php` — PDF generation: `generateOrderPdf()`, `download()`
+
+Auth & Session:
+- `classes/SessionGuard.php` — Interface: `isLoggedIn()`, `getId()`, `login()`, `logout()`, `requireAuth()`
+- `classes/AdminGuard.php` — implements SessionGuard + `isSuperAdmin()`, `requireSuperAdmin()`, `getRole()`
+- `classes/CustomerGuard.php` — implements SessionGuard
+- `classes/Auth.php` — Facade: `startSession()`, `admin()`, `customer()`
+
+Static Helpers:
+- `classes/CsrfService.php` — `generate()`, `verify()`, `field()`
+- `classes/FlashMessage.php` — `set()`, `get()`, `render()`, `has()`
+
+Base:
+- `classes/BaseService.php` — Abstract base with protected DB wrappers (`fetch()`, `fetchAll()`, `insert()`, `update()`, `delete()`)
+
+Exceptions:
+- `classes/exceptions/AppException.php` — Base exception
+- `classes/exceptions/DatabaseException.php`, `AuthException.php`, `CsrfException.php`
 
 **Priority 4 (Admin Panel): DONE (wired to DB)**
 - `admin/activity-log.php` — real logs from activity_log table (super_admin only)
@@ -124,35 +146,27 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 **Frontend Migration (Native CSS → Tailwind): IN PROGRESS**
 - **Phase 1 (Auth Pages):** ✅ 100% (login-admin, login-customer, register, forgot-password)
 - **Phase 2 (Admin List Pages):** ✅ 100% (orders, products, batches, customers)
-- **Phase 3 (Admin Form Pages):** ✅ 100% (edit-product, create-product, create-batch, edit-customer, create-order, edit-order, view-order)
+- **Phase 3 (Admin Form Pages):** ✅ 100% (edit-product, create-product, create-batch, edit-batch, edit-customer, create-order, edit-order, view-order)
 - **Phase 4 (Admin Special Pages):** ✅ 100% (dashboard, pengaturan, activity-log)
 - **Phase 5 (Customer Pages):** ✅ 100% (dashboard, preorder, orders, edit-order, profile)
 - **Cleanup:** ✅ 100% (dashboard status badges fixed)
 
 **Not yet built:** FonnteService (WhatsApp notifications).
 
-## Refactoring Plan (After All Features Complete)
+## Refactoring Plan — COMPLETE ✅
 
-**Goal:** Unify code style — currently mixed procedural + OOP. Refactor everything to consistent OOP after user completes campus OOP course (week 11-16).
+**Completed 2026-04-28.** All procedural code refactored to OOP. See design spec: `docs/superpowers/specs/2026-04-28-oop-refactor-design.md`
 
-**Known inconsistencies to refactor:**
-
-| Current (Procedural) | Target (OOP) | File |
-|----------------------|---------------|------|
-| `db()`, `db_fetch()`, `db_fetch_all()` | `Database` class (singleton, connection method) | `includes/functions.php` |
-| `requireAdmin()`, `loginAdmin()`, `isSuperAdmin()` | `AuthService` class with static methods | `includes/auth.php` |
-| `generateCsrfToken()`, `verifyCsrf()` | `CsrfService` class or part of `AuthService` | `includes/auth.php` |
-| `setFlash()`, `getFlash()`, `renderFlash()` | `FlashMessage` class | `includes/auth.php` |
-| `startSession()` | Part of `Session` class or `AuthService` | `includes/auth.php` |
-
-**OOP patterns to apply (based on course):**
-- Week 4 (Encapsulation): private properties, getters/setters in service classes
-- Week 5 (Inheritance): base `Service` class with shared DB access
-- Week 6 (Abstract/Interface): `RepositoryInterface` for DB operations
-- Week 7 (Polymorphism/Exception): custom exception classes for DB/auth errors
-
-**Rule:** Do NOT refactor during feature development. Complete all features first, then refactor in one pass.
-
+| OOP Concept | Implementation |
+|-------------|---------------|
+| Encapsulation | `Database` (private $pdo), guards (private const SESSION_KEY) |
+| Inheritance | `BaseService` → all 9 service classes |
+| Interface | `SessionGuard` with `isLoggedIn()`, `getId()`, `login()`, `logout()`, `requireAuth()` |
+| Polymorphism | `AdminGuard` vs `CustomerGuard` — same interface, different behavior |
+| Abstract class | `BaseService` with protected DB wrappers |
+| Exception hierarchy | `AppException` → `DatabaseException` / `AuthException` / `CsrfException` |
+| Singleton | `Database::getInstance()` with clone/wakeup prevention |
+| Static methods | `CsrfService`, `FlashMessage`, `Auth` facade |
 
 ## Project Structure
 
@@ -160,11 +174,9 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 tefa-canning-legacy/
 ├── index.php                ← Landing page (NOT a router yet)
 ├── .env                     ← Environment config (DB, Fonnte token)
-├── config/
-│   └── database.php         ← PDO connection
 ├── includes/
-│   ├── functions.php        ← Query helpers, CSRF, flash
-│   ├── auth.php             ← Session + auth guards
+│   ├── functions.php        ← OOP bootstrap (loads Database + BaseService)
+│   ├── auth.php             ← OOP bootstrap (loads all auth classes + starts session)
 │   ├── header-admin.php     ← Admin layout header
 │   ├── header-customer.php  ← Customer layout header
 │   ├── footer-admin.php     ← Admin layout footer
@@ -185,7 +197,8 @@ tefa-canning-legacy/
 │   ├── view-order.php
 │   ├── edit-customer.php
 │   ├── edit-order.php
-│   └── edit-product.php
+│   ├── edit-product.php
+│   └── edit-batch.php
 ├── customer/                ← Customer pages (UI done, backend pending)
 │   ├── dashboard.php
 │   ├── preorder.php
@@ -209,16 +222,28 @@ tefa-canning-legacy/
 │   ├── 05-flash-message.md
 │   └── 06-rbac-role-system.md
 ├── classes/                 ← OOP business logic
+│   ├── Database.php         ← Singleton PDO wrapper
+│   ├── BaseService.php      ← Abstract base with DB wrappers
+│   ├── SessionGuard.php     ← Interface for auth guards
+│   ├── AdminGuard.php       ← Admin auth (implements SessionGuard)
+│   ├── CustomerGuard.php    ← Customer auth (implements SessionGuard)
+│   ├── Auth.php             ← Facade: startSession(), admin(), customer()
+│   ├── CsrfService.php      ← CSRF token static methods
+│   ├── FlashMessage.php     ← Flash message static methods
 │   ├── FormatHelper.php     ← Static: rupiah, tanggal, status labels
+│   ├── AdminService.php     ← Admin operations, dashboard queries, RBAC
 │   ├── OrderService.php     ← Order CRUD (customer-side)
 │   ├── CustomerService.php  ← Customer profile, password, active order check
-│   ├── AdminService.php     ← Admin operations, dashboard queries, RBAC
 │   ├── ProductService.php   ← Product CRUD
 │   ├── BatchService.php     ← Batch CRUD
 │   ├── CustomerAdminService.php ← Customer admin CRUD
 │   ├── ActivityLogService.php   ← Activity log read/write
-│   └── PdfService.php           ← PDF generation (DomPDF)
-│   └── PdfService.php           ← PDF generation (DomPDF)
+│   ├── PdfService.php           ← PDF generation (DomPDF)
+│   └── exceptions/          ← Custom exception hierarchy
+│       ├── AppException.php
+│       ├── DatabaseException.php
+│       ├── AuthException.php
+│       └── CsrfException.php
 ├── services/                ← To be created (Fonnte)
 └── views/
     └── pdf/
@@ -232,15 +257,18 @@ tefa-canning-legacy/
 - `index.php` serves as landing page only (not a router).
 - Each page includes shared files (`includes/auth.php`, `includes/functions.php`) at the top.
 
-### Authentication (Dual Guard)
-Two separate session namespaces, mirroring Laravel's dual guard:
-- **Admin guard:** `$_SESSION['admin_id']` → references `users` table
-- **Customer guard:** `$_SESSION['customer_id']` → references `customers` table
+### Authentication (Dual Guard) — OOP
+Two separate session namespaces via `SessionGuard` interface:
+- **Admin guard:** `Auth::admin()` → `AdminGuard` → `$_SESSION['admin_id']` → references `users` table
+- **Customer guard:** `Auth::customer()` → `CustomerGuard` → `$_SESSION['customer_id']` → references `customers` table
 - Both can be logged in simultaneously without conflict
+- Polymorphism: same `SessionGuard` interface, different redirect URLs
 
-### Database Access
+### Database Access — OOP
+- **`Database::getInstance()`** — Singleton PDO wrapper
+- **`BaseService`** — Abstract class with protected `fetch()`, `fetchAll()`, `insert()`, `update()`, `delete()`
+- All service classes extend `BaseService` and use `$this->fetch()` etc.
 - **PDO prepared statements only** — never concatenate user input into queries
-- Simple query helper functions in `includes/functions.php`
 - No ORM — raw SQL with prepared params
 
 ### Template System
@@ -248,21 +276,16 @@ Two separate session namespaces, mirroring Laravel's dual guard:
 - Layout files with `$content` variable or `include` for sections
 - Keep logic in separate files from presentation where practical
 
-### Middleware Pattern
+### Middleware Pattern — OOP
 ```php
 // Protect admin routes
-function requireAdmin() {
-    if (!isset($_SESSION['admin_id'])) {
-        header('Location: /auth/login-admin.php');
-        exit;
-    }
-}
+Auth::admin()->requireAuth();
 
 // Protect customer routes
-function requireCustomer() {
-    if (!isset($_SESSION['customer_id'])) {
-        header('Location: /auth/login-customer.php');
-        exit;
+Auth::customer()->requireAuth();
+
+// Super admin only
+Auth::admin()->requireSuperAdmin();
     }
 }
 ```

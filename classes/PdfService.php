@@ -1,20 +1,21 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/BaseService.php';
 require_once __DIR__ . '/FormatHelper.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-class PdfService
+class PdfService extends BaseService
 {
     /**
      * Fetch order with items, customer, and batch data from DB.
      */
     private function getOrderData(int $orderId): ?array
     {
-        $order = db_fetch(
+        $order = $this->fetch(
             "SELECT o.id, o.order_number, o.pickup_code, o.status, o.total_amount,
                     o.profit, o.picked_up_at, o.created_at,
                     c.name AS customer_name, c.phone, c.email,
@@ -31,7 +32,7 @@ class PdfService
             return null;
         }
 
-        $items = db_fetch_all(
+        $items = $this->fetchAll(
             "SELECT op.quantity, op.unit_price, op.subtotal, p.name, p.sku
              FROM order_product op
              JOIN products p ON p.id = op.product_id

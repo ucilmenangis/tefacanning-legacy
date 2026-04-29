@@ -9,7 +9,11 @@
  *   $service->updateProfile($id, $data);
  *   $service->changePassword($id, $currentPassword, $newPassword);
  */
-class CustomerService
+
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/BaseService.php';
+
+class CustomerService extends BaseService
 {
     /**
      * Get customer by ID.
@@ -17,7 +21,7 @@ class CustomerService
      */
     public function getById(int $customerId): ?array
     {
-        return db_fetch(
+        return $this->fetch(
             "SELECT id, name, email, phone, organization, address, created_at
              FROM customers WHERE id = ? AND deleted_at IS NULL",
             [$customerId]
@@ -30,7 +34,7 @@ class CustomerService
      */
     public function hasActiveOrders(int $customerId): bool
     {
-        $result = db_fetch(
+        $result = $this->fetch(
             "SELECT COUNT(*) as count FROM orders
              WHERE customer_id = ? AND status IN ('processing', 'ready') AND deleted_at IS NULL",
             [$customerId]
@@ -40,12 +44,10 @@ class CustomerService
 
     /**
      * Update customer profile fields.
-     *
-     * @param array $data ['name' => ..., 'phone' => ..., 'organization' => ..., 'address' => ...]
      */
     public function updateProfile(int $customerId, array $data): void
     {
-        db()->prepare(
+        $this->db->getPdo()->prepare(
             "UPDATE customers SET name = ?, phone = ?, organization = ?, address = ?, updated_at = NOW()
              WHERE id = ? AND deleted_at IS NULL"
         )->execute([
@@ -64,7 +66,7 @@ class CustomerService
      */
     public function changePassword(int $customerId, string $currentPassword, string $newPassword): bool
     {
-        $customer = db_fetch(
+        $customer = $this->fetch(
             "SELECT password FROM customers WHERE id = ? AND deleted_at IS NULL",
             [$customerId]
         );
@@ -73,7 +75,7 @@ class CustomerService
             return false;
         }
 
-        db()->prepare("UPDATE customers SET password = ?, updated_at = NOW() WHERE id = ?")
+        $this->db->getPdo()->prepare("UPDATE customers SET password = ?, updated_at = NOW() WHERE id = ?")
             ->execute([password_hash($newPassword, PASSWORD_BCRYPT), $customerId]);
 
         return true;

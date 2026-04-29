@@ -15,7 +15,7 @@ if (!isset($currentPage)) {
 }
 
 // RBAC: check if current admin is super_admin
-$isAdminSuperAdmin = isSuperAdmin();
+$isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
 ?>
 
 <!DOCTYPE html>
@@ -227,10 +227,8 @@ $isAdminSuperAdmin = isSuperAdmin();
             <!-- Page Content -->
             <main class="flex-1 p-6">
                 <?php
-                // Render flash messages if function exists
-                if (function_exists('renderFlash')) {
-                    echo renderFlash();
-                }
+                // Render flash messages
+                echo FlashMessage::render();
                 ?>
                 <script>
                     function toggleGroup(id, btn) {

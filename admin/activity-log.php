@@ -2,8 +2,8 @@
 $pageTitle = "Log Aktivitas";
 $currentPage = "activity-log";
 require_once __DIR__ . "/../includes/auth.php";
-requireAdmin();
-requireSuperAdmin();
+Auth::admin()->requireAuth();
+Auth::admin()->requireSuperAdmin();
 include __DIR__ . "/../includes/header-admin.php";
 require_once __DIR__ . "/../includes/functions.php";
 
@@ -66,8 +66,6 @@ function getActionClass($action)
 }
 ?>
 
-
-
 <!-- Header & Breadcrumb -->
 <div class="mb-6">
     <div class="flex items-center gap-2 mb-1">
@@ -97,20 +95,11 @@ function getActionClass($action)
         <table class="w-full text-left text-[13px] border-collapse">
             <thead>
                 <tr>
-<<<<<<< Updated upstream
-                    <th>Waktu <i class="ph ph-caret-down text-[10px] ml-1"></i></th>
-                    <th>Aktor <i class="ph ph-caret-down text-[10px] ml-1"></i></th>
-                    <th>Aksi</th>
-                    <th>Target</th>
-                    <th>Deskripsi</th>
-=======
                     <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100">Waktu <i class="ph ph-caret-down text-[10px] ml-1"></i></th>
                     <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100">Aktor <i class="ph ph-caret-down text-[10px] ml-1"></i></th>
                     <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100">Aksi</th>
                     <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100">Target</th>
                     <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100">Deskripsi</th>
-                    <th class="text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100"></th>
->>>>>>> Stashed changes
                 </tr>
             </thead>
             <tbody>
@@ -137,19 +126,7 @@ function getActionClass($action)
                             <span class="text-[11px] text-slate-700 font-semibold">ID: <?php echo $log['target_id']; ?></span>
                         </div>
                     </td>
-<<<<<<< Updated upstream
-                    <td class="text-slate-500 italic"><?php echo $log[
-                      "deskripsi"
-                    ]; ?></td>
-=======
                     <td class="text-slate-500 italic px-5 py-3.5 border-b border-gray-50 align-middle"><?php echo $log['deskripsi']; ?></td>
-                    <td class="text-right px-5 py-3.5 border-b border-gray-50 align-middle">
-                        <button class="text-[12px] font-bold text-slate-600 hover:text-navy flex items-center gap-1.5 ml-auto group">
-                            <i class="ph ph-eye text-base text-slate-400 group-hover:text-navy"></i>
-                            View
-                        </button>
-                    </td>
->>>>>>> Stashed changes
                 </tr>
                 <?php endforeach; ?>
             </tbody>

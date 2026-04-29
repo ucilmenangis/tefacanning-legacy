@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/functions.php';
 
 $error   = '';
 $success = '';
@@ -13,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Format email tidak valid.';
     } else {
-        $customer = db_fetch(
+        $customer = Database::getInstance()->fetch(
             "SELECT id, name, email FROM customers WHERE email = ? AND deleted_at IS NULL LIMIT 1",
             [$email]
         );

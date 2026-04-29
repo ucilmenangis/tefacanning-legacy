@@ -3,18 +3,18 @@ require_once __DIR__ . "/../includes/auth.php";
 require_once __DIR__ . "/../includes/functions.php";
 require_once __DIR__ . "/../classes/OrderService.php";
 require_once __DIR__ . "/../classes/FormatHelper.php";
-requireCustomer();
+Auth::customer()->requireAuth();
 
-$customerId = getCustomerId();
+$customerId = Auth::customer()->getId();
 
 // Customer info
-$customer = db_fetch(
+$customer = Database::getInstance()->fetch(
   "SELECT name, email, phone, organization, created_at FROM customers WHERE id = ? AND deleted_at IS NULL",
   [$customerId],
 );
 
 if (!$customer) {
-  logoutCustomer();
+  Auth::customer()->logout();
   header("Location: login-customer.php");
   exit();
 }
@@ -28,7 +28,7 @@ $pendingOrders = $stats["pending_count"];
 $readyOrders = $stats["ready_count"];
 
 // Latest open batch
-$latestBatch = db_fetch(
+$latestBatch = Database::getInstance()->fetch(
   "SELECT b.id, b.name, b.event_name, b.event_date, b.status,
             (SELECT COUNT(*) FROM orders WHERE batch_id = b.id AND deleted_at IS NULL) as order_count
      FROM batches b
@@ -37,12 +37,12 @@ $latestBatch = db_fetch(
 );
 
 // Active products
-$products = db_fetch_all(
+$products = Database::getInstance()->fetchAll(
   "SELECT name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name",
 );
 
 // Monthly order counts (last 6 months) for sparkline
-$monthlyOrders = db_fetch_all(
+$monthlyOrders = Database::getInstance()->fetchAll(
   "SELECT DATE_FORMAT(created_at, '%Y-%m') as month,
           COUNT(*) as total,
           COALESCE(SUM(total_amount), 0) as amount
@@ -62,7 +62,7 @@ $sparkAmounts = array_map(function ($v) {
 
 // Monthly pending count
 $sparkPending = [];
-$pendingRows = db_fetch_all(
+$pendingRows = Database::getInstance()->fetchAll(
   "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
    FROM orders WHERE customer_id = ? AND status = 'pending' AND deleted_at IS NULL
      AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
@@ -72,7 +72,7 @@ $pendingRows = db_fetch_all(
 $sparkPending = array_column($pendingRows, "total");
 
 // Monthly ready count
-$readyRows = db_fetch_all(
+$readyRows = Database::getInstance()->fetchAll(
   "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
    FROM orders WHERE customer_id = ? AND status = 'ready' AND deleted_at IS NULL
      AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
