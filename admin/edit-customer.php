@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $customerAdminService->update($id, $data);
+    $customerAdminService->updateById($id, $data);
     $activityLogService->log('updated', 'App\Models\Customer', $id, 'updated', ['new' => $data, 'old' => $customer]);
 
     FlashMessage::set('success', 'Data pelanggan berhasil diperbarui.');

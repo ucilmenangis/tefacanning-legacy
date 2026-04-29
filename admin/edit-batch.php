@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = $batch['status'];
     }
 
-    $batchService->update($id, [
+    $batchService->updateById($id, [
         'name' => $name,
         'event_name' => $eventName,
         'event_date' => $eventDate,

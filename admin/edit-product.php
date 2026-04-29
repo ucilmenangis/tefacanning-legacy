@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $price = (float) $product['price'];
     }
 
-    $productService->update($id, [
+    $productService->updateById($id, [
         'name' => $name,
         'sku' => $sku,
         'price' => $price,

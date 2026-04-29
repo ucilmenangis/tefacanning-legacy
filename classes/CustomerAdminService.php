@@ -7,7 +7,7 @@
  *   getAll()              — customers with order counts
  *   getById($id)         — single customer
  *   getStats($id)        — order stats for a customer
- *   update($id, $data)   — update customer profile
+ *   updateById($id, $data)   — update customer profile
  *   softDelete($id)      — soft delete customer
  */
 
@@ -70,7 +70,7 @@ class CustomerAdminService extends BaseService
     /**
      * Update customer profile.
      */
-    public function update(int $id, array $data): void
+    public function updateById(int $id, array $data): void
     {
         $this->db->update(
             "UPDATE customers SET name = ?, organization = ?, phone = ?, email = ?, address = ?, updated_at = NOW()

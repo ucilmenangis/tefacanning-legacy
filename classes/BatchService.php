@@ -8,7 +8,7 @@
  *   getById($id)         — single batch
  *   getOpenBatches()     — status = 'open'
  *   create($data)        — insert, return new ID
- *   update($id, $data)   — update batch
+ *   updateById($id, $data)   — update batch
  *   softDelete($id)      — set deleted_at
  */
 
@@ -78,7 +78,7 @@ class BatchService extends BaseService
     /**
      * Update batch by ID.
      */
-    public function update(int $id, array $data): void
+    public function updateById(int $id, array $data): void
     {
         $fields = [];
         $params = [];

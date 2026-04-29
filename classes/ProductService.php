@@ -7,7 +7,7 @@
  *   getAll()              — all products ordered by name
  *   getById($id)         — single product
  *   create($data)        — insert, return new ID
- *   update($id, $data)   — update product
+ *   updateById($id, $data)   — update product
  *   softDelete($id)      — set deleted_at
  */
 
@@ -63,7 +63,7 @@ class ProductService extends BaseService
     /**
      * Update product by ID.
      */
-    public function update(int $id, array $data): void
+    public function updateById(int $id, array $data): void
     {
         $this->db->update(
             "UPDATE products SET name = ?, sku = ?, price = ?, stock = ?, is_active = ?, updated_at = NOW()
