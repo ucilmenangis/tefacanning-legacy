@@ -6,6 +6,7 @@ Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/FormatHelper.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
+require_once __DIR__ . '/../classes/ProductService.php';
 
 $activityLogService = new ActivityLogService();
 
@@ -13,6 +14,16 @@ $activityLogService = new ActivityLogService();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete') {
     $deleteId = intval($_GET['id'] ?? 0);
     if ($deleteId && CsrfService::verify()) {
+        // Return stock for order items
+        $items = Database::getInstance()->fetchAll(
+            "SELECT product_id, quantity FROM order_product WHERE order_id = ?",
+            [$deleteId]
+        );
+        $productService = new ProductService();
+        foreach ($items as $item) {
+            $productService->returnStock($item['product_id'], $item['quantity']);
+        }
+
         Database::getInstance()->update("UPDATE orders SET deleted_at = NOW() WHERE id = ?", [$deleteId]);
         $activityLogService->log('deleted', 'App\Models\Order', $deleteId, 'deleted');
         FlashMessage::set('success', 'Pesanan berhasil dihapus.');

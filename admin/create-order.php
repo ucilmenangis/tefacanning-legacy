@@ -10,10 +10,12 @@ require_once __DIR__ . '/../includes/auth.php';
 Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/AdminService.php';
+require_once __DIR__ . '/../classes/ProductService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
 
 $adminService = new AdminService();
+$productService = new ProductService();
 $activityLogService = new ActivityLogService();
 
 // Build JS-safe product data for dynamic add row
@@ -47,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $orderNumber = 'ORD-' . strtoupper(bin2hex(random_bytes(4)));
     $pickupCode  = strtoupper(bin2hex(random_bytes(3)));
 
-    // Calculate total from DB prices (never trust form)
+    // Calculate total from DB prices (never trust form) + check stock
     $totalAmount = 0;
     $orderItems = [];
     foreach ($productIds as $i => $productId) {
@@ -55,6 +57,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $qty = max(1, intval($quantities[$i] ?? 1));
         $price = $adminService->verifyProductPrice($productId);
         if ($price <= 0) continue;
+
+        if (!$productService->hasStock($productId, $qty)) {
+            $product = $productService->getById($productId);
+            $name = $product ? $product['name'] : 'Produk #' . $productId;
+            FlashMessage::set('error', 'Stok ' . $name . ' tidak cukup.');
+            header('Location: create-order.php');
+            exit;
+        }
+
         $subtotal = $price * $qty;
         $totalAmount += $subtotal;
         $orderItems[] = [$productId, $qty, $price, $subtotal];
@@ -66,30 +77,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Insert order
-    $orderId = Database::getInstance()->insert(
-        "INSERT INTO orders (customer_id, batch_id, order_number, pickup_code, status, total_amount, profit, created_at, updated_at)
-         VALUES (?, ?, ?, ?, 'pending', ?, 0, NOW(), NOW())",
-        [$customerId, $batchId, $orderNumber, $pickupCode, $totalAmount]
-    );
+    $pdo = Database::getInstance()->getPdo();
+    $pdo->beginTransaction();
 
-    // Insert order items
-    foreach ($orderItems as $item) {
-        Database::getInstance()->insert(
-            "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
-             VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
-            [$orderId, $item[0], $item[1], $item[2], $item[3]]
+    try {
+        // Deduct stock atomically
+        foreach ($orderItems as $item) {
+            if (!$productService->deductStock($item[0], $item[1])) {
+                throw new RuntimeException('Stok produk tidak cukup.');
+            }
+        }
+
+        // Insert order
+        $orderId = Database::getInstance()->insert(
+            "INSERT INTO orders (customer_id, batch_id, order_number, pickup_code, status, total_amount, profit, created_at, updated_at)
+             VALUES (?, ?, ?, ?, 'pending', ?, 0, NOW(), NOW())",
+            [$customerId, $batchId, $orderNumber, $pickupCode, $totalAmount]
         );
+
+        // Insert order items
+        foreach ($orderItems as $item) {
+            Database::getInstance()->insert(
+                "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
+                 VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
+                [$orderId, $item[0], $item[1], $item[2], $item[3]]
+            );
+        }
+
+        $activityLogService->log('created', 'App\Models\Order', $orderId, 'created', [
+            'order_number' => $orderNumber,
+            'total' => $totalAmount,
+        ]);
+
+        $pdo->commit();
+        FlashMessage::set('success', 'Pesanan berhasil dibuat.');
+        header('Location: view-order.php?id=' . $orderId);
+        exit;
+    } catch (Throwable $e) {
+        $pdo->rollBack();
+        FlashMessage::set('error', 'Gagal membuat pesanan: ' . $e->getMessage());
+        header('Location: create-order.php');
+        exit;
     }
-
-    $activityLogService->log('created', 'App\Models\Order', $orderId, 'created', [
-        'order_number' => $orderNumber,
-        'total' => $totalAmount,
-    ]);
-
-    FlashMessage::set('success', 'Pesanan berhasil dibuat.');
-    header('Location: view-order.php?id=' . $orderId);
-    exit;
 }
 
 // Fetch data for form

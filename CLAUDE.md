@@ -114,12 +114,12 @@ Core (no parent):
 - `classes/FormatHelper.php` — static helpers: `rupiah()`, `tanggal()`, `orderStatus()`, `batchStatus()`
 
 Services (extend BaseService):
-- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `getAll()`, dashboard methods
-- `classes/OrderService.php` — order operations: `getByCustomer()`, `getById()`, `cancel()`, `getStats()`
+- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `getAll()`, dashboard methods (profit from picked_up orders)
+- `classes/OrderService.php` — order operations: `getByCustomer()`, `getById()`, `cancel()` (with stock return), `getStats()`
 - `classes/CustomerService.php` — customer operations: `getById()`, `updateProfile()`, `changePassword()`, `hasActiveOrders()`
-- `classes/ProductService.php` — product CRUD: `getAll()`, `getById()`, `create()`, `update()`, `softDelete()`
-- `classes/BatchService.php` — batch CRUD: `getAll()`, `getById()`, `getOpenBatches()`, `create()`, `update()`, `softDelete()`
-- `classes/CustomerAdminService.php` — customer admin CRUD: `getAll()`, `getById()`, `getStats()`, `update()`, `softDelete()`
+- `classes/ProductService.php` — product CRUD + stock: `getAll()`, `getById()`, `create()`, `updateById()`, `softDelete()`, `hasStock()`, `deductStock()`, `returnStock()`
+- `classes/BatchService.php` — batch CRUD: `getAll()`, `getById()`, `getOpenBatches()`, `create()`, `updateById()`, `softDelete()`
+- `classes/CustomerAdminService.php` — customer admin CRUD: `getAll()`, `getById()`, `getStats()`, `updateById()`, `softDelete()`
 - `classes/ActivityLogService.php` — activity log: `log()`, `getAll()`, `countAll()`
 - `classes/PdfService.php` — PDF generation: `generateOrderPdf()`, `download()`
 
@@ -389,6 +389,8 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 7.2 | Role-based access control (super_admin vs teknisi) | Ivan | [x] |
 | 7.3 | Product price protection | Ivan | [x] |
 | 7.4 | Core product deletion protection (3 SKUs) | Ivan | [x] |
+| 7.5 | Stock management (deduct on order, return on cancel/delete) | Ivan | [x] |
+| 7.6 | Profit = total_amount of picked_up orders | Ivan | [x] |
 
 **Owner legend:** `Ivan` = backend, `Alif` = frontend UI, `Alif → Ivan` = Alif buat UI dulu, Ivan wiring ke DB.
 
@@ -402,6 +404,8 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 6. **Price from DB:** Never trust form-submitted prices. Always lookup from `products` table.
 7. **Soft deletes:** Use `WHERE deleted_at IS NULL` in all queries on business tables.
 8. **Red theme:** Use `#E02424` (primary), `#F05252` (accent), `#9B1C1C` (dark). Check Laravel version for UI reference.
+9. **Stock management:** Stock deducted at order creation (atomic `stock - ? WHERE stock >= ?`). Returned on cancel/delete/edit. Products with 0 stock cannot be ordered.
+10. **Profit calculation:** Omzet = `SUM(total_amount)` all orders. Profit = `SUM(total_amount)` where `status = 'picked_up'`.
 
 ## Role-Based Access
 

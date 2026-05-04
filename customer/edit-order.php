@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../classes/OrderService.php';
+require_once __DIR__ . '/../classes/ProductService.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
 Auth::customer()->requireAuth();
 
@@ -37,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $validItems = [];
+    $productService = new ProductService();
     foreach ($items as $item) {
         $productId = (int) ($item['product_id'] ?? 0);
         $quantity  = (int) ($item['quantity'] ?? 0);
@@ -47,12 +49,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $product = Database::getInstance()->fetch(
-            "SELECT id, name, price FROM products WHERE id = ? AND is_active = 1 AND deleted_at IS NULL",
+            "SELECT id, name, price, stock FROM products WHERE id = ? AND is_active = 1 AND deleted_at IS NULL",
             [$productId]
         );
 
         if (!$product) {
             $errors[] = 'Produk tidak valid.';
+            continue;
+        }
+
+        // Check stock (add back current order quantity since we'll return it first)
+        $currentQty = 0;
+        foreach ($order['items'] as $oi) {
+            if ($oi['product_id'] == $productId) {
+                $currentQty = $oi['quantity'];
+                break;
+            }
+        }
+        $availableStock = $product['stock'] + $currentQty;
+        if ($availableStock < $quantity) {
+            $errors[] = 'Stok ' . $product['name'] . ' tidak cukup (sisa: ' . $product['stock'] . ' kaleng).';
             continue;
         }
 
@@ -67,21 +83,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors) && !empty($validItems)) {
         $totalAmount = array_sum(array_column($validItems, 'subtotal'));
 
-        Database::getInstance()->getPdo()->prepare("UPDATE orders SET total_amount = ?, updated_at = NOW() WHERE id = ?")
-            ->execute([$totalAmount, $orderId]);
-        Database::getInstance()->getPdo()->prepare("DELETE FROM order_product WHERE order_id = ?")->execute([$orderId]);
+        $pdo = Database::getInstance()->getPdo();
+        $pdo->beginTransaction();
 
-        foreach ($validItems as $vi) {
-            Database::getInstance()->insert(
-                "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
-                 VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
-                [$orderId, $vi['product_id'], $vi['quantity'], $vi['unit_price'], $vi['subtotal']]
-            );
+        try {
+            // Return stock for old items
+            foreach ($order['items'] as $oldItem) {
+                $productService->returnStock($oldItem['product_id'], $oldItem['quantity']);
+            }
+
+            // Deduct stock for new items
+            foreach ($validItems as $vi) {
+                if (!$productService->deductStock($vi['product_id'], $vi['quantity'])) {
+                    throw new RuntimeException('Stok produk tidak cukup.');
+                }
+            }
+
+            $pdo->prepare("UPDATE orders SET total_amount = ?, updated_at = NOW() WHERE id = ?")
+                ->execute([$totalAmount, $orderId]);
+            $pdo->prepare("DELETE FROM order_product WHERE order_id = ?")->execute([$orderId]);
+
+            foreach ($validItems as $vi) {
+                Database::getInstance()->insert(
+                    "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
+                     VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
+                    [$orderId, $vi['product_id'], $vi['quantity'], $vi['unit_price'], $vi['subtotal']]
+                );
+            }
+
+            $pdo->commit();
+            FlashMessage::set('success', 'Pesanan berhasil diperbarui.');
+            header('Location: orders.php');
+            exit;
+        } catch (Throwable $e) {
+            $pdo->rollBack();
+            $errors[] = 'Gagal memperbarui pesanan: ' . $e->getMessage();
         }
-
-        FlashMessage::set('success', 'Pesanan berhasil diperbarui.');
-        header('Location: orders.php');
-        exit;
     }
 
     $formErrors = $errors;

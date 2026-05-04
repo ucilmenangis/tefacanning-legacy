@@ -89,4 +89,39 @@ class ProductService extends BaseService
             [$id]
         );
     }
+
+    /**
+     * Check if product has enough stock.
+     */
+    public function hasStock(int $productId, int $quantity): bool
+    {
+        $row = $this->fetch(
+            "SELECT stock FROM products WHERE id = ? AND deleted_at IS NULL",
+            [$productId]
+        );
+        return $row && $row['stock'] >= $quantity;
+    }
+
+    /**
+     * Atomically deduct stock. Returns true if successful, false if insufficient.
+     */
+    public function deductStock(int $productId, int $quantity): bool
+    {
+        $stmt = $this->db->getPdo()->prepare(
+            "UPDATE products SET stock = stock - ?, updated_at = NOW() WHERE id = ? AND stock >= ? AND deleted_at IS NULL"
+        );
+        $stmt->execute([$quantity, $productId, $quantity]);
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Return stock (e.g. on cancel or edit).
+     */
+    public function returnStock(int $productId, int $quantity): void
+    {
+        $this->db->update(
+            "UPDATE products SET stock = stock + ?, updated_at = NOW() WHERE id = ?",
+            [$quantity, $productId]
+        );
+    }
 }

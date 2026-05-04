@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
+require_once __DIR__ . '/../classes/ProductService.php';
 Auth::customer()->requireAuth();
 
 $customerId = Auth::customer()->getId();
@@ -28,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate items — price from DB, never trust client
     $validItems = [];
+    $productService = new ProductService();
     foreach ($items as $item) {
         $productId = (int) ($item['product_id'] ?? 0);
         $quantity  = (int) ($item['quantity'] ?? 0);
@@ -38,12 +40,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $product = Database::getInstance()->fetch(
-            "SELECT id, name, price FROM products WHERE id = ? AND is_active = 1 AND deleted_at IS NULL",
+            "SELECT id, name, price, stock FROM products WHERE id = ? AND is_active = 1 AND deleted_at IS NULL",
             [$productId]
         );
 
         if (!$product) {
             $errors[] = 'Produk tidak valid.';
+            continue;
+        }
+
+        if ($product['stock'] < $quantity) {
+            $errors[] = 'Stok ' . $product['name'] . ' tidak cukup (sisa: ' . $product['stock'] . ' kaleng).';
             continue;
         }
 
@@ -60,23 +67,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pickupCode  = strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
         $totalAmount = array_sum(array_column($validItems, 'subtotal'));
 
-        $orderId = Database::getInstance()->insert(
-            "INSERT INTO orders (customer_id, batch_id, order_number, pickup_code, status, total_amount, profit, notes, created_at, updated_at)
-             VALUES (?, ?, ?, ?, 'pending', ?, 0, ?, NOW(), NOW())",
-            [$customerId, $batchId, $orderNumber, $pickupCode, $totalAmount, $notes ?: null]
-        );
+        $pdo = Database::getInstance()->getPdo();
+        $pdo->beginTransaction();
 
-        foreach ($validItems as $vi) {
-            Database::getInstance()->insert(
-                "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
-                 VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
-                [$orderId, $vi['product_id'], $vi['quantity'], $vi['unit_price'], $vi['subtotal']]
+        try {
+            // Deduct stock atomically for each item
+            foreach ($validItems as $vi) {
+                if (!$productService->deductStock($vi['product_id'], $vi['quantity'])) {
+                    throw new RuntimeException('Stok produk tidak cukup.');
+                }
+            }
+
+            $orderId = Database::getInstance()->insert(
+                "INSERT INTO orders (customer_id, batch_id, order_number, pickup_code, status, total_amount, profit, notes, created_at, updated_at)
+                 VALUES (?, ?, ?, ?, 'pending', ?, 0, ?, NOW(), NOW())",
+                [$customerId, $batchId, $orderNumber, $pickupCode, $totalAmount, $notes ?: null]
             );
-        }
 
-        FlashMessage::set('success', 'Pre-Order berhasil dikirim! Order: ' . $orderNumber);
-        header('Location: preorder.php');
-        exit;
+            foreach ($validItems as $vi) {
+                Database::getInstance()->insert(
+                    "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
+                     VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
+                    [$orderId, $vi['product_id'], $vi['quantity'], $vi['unit_price'], $vi['subtotal']]
+                );
+            }
+
+            $pdo->commit();
+            FlashMessage::set('success', 'Pre-Order berhasil dikirim! Order: ' . $orderNumber);
+            header('Location: preorder.php');
+            exit;
+        } catch (Throwable $e) {
+            $pdo->rollBack();
+            $errors[] = 'Gagal membuat pesanan: ' . $e->getMessage();
+        }
     }
 
     $formErrors = $errors;
@@ -88,7 +111,7 @@ $batches = Database::getInstance()->fetchAll(
 );
 
 $products = Database::getInstance()->fetchAll(
-    "SELECT id, name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name"
+    "SELECT id, name, sku, price, stock FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name"
 );
 
 // Recent orders
@@ -243,8 +266,8 @@ include __DIR__ . '/../includes/header-customer.php';
                     <select class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none appearance-none cursor-pointer focus:border-primary prod-select" onchange="recalc(this)">
                         <option value="" disabled selected>Pilih produk…</option>
                         <?php foreach ($products as $p): ?>
-                        <option value="<?php echo $p['id']; ?>" data-price="<?php echo $p['price']; ?>">
-                            <?php echo htmlspecialchars($p['name']); ?>
+                        <option value="<?php echo $p['id']; ?>" data-price="<?php echo $p['price']; ?>" <?php echo $p['stock'] < 100 ? 'disabled' : ''; ?>>
+                            <?php echo htmlspecialchars($p['name']); ?> (Stok: <?php echo $p['stock']; ?>)
                         </option>
                         <?php endforeach; ?>
                     </select>
@@ -346,7 +369,7 @@ include __DIR__ . '/../includes/header-customer.php';
 <script>
     const PRODUCTS = {
         <?php foreach ($products as $p): ?>
-        '<?php echo $p['id']; ?>': { name: '<?php echo addslashes($p['name']); ?>', price: <?php echo $p['price']; ?> },
+        '<?php echo $p['id']; ?>': { name: '<?php echo addslashes($p['name']); ?>', price: <?php echo $p['price']; ?>, stock: <?php echo $p['stock']; ?> },
         <?php endforeach; ?>
     };
 
@@ -383,7 +406,7 @@ include __DIR__ . '/../includes/header-customer.php';
     function addRow() {
         const container = document.getElementById('product-rows');
         const optionsHtml = Object.entries(PRODUCTS).map(([id, p]) =>
-            '<option value="' + id + '" data-price="' + p.price + '">' + p.name + '</option>'
+            '<option value="' + id + '" data-price="' + p.price + '"' + (p.stock < 100 ? ' disabled' : '') + '>' + p.name + ' (Stok: ' + p.stock + ')</option>'
         ).join('');
 
         const div = document.createElement('div');
@@ -425,13 +448,22 @@ include __DIR__ . '/../includes/header-customer.php';
         }
         const rows = document.querySelectorAll('.product-row');
         let valid = true;
+        let stockOk = true;
         rows.forEach(function(row) {
-            if (!row.querySelector('.prod-select').value) valid = false;
+            const sel = row.querySelector('.prod-select');
+            if (!sel.value) { valid = false; return; }
+            const qty = parseInt(row.querySelector('.prod-qty').value) || 0;
+            const prod = PRODUCTS[sel.value];
+            if (prod && qty > prod.stock) {
+                alert('Stok ' + prod.name + ' tidak cukup (sisa: ' + prod.stock + ' kaleng).');
+                stockOk = false;
+            }
         });
         if (!valid) {
             alert('Silakan pilih produk untuk semua baris.');
             return;
         }
+        if (!stockOk) return;
 
         document.getElementById('form-batch-id').value = batchSel.value;
         document.getElementById('form-notes').value = document.getElementById('catatan-area').value;

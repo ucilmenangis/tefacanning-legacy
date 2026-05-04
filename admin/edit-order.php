@@ -10,6 +10,7 @@ require_once __DIR__ . '/../includes/auth.php';
 Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/AdminService.php';
+require_once __DIR__ . '/../classes/ProductService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
 
@@ -67,6 +68,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_GET['action'] ?? '';
 
     if ($action === 'delete') {
+        // Return stock for order items
+        $items = Database::getInstance()->fetchAll(
+            "SELECT product_id, quantity FROM order_product WHERE order_id = ?",
+            [$id]
+        );
+        $productService = new ProductService();
+        foreach ($items as $item) {
+            $productService->returnStock($item['product_id'], $item['quantity']);
+        }
+
         Database::getInstance()->update("UPDATE orders SET deleted_at = NOW() WHERE id = ?", [$id]);
         $activityLogService->log('deleted', 'App\Models\Order', $id, 'deleted');
         FlashMessage::set('success', 'Pesanan berhasil dihapus.');
@@ -91,39 +102,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pickedUpAt = date('Y-m-d H:i:s');
     }
 
-    // Delete existing order_product rows and recalculate
-    Database::getInstance()->delete("DELETE FROM order_product WHERE order_id = ?", [$id]);
+    // Return old stock, deduct new stock, update items in transaction
+    $pdo = Database::getInstance()->getPdo();
+    $pdo->beginTransaction();
 
-    $totalAmount = 0;
-    foreach ($productIds as $i => $productId) {
-        $productId = intval($productId);
-        $qty = max(1, intval($quantities[$i] ?? 1));
+    try {
+        // Return stock for old items
+        $productService = new ProductService();
+        foreach ($items as $oldItem) {
+            $productService->returnStock($oldItem['product_id'], $oldItem['quantity']);
+        }
 
-        // Get price from DB (security: never trust form prices)
-        $price = $adminService->verifyProductPrice($productId);
-        $subtotal = $price * $qty;
-        $totalAmount += $subtotal;
+        // Delete existing order_product rows and recalculate
+        Database::getInstance()->delete("DELETE FROM order_product WHERE order_id = ?", [$id]);
 
-        Database::getInstance()->insert(
-            "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
-             VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
-            [$id, $productId, $qty, $price, $subtotal]
+        $totalAmount = 0;
+        foreach ($productIds as $i => $productId) {
+            $productId = intval($productId);
+            $qty = max(1, intval($quantities[$i] ?? 1));
+
+            // Check + deduct stock
+            if (!$productService->deductStock($productId, $qty)) {
+                throw new RuntimeException('Stok produk tidak cukup.');
+            }
+
+            // Get price from DB (security: never trust form prices)
+            $price = $adminService->verifyProductPrice($productId);
+            $subtotal = $price * $qty;
+            $totalAmount += $subtotal;
+
+            Database::getInstance()->insert(
+                "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
+                 VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
+                [$id, $productId, $qty, $price, $subtotal]
+            );
+        }
+
+        Database::getInstance()->update(
+            "UPDATE orders SET status = ?, total_amount = ?, picked_up_at = ?, updated_at = NOW() WHERE id = ?",
+            [$status, $totalAmount, $pickedUpAt, $id]
         );
+
+        $activityLogService->log('updated', 'App\Models\Order', $id, 'updated', [
+            'status' => $status,
+            'total' => $totalAmount,
+        ]);
+
+        $pdo->commit();
+        FlashMessage::set('success', 'Pesanan berhasil diperbarui.');
+        header('Location: edit-order.php?id=' . $id);
+        exit;
+    } catch (Throwable $e) {
+        $pdo->rollBack();
+        FlashMessage::set('error', 'Gagal memperbarui pesanan: ' . $e->getMessage());
+        header('Location: edit-order.php?id=' . $id);
+        exit;
     }
-
-    Database::getInstance()->update(
-        "UPDATE orders SET status = ?, total_amount = ?, picked_up_at = ?, updated_at = NOW() WHERE id = ?",
-        [$status, $totalAmount, $pickedUpAt, $id]
-    );
-
-    $activityLogService->log('updated', 'App\Models\Order', $id, 'updated', [
-        'status' => $status,
-        'total' => $totalAmount,
-    ]);
-
-    FlashMessage::set('success', 'Pesanan berhasil diperbarui.');
-    header('Location: edit-order.php?id=' . $id);
-    exit;
 }
 
 // Build template-ready order data

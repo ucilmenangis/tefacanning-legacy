@@ -66,6 +66,7 @@ class OrderService extends BaseService
     /**
      * Cancel (soft-delete) a pending order.
      * Only pending orders can be cancelled.
+     * Returns stock for all items.
      */
     public function cancel(int $orderId, int $customerId): bool
     {
@@ -76,6 +77,17 @@ class OrderService extends BaseService
 
         if (!$order || $order['status'] !== 'pending') {
             return false;
+        }
+
+        // Return stock for all items
+        $items = $this->fetchAll(
+            "SELECT product_id, quantity FROM order_product WHERE order_id = ?",
+            [$orderId]
+        );
+        require_once __DIR__ . '/ProductService.php';
+        $productService = new ProductService();
+        foreach ($items as $item) {
+            $productService->returnStock($item['product_id'], $item['quantity']);
         }
 
         $this->db->getPdo()->prepare("UPDATE orders SET deleted_at = NOW(), updated_at = NOW() WHERE id = ?")
