@@ -2,16 +2,17 @@
 require_once __DIR__ . "/../includes/auth.php";
 require_once __DIR__ . "/../includes/functions.php";
 require_once __DIR__ . "/../classes/OrderService.php";
+require_once __DIR__ . "/../classes/CustomerService.php";
+require_once __DIR__ . "/../classes/ProductService.php";
+require_once __DIR__ . "/../classes/BatchService.php";
 require_once __DIR__ . "/../classes/FormatHelper.php";
 Auth::customer()->requireAuth();
 
 $customerId = Auth::customer()->getId();
 
 // Customer info
-$customer = Database::getInstance()->fetch(
-  "SELECT name, email, phone, organization, created_at FROM customers WHERE id = ? AND deleted_at IS NULL",
-  [$customerId],
-);
+$customerService = new CustomerService();
+$customer = $customerService->getById($customerId);
 
 if (!$customer) {
   Auth::customer()->logout();
@@ -19,67 +20,27 @@ if (!$customer) {
   exit();
 }
 
-// Order stats via OOP
+// Order stats + monthly sparkline data
 $orderService = new OrderService();
 $stats = $orderService->getStats($customerId);
+$monthly = $orderService->getMonthlyStats($customerId);
+
 $totalOrders = $stats["total_orders"];
 $totalSpent = $stats["total_spent"];
 $pendingOrders = $stats["pending_count"];
 $readyOrders = $stats["ready_count"];
+$sparkOrders = $monthly["orders"];
+$sparkAmounts = $monthly["amounts"];
+$sparkPending = $monthly["pending"];
+$sparkReady = $monthly["ready"];
 
 // Latest open batch
-$latestBatch = Database::getInstance()->fetch(
-  "SELECT b.id, b.name, b.event_name, b.event_date, b.status,
-            (SELECT COUNT(*) FROM orders WHERE batch_id = b.id AND deleted_at IS NULL) as order_count
-     FROM batches b
-     WHERE b.deleted_at IS NULL AND b.status = 'open'
-     ORDER BY b.created_at DESC LIMIT 1",
-);
+$batchService = new BatchService();
+$latestBatch = $batchService->getLatestOpenBatch();
 
 // Active products
-$products = Database::getInstance()->fetchAll(
-  "SELECT name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name",
-);
-
-// Monthly order counts (last 6 months) for sparkline
-$monthlyOrders = Database::getInstance()->fetchAll(
-  "SELECT DATE_FORMAT(created_at, '%Y-%m') as month,
-          COUNT(*) as total,
-          COALESCE(SUM(total_amount), 0) as amount
-   FROM orders
-   WHERE customer_id = ? AND deleted_at IS NULL
-     AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-   GROUP BY DATE_FORMAT(created_at, '%Y-%m')
-   ORDER BY month ASC",
-  [$customerId],
-);
-
-// Build sparkline data arrays
-$sparkOrders = array_column($monthlyOrders, "total");
-$sparkAmounts = array_map(function ($v) {
-  return (float) $v;
-}, array_column($monthlyOrders, "amount"));
-
-// Monthly pending count
-$sparkPending = [];
-$pendingRows = Database::getInstance()->fetchAll(
-  "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
-   FROM orders WHERE customer_id = ? AND status = 'pending' AND deleted_at IS NULL
-     AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-   GROUP BY DATE_FORMAT(created_at, '%Y-%m') ORDER BY month ASC",
-  [$customerId],
-);
-$sparkPending = array_column($pendingRows, "total");
-
-// Monthly ready count
-$readyRows = Database::getInstance()->fetchAll(
-  "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
-   FROM orders WHERE customer_id = ? AND status = 'ready' AND deleted_at IS NULL
-     AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-   GROUP BY DATE_FORMAT(created_at, '%Y-%m') ORDER BY month ASC",
-  [$customerId],
-);
-$sparkReady = array_column($readyRows, "total");
+$productService = new ProductService();
+$products = $productService->getAll();
 
 $pageTitle = "Dashboard";
 $currentPage = "dashboard";

@@ -132,4 +132,46 @@ class OrderService extends BaseService
             'ready_count'   => (int) $ready,
         ];
     }
+
+    /**
+     * Get monthly order stats for customer sparkline charts.
+     * Returns arrays: orders, amounts, pending, ready (last 6 months).
+     */
+    public function getMonthlyStats(int $customerId): array
+    {
+        $monthly = $this->fetchAll(
+            "SELECT DATE_FORMAT(created_at, '%Y-%m') as month,
+                    COUNT(*) as total,
+                    COALESCE(SUM(total_amount), 0) as amount
+             FROM orders
+             WHERE customer_id = ? AND deleted_at IS NULL
+               AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+             GROUP BY DATE_FORMAT(created_at, '%Y-%m')
+             ORDER BY month ASC",
+            [$customerId]
+        );
+
+        $pendingRows = $this->fetchAll(
+            "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
+             FROM orders WHERE customer_id = ? AND status = 'pending' AND deleted_at IS NULL
+               AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+             GROUP BY DATE_FORMAT(created_at, '%Y-%m') ORDER BY month ASC",
+            [$customerId]
+        );
+
+        $readyRows = $this->fetchAll(
+            "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as total
+             FROM orders WHERE customer_id = ? AND status = 'ready' AND deleted_at IS NULL
+               AND created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+             GROUP BY DATE_FORMAT(created_at, '%Y-%m') ORDER BY month ASC",
+            [$customerId]
+        );
+
+        return [
+            'orders'  => array_map('intval', array_column($monthly, 'total')),
+            'amounts' => array_map('floatval', array_column($monthly, 'amount')),
+            'pending' => array_map('intval', array_column($pendingRows, 'total')),
+            'ready'   => array_map('intval', array_column($readyRows, 'total')),
+        ];
+    }
 }
