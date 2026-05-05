@@ -68,6 +68,25 @@ class CustomerAdminService extends BaseService
     }
 
     /**
+     * Create a new customer.
+     */
+    public function create(array $data): int
+    {
+        return $this->insert(
+            "INSERT INTO customers (name, email, phone, password, organization, address, created_at, updated_at)
+             VALUES (:name, :email, :phone, :password, :organization, :address, NOW(), NOW())",
+            [
+                'name'         => $data['name'],
+                'email'        => $data['email'],
+                'phone'        => $data['phone'] ?? null,
+                'password'     => password_hash($data['password'], PASSWORD_BCRYPT),
+                'organization' => $data['organization'] ?? null,
+                'address'      => $data['address'] ?? null,
+            ]
+        );
+    }
+
+    /**
      * Update customer profile.
      */
     public function updateById(int $id, array $data): void
