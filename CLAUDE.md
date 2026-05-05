@@ -114,13 +114,13 @@ Core (no parent):
 - `classes/FormatHelper.php` — static helpers: `rupiah()`, `tanggal()`, `orderStatus()`, `batchStatus()`
 
 Services (extend BaseService):
-- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `getAll()`, dashboard methods (profit from picked_up orders)
+- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `getAll()`, dashboard methods (profit from picked_up orders), `getDashboardStatsByBatch()`, `getAllBatchesForDropdown()`, `getRecentOrdersByBatch()`
 - `classes/OrderService.php` — order operations: `getByCustomer()`, `getById()`, `cancel()` (with stock return), `getStats()`
 - `classes/OrderAdminService.php` — admin order operations: `getAll()`, `getById()`, `getItems()`, `getActiveProducts()`, `getCustomersForDropdown()`, `getOpenBatchesForDropdown()`, `createOrder()`, `updateOrder()`, `deleteOrder()`
 - `classes/CustomerService.php` — customer operations: `getById()`, `updateProfile()`, `changePassword()`, `hasActiveOrders()`
 - `classes/ProductService.php` — product CRUD + stock: `getAll()`, `getById()`, `create()`, `updateById()`, `softDelete()`, `hasStock()`, `deductStock()`, `returnStock()`
 - `classes/BatchService.php` — batch CRUD: `getAll()`, `getById()`, `getOpenBatches()`, `create()`, `updateById()`, `softDelete()`
-- `classes/CustomerAdminService.php` — customer admin CRUD: `getAll()`, `getById()`, `getStats()`, `updateById()`, `softDelete()`
+- `classes/CustomerAdminService.php` — customer admin CRUD: `getAll()`, `getById()`, `getStats()`, `create()`, `updateById()`, `softDelete()`
 - `classes/ActivityLogService.php` — activity log: `log()`, `getAll()`, `countAll()`
 - `classes/OrderAdminService.php` — admin order CRUD: `getAll()`, `getById()`, `getItems()`, `getActiveProducts()`, `getCustomersForDropdown()`, `getOpenBatchesForDropdown()`, `createOrder()`, `updateOrder()`, `deleteOrder()`
 - `classes/PdfService.php` — PDF generation: `generateOrderPdf()`, `download()`

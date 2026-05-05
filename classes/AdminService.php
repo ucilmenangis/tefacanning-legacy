@@ -299,4 +299,72 @@ class AdminService extends BaseService
     );
     return (int) ($row["total"] ?? 0);
   }
+
+  /**
+   * Get dashboard stats filtered by a specific batch.
+   */
+  public function getDashboardStatsByBatch(int $batchId): array
+  {
+    $orderCount = $this->fetch(
+      "SELECT COUNT(*) AS total FROM orders WHERE batch_id = ? AND deleted_at IS NULL",
+      [$batchId],
+    );
+    $omset = $this->fetch(
+      "SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders WHERE batch_id = ? AND deleted_at IS NULL",
+      [$batchId],
+    );
+    $profit = $this->fetch(
+      "SELECT COALESCE(SUM(total_amount), 0) AS total FROM orders WHERE batch_id = ? AND status = 'picked_up' AND deleted_at IS NULL",
+      [$batchId],
+    );
+    $readyCount = $this->fetch(
+      "SELECT COUNT(*) AS total FROM orders WHERE batch_id = ? AND status = 'ready' AND deleted_at IS NULL",
+      [$batchId],
+    );
+    $customerCount = $this->fetch(
+      "SELECT COUNT(DISTINCT customer_id) AS total FROM orders WHERE batch_id = ? AND deleted_at IS NULL",
+      [$batchId],
+    );
+
+    return [
+      "total_pelanggan" => (int) ($customerCount["total"] ?? 0),
+      "total_omset" => (float) ($omset["total"] ?? 0),
+      "total_profit" => (float) ($profit["total"] ?? 0),
+      "siap_ambil" => (int) ($readyCount["total"] ?? 0),
+      "order_batch" => (int) ($orderCount["total"] ?? 0),
+    ];
+  }
+
+  /**
+   * Get all batches for dropdown (id, name, status).
+   */
+  public function getAllBatchesForDropdown(): array
+  {
+    return $this->fetchAll(
+      "SELECT id, name, status FROM batches WHERE deleted_at IS NULL ORDER BY created_at DESC",
+    );
+  }
+
+  /**
+   * Get recent orders, optionally filtered by batch.
+   */
+  public function getRecentOrdersByBatch(int $limit = 5, ?int $batchId = null): array
+  {
+    $limit = (int) $limit;
+    if ($batchId) {
+      return $this->fetchAll(
+        "SELECT o.id, o.order_number, o.status, o.total_amount, o.pickup_code, o.created_at,
+                c.name AS customer_name, c.phone AS customer_phone,
+                b.name AS batch_name
+         FROM orders o
+         JOIN customers c ON c.id = o.customer_id
+         JOIN batches b ON b.id = o.batch_id
+         WHERE o.batch_id = ? AND o.deleted_at IS NULL
+         ORDER BY o.created_at DESC
+         LIMIT {$limit}",
+        [$batchId],
+      );
+    }
+    return $this->getRecentOrders($limit);
+  }
 }
