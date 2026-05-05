@@ -4,35 +4,23 @@ $currentPage = 'users';
 require_once __DIR__ . '/../includes/auth.php';
 Auth::admin()->requireAuth();
 Auth::admin()->requireSuperAdmin();
-include __DIR__ . '/../includes/header-admin.php';
 
 require_once __DIR__ . '/../classes/AdminService.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
+require_once __DIR__ . '/../classes/CsrfService.php';
 
 $adminService = new AdminService();
 $users_raw = $adminService->getAll();
 
-$users = [];
-foreach ($users_raw as $u) {
-    $roleLabel = $u['role'] === 'super_admin' ? 'Super Admin' : ucfirst($u['role'] ?? 'User');
-    $users[] = [
-        'id' => $u['id'],
-        'name' => $u['name'],
-        'email' => $u['email'],
-        'role' => $roleLabel,
-        'created_at' => FormatHelper::tanggal($u['created_at'] ?? 'now'),
-    ];
-}
-
 function getRoleClass($role) {
-    if ($role === 'Super Admin') {
+    if ($role === 'super_admin') {
         return 'bg-rose-50 text-rose-500 border-rose-100';
     }
     return 'bg-sky-50 text-sky-500 border-sky-100';
 }
+
+include __DIR__ . '/../includes/header-admin.php';
 ?>
-
-
 
 <!-- Header & Breadcrumb -->
 <div class="mb-6 flex items-end justify-between">
@@ -44,13 +32,13 @@ function getRoleClass($role) {
         </div>
         <h1 class="text-2xl font-extrabold text-slate-800">Pengguna</h1>
     </div>
-    <a href="create-user.php" class="inline-flex items-center gap-2 bg-primary text-white text-[12px] font-bold px-4 py-2 rounded-lg transition-colors hover:bg-dark">
-        New Pengguna
+    <a href="create-user.php" class="inline-flex items-center gap-2 bg-primary text-white text-[12px] font-bold px-4 py-2 rounded-lg transition-colors hover:bg-dark shadow-lg shadow-primary/20">
+        <i class="ph-bold ph-plus text-sm"></i> New Pengguna
     </a>
 </div>
 
 <!-- Table Section -->
-<div class="bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm">
+<div class="bg-white border border-gray-100 rounded-xl overflow-visible shadow-sm">
     <div class="flex items-center justify-end gap-2.5 px-5 py-3 border-b border-gray-50">
         <div class="relative">
             <i class="ph ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
@@ -58,7 +46,6 @@ function getRoleClass($role) {
         </div>
         <button class="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors relative">
             <i class="ph ph-funnel text-base"></i>
-            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full border border-white">0</span>
         </button>
         <button class="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors">
             <i class="ph ph-squares-four text-base"></i>
@@ -66,7 +53,7 @@ function getRoleClass($role) {
     </div>
 
     <div class="overflow-x-auto">
-        <table class="w-full text-left text-[13px] border-collapse">
+        <table class="w-full text-left text-[13px] border-collapse" id="user-table">
             <thead>
                 <tr>
                     <th class="w-10 text-[11px] font-bold text-navy px-5 py-3 border-b border-gray-100 bg-gray-50/50">
@@ -81,28 +68,32 @@ function getRoleClass($role) {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($users as $user): ?>
-                <tr>
+                <?php foreach ($users_raw as $u): ?>
+                <tr class="hover:bg-gray-50/50 transition-colors">
                     <td class="px-5 py-3.5 border-b border-gray-50 align-middle">
                         <input type="checkbox" class="w-4 h-4 accent-primary cursor-pointer">
                     </td>
-                    <td class="font-bold text-slate-700 px-5 py-3.5 border-b border-gray-50 align-middle"><?php echo $user['name']; ?></td>
+                    <td class="font-bold text-slate-700 px-5 py-3.5 border-b border-gray-50 align-middle"><?php echo htmlspecialchars($u['name']); ?></td>
                     <td class="px-5 py-3.5 border-b border-gray-50 align-middle">
                         <div class="flex items-center gap-2 text-slate-500">
                             <i class="ph ph-envelope text-slate-300 text-base"></i>
-                            <span><?php echo $user['email']; ?></span>
+                            <span><?php echo htmlspecialchars($u['email']); ?></span>
                         </div>
                     </td>
-                    <td class="text-slate-400 px-5 py-3.5 border-b border-gray-50 align-middle">—</td>
+                    <td class="text-slate-500 px-5 py-3.5 border-b border-gray-50 align-middle">
+                        <?php echo $u['phone'] ? htmlspecialchars($u['phone']) : '<span class="text-slate-300">—</span>'; ?>
+                    </td>
                     <td class="px-5 py-3.5 border-b border-gray-50 align-middle">
-                        <span class="inline-flex items-center px-3 py-0.5 rounded-md text-[10px] font-semibold border <?php echo getRoleClass($user['role']); ?>">
-                            <?php echo $user['role']; ?>
+                        <span class="inline-flex items-center px-3 py-0.5 rounded-md text-[10px] font-semibold border <?php echo getRoleClass($u['role']); ?>">
+                            <?php echo $u['role'] === 'super_admin' ? 'Super Admin' : ucfirst($u['role'] ?? 'User'); ?>
                         </span>
                     </td>
-                    <td class="text-slate-500 px-5 py-3.5 border-b border-gray-50 align-middle"><?php echo $user['created_at']; ?></td>
+                    <td class="text-slate-500 px-5 py-3.5 border-b border-gray-50 align-middle"><?php echo FormatHelper::tanggal($u['created_at']); ?></td>
                     <td class="text-right px-5 py-3.5 border-b border-gray-50 align-middle">
-                        <button class="text-slate-300 hover:text-slate-600 transition-colors">
-                            <i class="ph ph-dots-three-vertical text-xl"></i>
+                        <button type="button" 
+                                onclick="toggleDropdown(event, this, '<?php echo $u['id']; ?>')"
+                                class="text-red-500 hover:text-red-700 transition-colors dropdown-trigger">
+                            <i class="ph ph-dots-three-vertical text-xl pointer-events-none font-bold"></i>
                         </button>
                     </td>
                 </tr>
@@ -113,7 +104,7 @@ function getRoleClass($role) {
 
     <!-- Table Footer -->
     <div class="px-5 py-3 border-t border-gray-50 flex items-center justify-between text-[12px] text-slate-500">
-        <div>Showing 1 to <?php echo count($users); ?> of <?php echo count($users); ?> results</div>
+        <div>Showing 1 to <?php echo count($users_raw); ?> of <?php echo count($users_raw); ?> results</div>
         <div class="flex items-center gap-2">
             <span>Per page</span>
             <select class="border border-slate-200 rounded px-2 py-1 outline-none bg-white text-[12px]">
@@ -124,5 +115,55 @@ function getRoleClass($role) {
         </div>
     </div>
 </div>
+
+<!-- Dropdown Menu Global -->
+<div id="dropdown-menu-global" class="hidden fixed w-32 bg-white border border-gray-100 rounded-lg shadow-xl z-[9999] text-left animate-in fade-in zoom-in duration-100">
+    <div class="py-1">
+        <a id="dropdown-edit-link" href="#" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-500 hover:bg-red-50 transition-colors font-bold">
+            <i class="ph ph-note-pencil text-lg"></i> Edit
+        </a>
+    </div>
+</div>
+
+<script>
+    function toggleDropdown(event, btn, id) {
+        event.stopPropagation();
+        const menu = document.getElementById('dropdown-menu-global');
+        const editLink = document.getElementById('dropdown-edit-link');
+
+        if (!menu.classList.contains('hidden') && menu.dataset.activeId == id) {
+            menu.classList.add('hidden');
+            return;
+        }
+
+        editLink.href = 'edit-user.php?id=' + id;
+
+        menu.classList.remove('hidden');
+        const rect = btn.getBoundingClientRect();
+        
+        // Positioning
+        let top = rect.bottom + 8;
+        let left = rect.right - menu.offsetWidth;
+        
+        menu.style.top = top + 'px';
+        menu.style.left = left + 'px';
+        menu.dataset.activeId = id;
+    }
+
+    window.onclick = function(event) {
+        const menu = document.getElementById('dropdown-menu-global');
+        if (!event.target.closest('#dropdown-menu-global') && !event.target.closest('.dropdown-trigger')) {
+            menu.classList.add('hidden');
+        }
+    }
+
+    document.getElementById('user-search-input').addEventListener('input', function() {
+        const q = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#user-table tbody tr');
+        rows.forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(q) ? '' : 'none';
+        });
+    });
+</script>
 
 <?php include __DIR__ . '/../includes/footer-admin.php'; ?>

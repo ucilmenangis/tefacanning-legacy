@@ -44,7 +44,7 @@ class AdminService extends BaseService
    */
   public function getById(int $userId): ?array
   {
-    return $this->fetch("SELECT id, name, email FROM users WHERE id = ?", [
+    return $this->fetch("SELECT id, name, email, phone FROM users WHERE id = ?", [
       $userId,
     ]);
   }
@@ -55,7 +55,7 @@ class AdminService extends BaseService
   public function getAll(): array
   {
     return $this->fetchAll(
-      "SELECT u.id, u.name, u.email, u.created_at, r.name as role
+      "SELECT u.id, u.name, u.email, u.phone, u.created_at, r.name as role
              FROM users u
              LEFT JOIN model_has_roles mhr ON mhr.model_id = u.id AND mhr.model_type = 'App\\\\Models\\\\User'
              LEFT JOIN roles r ON mhr.role_id = r.id
@@ -108,6 +108,90 @@ class AdminService extends BaseService
     $product = $this->fetch("SELECT sku FROM products WHERE id = ?", [$productId]);
 
     return $product && in_array($product["sku"], $coreSkus);
+  }
+
+  /**
+   * Get all available roles.
+   */
+  public function getRoles(): array
+  {
+    return $this->fetchAll("SELECT id, name FROM roles ORDER BY name ASC");
+  }
+
+  /**
+   * Create a new admin user.
+   */
+  public function createUser(array $data): int
+  {
+    $params = [
+      'name' => $data['name'],
+      'email' => $data['email'],
+      'phone' => $data['phone'] ?? null,
+      'password' => password_hash($data['password'], PASSWORD_BCRYPT)
+    ];
+
+    $id = $this->insert(
+      "INSERT INTO users (name, email, phone, password, created_at, updated_at) VALUES (:name, :email, :phone, :password, NOW(), NOW())",
+      $params
+    );
+
+    if ($id && isset($data['role'])) {
+      $roleId = $this->fetch("SELECT id FROM roles WHERE name = ?", [$data['role']])['id'] ?? null;
+      if ($roleId) {
+        $this->insert("INSERT INTO model_has_roles (role_id, model_id, model_type) VALUES (?, ?, 'App\\\\Models\\\\User')", [$roleId, $id]);
+      }
+    }
+
+    return $id;
+  }
+
+  /**
+   * Update admin user data.
+   */
+  public function updateUser(int $id, array $data): bool
+  {
+    $params = [
+      'name' => $data['name'],
+      'email' => $data['email'],
+      'phone' => $data['phone'] ?? null,
+      'id' => $id
+    ];
+
+    $sql = "UPDATE users SET name = :name, email = :email, phone = :phone, updated_at = NOW()";
+
+    if (!empty($data['password'])) {
+      $sql .= ", password = :password";
+      $params['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+    }
+
+    $sql .= " WHERE id = :id";
+    $result = $this->update($sql, $params);
+
+    if (isset($data['role'])) {
+      // Update role
+      $this->delete("DELETE FROM model_has_roles WHERE model_id = ? AND model_type = 'App\\\\Models\\\\User'", [$id]);
+
+      $roleId = $this->fetch("SELECT id FROM roles WHERE name = ?", [$data['role']])['id'] ?? null;
+      if ($roleId) {
+        $this->insert("INSERT INTO model_has_roles (role_id, model_id, model_type) VALUES (?, ?, 'App\\\\Models\\\\User')", [$roleId, $id]);
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Delete an admin user.
+   */
+  public function deleteUser(int $id): bool
+  {
+    require_once __DIR__ . '/Auth.php';
+    if (Auth::admin()->getId() === $id) {
+      return false;
+    }
+
+    $this->delete("DELETE FROM model_has_roles WHERE model_id = ? AND model_type = 'App\\\\Models\\\\User'", [$id]);
+    return $this->delete("DELETE FROM users WHERE id = ?", [$id]) > 0;
   }
 
   // ── Dashboard Methods ──

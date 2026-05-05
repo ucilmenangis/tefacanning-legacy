@@ -100,20 +100,10 @@ $statusMap = [
                         <span class="text-[11px] bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded font-semibold"><?php echo $batch['order_count']; ?></span>
                     </td>
                     <td class="text-right px-3.5 py-3 border-b border-gray-50/50 align-middle">
-                        <div class="relative inline-block text-left dropdown-container">
-                            <button type="button" class="w-[30px] h-[30px] rounded-md border border-gray-200 bg-white inline-flex items-center justify-center text-gray-400 cursor-pointer transition-colors hover:bg-gray-50 hover:text-gray-700 dropdown-trigger" title="Opsi lainnya" onclick="toggleDropdown(event, this)">
+                        <div class="relative inline-block text-left">
+                            <button type="button" class="w-[30px] h-[30px] rounded-md border border-gray-200 bg-white inline-flex items-center justify-center text-gray-400 cursor-pointer transition-colors hover:bg-gray-50 hover:text-gray-700 dropdown-trigger" title="Opsi lainnya" onclick="toggleDropdown(event, this, '<?php echo $batch['id']; ?>')">
                                 <i class="ph ph-dots-three-vertical text-sm pointer-events-none"></i>
                             </button>
-                            <div class="hidden absolute right-0 mt-2 w-32 bg-white border border-gray-100 rounded-lg shadow-lg z-50 dropdown-menu text-left">
-                                <div class="py-1">
-                                    <a href="edit-batch.php?id=<?php echo $batch['id']; ?>" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-500 hover:bg-red-50 transition-colors font-medium">
-                                        <i class="ph ph-note-pencil text-base text-red-400"></i> Edit
-                                    </a>
-                                    <button type="button" onclick="confirmDelete(<?php echo $batch['id']; ?>)" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-600 hover:bg-red-50 transition-colors w-full text-left font-medium">
-                                        <i class="ph ph-trash text-base text-red-500"></i> Delete
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </td>
                 </tr>
@@ -142,20 +132,61 @@ $statusMap = [
 <!-- Hidden CSRF for JS actions -->
 <div class="hidden"><?php echo CsrfService::field(); ?></div>
 
+<!-- Dropdown Menu Global -->
+<div id="dropdown-menu-global" class="hidden fixed w-32 bg-white border border-gray-100 rounded-lg shadow-lg z-[9999] text-left">
+    <div class="py-1">
+        <a id="dropdown-edit-link" href="#" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-500 hover:bg-red-50 transition-colors font-medium">
+            <i class="ph ph-note-pencil text-base text-red-400"></i> Edit
+        </a>
+        <button id="dropdown-delete-btn" type="button" class="flex items-center gap-2 px-4 py-2 text-[12px] text-red-600 hover:bg-red-50 transition-colors w-full text-left font-medium">
+            <i class="ph ph-trash text-base text-red-500"></i> Delete
+        </button>
+    </div>
+</div>
+
 <script>
     function toggleAll(master) {
         document.querySelectorAll('.cb-row').forEach(cb => cb.checked = master.checked);
     }
-    function toggleDropdown(event, btn) {
+    function toggleDropdown(event, btn, id) {
         event.stopPropagation();
-        document.querySelectorAll('.dropdown-menu').forEach(menu => {
-            if (menu !== btn.nextElementSibling) menu.classList.add('hidden');
-        });
-        btn.nextElementSibling.classList.toggle('hidden');
+        const menu = document.getElementById('dropdown-menu-global');
+        const editLink = document.getElementById('dropdown-edit-link');
+        const deleteBtn = document.getElementById('dropdown-delete-btn');
+
+        // Check if clicking same button to toggle
+        if (!menu.classList.contains('hidden') && menu.dataset.activeId === id) {
+            menu.classList.add('hidden');
+            return;
+        }
+
+        // Update links
+        editLink.href = 'edit-batch.php?id=' + id;
+        deleteBtn.onclick = function() { confirmDelete(id); };
+
+        // Show menu to get dimensions
+        menu.classList.remove('hidden');
+
+        // Position it
+        const rect = btn.getBoundingClientRect();
+        const menuWidth = menu.offsetWidth;
+        let top = rect.bottom + 8;
+        let left = rect.right - menuWidth;
+
+        // Prevent overflow
+        if (left < 10) left = 10;
+        if (top + menu.offsetHeight > window.innerHeight) {
+            top = rect.top - menu.offsetHeight - 8;
+        }
+
+        menu.style.top = top + 'px';
+        menu.style.left = left + 'px';
+        menu.dataset.activeId = id;
     }
     window.onclick = function(event) {
-        if (!event.target.closest('.dropdown-container')) {
-            document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
+        const menu = document.getElementById('dropdown-menu-global');
+        if (!event.target.closest('#dropdown-menu-global') && !event.target.closest('.dropdown-trigger')) {
+            menu.classList.add('hidden');
         }
     }
     function confirmDelete(id) {
