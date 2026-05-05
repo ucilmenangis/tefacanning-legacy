@@ -44,7 +44,7 @@ class AdminService extends BaseService
    */
   public function getById(int $userId): ?array
   {
-    return $this->fetch("SELECT id, name, email, phone FROM users WHERE id = ?", [
+    return $this->fetch("SELECT id, name, email FROM users WHERE id = ?", [
       $userId,
     ]);
   }
@@ -55,7 +55,7 @@ class AdminService extends BaseService
   public function getAll(): array
   {
     return $this->fetchAll(
-      "SELECT u.id, u.name, u.email, u.phone, u.created_at, r.name as role
+      "SELECT u.id, u.name, u.email, u.created_at, r.name as role
              FROM users u
              LEFT JOIN model_has_roles mhr ON mhr.model_id = u.id AND mhr.model_type = 'App\\\\Models\\\\User'
              LEFT JOIN roles r ON mhr.role_id = r.id
@@ -126,12 +126,11 @@ class AdminService extends BaseService
     $params = [
       'name' => $data['name'],
       'email' => $data['email'],
-      'phone' => $data['phone'] ?? null,
       'password' => password_hash($data['password'], PASSWORD_BCRYPT)
     ];
 
     $id = $this->insert(
-      "INSERT INTO users (name, email, phone, password, created_at, updated_at) VALUES (:name, :email, :phone, :password, NOW(), NOW())",
+      "INSERT INTO users (name, email, password, created_at, updated_at) VALUES (:name, :email, :password, NOW(), NOW())",
       $params
     );
 
@@ -153,11 +152,10 @@ class AdminService extends BaseService
     $params = [
       'name' => $data['name'],
       'email' => $data['email'],
-      'phone' => $data['phone'] ?? null,
       'id' => $id
     ];
 
-    $sql = "UPDATE users SET name = :name, email = :email, phone = :phone, updated_at = NOW()";
+    $sql = "UPDATE users SET name = :name, email = :email, updated_at = NOW()";
 
     if (!empty($data['password'])) {
       $sql .= ", password = :password";
