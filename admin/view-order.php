@@ -9,8 +9,10 @@ $currentPage = 'orders';
 require_once __DIR__ . '/../includes/auth.php';
 Auth::admin()->requireAuth();
 
-require_once __DIR__ . '/../classes/AdminService.php';
+require_once __DIR__ . '/../classes/OrderAdminService.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
+
+$orderAdminService = new OrderAdminService();
 
 $id = intval($_GET['id'] ?? 0);
 if (!$id) {
@@ -19,18 +21,7 @@ if (!$id) {
     exit;
 }
 
-$order = Database::getInstance()->fetch(
-    "SELECT o.id, o.order_number, o.pickup_code, o.status, o.total_amount, o.profit,
-            o.picked_up_at, o.created_at, o.updated_at,
-            c.name AS customer_name, c.phone AS customer_phone, c.email AS customer_email,
-            c.organization, c.address,
-            b.name AS batch_name, b.event_name, b.event_date
-     FROM orders o
-     JOIN customers c ON c.id = o.customer_id
-     JOIN batches b ON b.id = o.batch_id
-     WHERE o.id = ? AND o.deleted_at IS NULL",
-    [$id]
-);
+$order = $orderAdminService->getById($id);
 
 if (!$order) {
     FlashMessage::set('error', 'Pesanan tidak ditemukan.');
@@ -38,13 +29,7 @@ if (!$order) {
     exit;
 }
 
-$items = Database::getInstance()->fetchAll(
-    "SELECT op.quantity, op.unit_price, op.subtotal, p.name AS product_name, p.sku
-     FROM order_product op
-     JOIN products p ON p.id = op.product_id
-     WHERE op.order_id = ?",
-    [$id]
-);
+$items = $orderAdminService->getItems($id);
 
 $statusMap = [
     'processing' => ['label' => 'Processing', 'bg' => '#eff6ff', 'color' => '#2563eb', 'border' => '#dbeafe'],

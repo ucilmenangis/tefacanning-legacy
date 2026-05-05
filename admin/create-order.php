@@ -9,19 +9,15 @@ $currentPage = 'orders';
 require_once __DIR__ . '/../includes/auth.php';
 Auth::admin()->requireAuth();
 
-require_once __DIR__ . '/../classes/AdminService.php';
-require_once __DIR__ . '/../classes/ProductService.php';
+require_once __DIR__ . '/../classes/OrderAdminService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
 require_once __DIR__ . '/../classes/FormatHelper.php';
 
-$adminService = new AdminService();
-$productService = new ProductService();
+$orderAdminService  = new OrderAdminService();
 $activityLogService = new ActivityLogService();
 
 // Build JS-safe product data for dynamic add row
-$products = Database::getInstance()->fetchAll(
-    "SELECT id, name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name ASC"
-);
+$products = $orderAdminService->getActiveProducts();
 $productJson = json_encode(array_map(function($p) {
     return ['id' => (int)$p['id'], 'name' => $p['name'], 'price' => (float)$p['price']];
 }, $products), JSON_UNESCAPED_UNICODE);
@@ -45,76 +41,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Generate order number and pickup code
-    $orderNumber = 'ORD-' . strtoupper(bin2hex(random_bytes(4)));
-    $pickupCode  = strtoupper(bin2hex(random_bytes(3)));
-
-    // Calculate total from DB prices (never trust form) + check stock
-    $totalAmount = 0;
-    $orderItems = [];
-    foreach ($productIds as $i => $productId) {
-        $productId = intval($productId);
-        $qty = max(1, intval($quantities[$i] ?? 1));
-        $price = $adminService->verifyProductPrice($productId);
-        if ($price <= 0) continue;
-
-        if (!$productService->hasStock($productId, $qty)) {
-            $product = $productService->getById($productId);
-            $name = $product ? $product['name'] : 'Produk #' . $productId;
-            FlashMessage::set('error', 'Stok ' . $name . ' tidak cukup.');
-            header('Location: create-order.php');
-            exit;
-        }
-
-        $subtotal = $price * $qty;
-        $totalAmount += $subtotal;
-        $orderItems[] = [$productId, $qty, $price, $subtotal];
-    }
-
-    if (empty($orderItems)) {
-        FlashMessage::set('error', 'Tidak ada produk valid yang dipilih.');
-        header('Location: create-order.php');
-        exit;
-    }
-
-    $pdo = Database::getInstance()->getPdo();
-    $pdo->beginTransaction();
-
     try {
-        // Deduct stock atomically
-        foreach ($orderItems as $item) {
-            if (!$productService->deductStock($item[0], $item[1])) {
-                throw new RuntimeException('Stok produk tidak cukup.');
-            }
-        }
-
-        // Insert order
-        $orderId = Database::getInstance()->insert(
-            "INSERT INTO orders (customer_id, batch_id, order_number, pickup_code, status, total_amount, profit, created_at, updated_at)
-             VALUES (?, ?, ?, ?, 'pending', ?, 0, NOW(), NOW())",
-            [$customerId, $batchId, $orderNumber, $pickupCode, $totalAmount]
-        );
-
-        // Insert order items
-        foreach ($orderItems as $item) {
-            Database::getInstance()->insert(
-                "INSERT INTO order_product (order_id, product_id, quantity, unit_price, subtotal, created_at, updated_at)
-                 VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
-                [$orderId, $item[0], $item[1], $item[2], $item[3]]
-            );
-        }
-
+        $orderId = $orderAdminService->createOrder($customerId, $batchId, $productIds, $quantities);
+        $order = $orderAdminService->getById($orderId);
         $activityLogService->log('created', 'App\Models\Order', $orderId, 'created', [
-            'order_number' => $orderNumber,
-            'total' => $totalAmount,
+            'order_number' => $order['order_number'],
+            'total'        => $order['total_amount'],
         ]);
-
-        $pdo->commit();
         FlashMessage::set('success', 'Pesanan berhasil dibuat.');
         header('Location: view-order.php?id=' . $orderId);
         exit;
     } catch (Throwable $e) {
-        $pdo->rollBack();
         FlashMessage::set('error', 'Gagal membuat pesanan: ' . $e->getMessage());
         header('Location: create-order.php');
         exit;
@@ -122,12 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Fetch data for form
-$customers = Database::getInstance()->fetchAll(
-    "SELECT id, name, phone FROM customers WHERE deleted_at IS NULL ORDER BY name ASC"
-);
-$batches = Database::getInstance()->fetchAll(
-    "SELECT id, name, event_name, event_date FROM batches WHERE status = 'open' AND deleted_at IS NULL ORDER BY created_at DESC"
-);
+$customers = $orderAdminService->getCustomersForDropdown();
+$batches   = $orderAdminService->getOpenBatchesForDropdown();
 
 include __DIR__ . '/../includes/header-admin.php';
 ?>

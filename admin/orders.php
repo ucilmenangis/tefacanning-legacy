@@ -5,26 +5,17 @@ require_once __DIR__ . '/../includes/auth.php';
 Auth::admin()->requireAuth();
 
 require_once __DIR__ . '/../classes/FormatHelper.php';
+require_once __DIR__ . '/../classes/OrderAdminService.php';
 require_once __DIR__ . '/../classes/ActivityLogService.php';
-require_once __DIR__ . '/../classes/ProductService.php';
 
+$orderAdminService  = new OrderAdminService();
 $activityLogService = new ActivityLogService();
 
 // ── POST: Delete ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete') {
     $deleteId = intval($_GET['id'] ?? 0);
     if ($deleteId && CsrfService::verify()) {
-        // Return stock for order items
-        $items = Database::getInstance()->fetchAll(
-            "SELECT product_id, quantity FROM order_product WHERE order_id = ?",
-            [$deleteId]
-        );
-        $productService = new ProductService();
-        foreach ($items as $item) {
-            $productService->returnStock($item['product_id'], $item['quantity']);
-        }
-
-        Database::getInstance()->update("UPDATE orders SET deleted_at = NOW() WHERE id = ?", [$deleteId]);
+        $orderAdminService->deleteOrder($deleteId);
         $activityLogService->log('deleted', 'App\Models\Order', $deleteId, 'deleted');
         FlashMessage::set('success', 'Pesanan berhasil dihapus.');
     }
@@ -34,16 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete
 
 include __DIR__ . '/../includes/header-admin.php';
 
-$orders = Database::getInstance()->fetchAll(
-    "SELECT o.id, o.order_number, o.status, o.pickup_code, o.total_amount, o.picked_up_at, o.created_at,
-            c.name AS customer_name, c.phone AS customer_phone,
-            b.name AS batch_name
-     FROM orders o
-     JOIN customers c ON c.id = o.customer_id
-     JOIN batches b ON b.id = o.batch_id
-     WHERE o.deleted_at IS NULL
-     ORDER BY o.created_at DESC"
-);
+$orders = $orderAdminService->getAll();
 
 $statusMap = [
     'processing' => ['label' => 'Processing', 'icon' => 'ph-arrows-clockwise', 'bg' => '#eff6ff', 'color' => '#2563eb', 'border' => '#dbeafe'],

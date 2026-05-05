@@ -60,6 +60,21 @@ class BatchService extends BaseService
     }
 
     /**
+     * Get latest open batch with order count.
+     * Returns null if no open batch exists.
+     */
+    public function getLatestOpenBatch(): ?array
+    {
+        return $this->fetch(
+            "SELECT b.id, b.name, b.event_name, b.event_date, b.status,
+                    (SELECT COUNT(*) FROM orders WHERE batch_id = b.id AND deleted_at IS NULL) as order_count
+             FROM batches b
+             WHERE b.deleted_at IS NULL AND b.status = 'open'
+             ORDER BY b.created_at DESC LIMIT 1"
+        );
+    }
+
+    /**
      * Create new batch. Returns new ID.
      */
     public function create(array $data): int
