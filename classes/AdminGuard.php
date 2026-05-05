@@ -102,4 +102,23 @@ class AdminGuard implements SessionGuard
       exit();
     }
   }
+
+  /**
+   * Get full user data for the current logged-in admin.
+   */
+  public function user(): ?array
+  {
+    $id = $this->getId();
+    if (!$id) return null;
+
+    require_once __DIR__ . "/AdminService.php";
+    $adminService = new AdminService();
+    $user = $adminService->getById($id);
+    
+    if ($user) {
+      $user['role'] = $this->getRole();
+    }
+    
+    return $user;
+  }
 }
