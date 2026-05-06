@@ -26,6 +26,15 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?> — TEFA Canning Admin</title>
 
+    <!-- Theme Detection -->
+    <script>
+        if (localStorage.getItem('admin-theme') === 'dark' || (!('admin-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,6 +46,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
@@ -122,10 +132,83 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
             display: block !important;
             max-height: 400px !important;
         }
+        /* Dark Mode Overrides for global elements */
+        .dark .bg-white,
+        .dark .bg-slate-50,
+        .dark .bg-gray-50 {
+            background-color: #1e293b !important;
+        }
+        .dark .bg-[#f8f9fb],
+        .dark .bg-gray-100 {
+            background-color: #0f172a !important;
+        }
+        .dark .bg-gray-50\/50,
+        .dark .hover\:bg-gray-50\/50:hover {
+            background-color: #334155 !important;
+        }
+        
+        .dark .border-gray-100, 
+        .dark .border-gray-50,
+        .dark .border-gray-200 {
+            border-color: #334155 !important;
+        }
+
+        /* Text Overrides */
+        .dark .text-navy,
+        .dark .text-slate-800,
+        .dark .text-slate-700,
+        .dark .text-gray-800,
+        .dark .text-gray-700 {
+            color: #f1f5f9 !important; /* slate-100 */
+        }
+        .dark .text-slate-600,
+        .dark .text-slate-500,
+        .dark .text-gray-600,
+        .dark .text-gray-500 {
+            color: #cbd5e1 !important; /* slate-300 */
+        }
+        .dark .text-slate-400,
+        .dark .text-gray-400 {
+            color: #94a3b8 !important; /* slate-400 */
+        }
+        .dark .text-gray-300,
+        .dark .text-slate-300 {
+            color: #64748b !important; /* slate-500 */
+        }
+
+        /* Table & Specifics */
+        .dark thead th {
+            background-color: #1e293b !important;
+            color: #94a3b8 !important;
+        }
+        .dark tbody tr {
+            border-color: #334155 !important;
+        }
+
+        /* Badges & Accents */
+        .dark .bg-emerald-50 {
+            background-color: rgba(16, 185, 129, 0.1) !important;
+            color: #34d399 !important;
+        }
+        .dark .bg-primary\/5 {
+            background-color: rgba(224, 36, 36, 0.1) !important;
+        }
+
+        /* Inputs */
+        .dark input, 
+        .dark select, 
+        .dark textarea {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+        .dark input::placeholder {
+            color: #64748b !important;
+        }
     </style>
 </head>
 
-<body class="font-sans text-gray-800 antialiased bg-[#f8f9fb]">
+<body class="font-sans text-gray-800 dark:text-gray-200 antialiased bg-[#f8f9fb] dark:bg-[#0f172a]">
     <script>
         // Check sidebar state before body renders to prevent flicker
         if (localStorage.getItem('sidebar-collapsed') === 'true') {
@@ -137,13 +220,13 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
 
         <!-- ═══ Sidebar ═══ -->
         <aside id="sidebar"
-            class="w-[220px] bg-white border-r border-gray-100 flex-shrink-0 flex flex-col fixed top-0 left-0 h-full z-30 overflow-y-auto group/sidebar">
+            class="w-[220px] bg-white dark:bg-[#1e293b] border-r border-gray-100 dark:border-gray-800 flex-shrink-0 flex flex-col fixed top-0 left-0 h-full z-30 overflow-y-auto group/sidebar">
 
             <!-- Logo Area -->
-            <div class="h-[60px] flex items-center px-4 border-b border-gray-50 flex-shrink-0">
+            <div class="h-[60px] flex items-center px-4 border-b border-gray-50 dark:border-gray-800 flex-shrink-0">
                 <img src="../assets/images/politeknik_logo_red.png" alt="Logo TEFA" class="h-8 w-auto min-w-[29px]">
                 <div class="ml-2 logo-text overflow-hidden whitespace-nowrap flex-1">
-                    <div class="text-[13px] font-bold text-navy leading-none">TEFA Canning SIP</div>
+                    <div class="text-[13px] font-bold text-navy dark:text-white leading-none">TEFA Canning SIP</div>
                     <div class="text-[10px] text-slate-400 mt-0.5">Politeknik Negeri Jember</div>
                 </div>
                 <!-- Collapse toggle -->
@@ -158,14 +241,14 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
 
                 <!-- Dashboard -->
                 <a href="dashboard.php" id="nav-dashboard"
-                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 hover:text-primary <?php echo $currentPage === 'dashboard' ? '!text-primary bg-primary/10 [&_i]:text-primary' : ''; ?>">
+                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage === 'dashboard' ? '!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary' : ''; ?>">
                     <i class="ph-bold ph-squares-four text-[20px] shrink-0"></i>
                     <span class="nav-text whitespace-nowrap">Dashboard</span>
                 </a>
 
                 <!-- Transaksi -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 cursor-pointer transition-all duration-150 select-none hover:bg-primary/5 hover:text-primary <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-transaksi', this)">
                         <i class="ph-bold ph-receipt text-[20px] shrink-0"></i>
                         <span class="nav-text whitespace-nowrap">Transaksi</span>
@@ -175,7 +258,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
                         id="grp-transaksi">
                         <a href="orders.php"
-                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'orders' ? '!text-primary font-bold' : ''; ?>">
+                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'orders' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                             <span class="nav-text">Pesanan</span>
                         </a>
                     </div>
@@ -183,7 +266,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
 
                 <!-- Master Data -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 cursor-pointer transition-all duration-150 select-none hover:bg-primary/5 hover:text-primary <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-master', this)">
                         <i class="ph-bold ph-database text-[20px] shrink-0"></i>
                         <span class="nav-text whitespace-nowrap">Master Data</span>
@@ -193,11 +276,11 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
                         id="grp-master">
                         <a href="customers.php"
-                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'customers' ? '!text-primary font-bold' : ''; ?>">
+                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'customers' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                             <span class="nav-text">Pelanggan</span>
                         </a>
                         <a href="products.php"
-                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'products' ? '!text-primary font-bold' : ''; ?>">
+                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'products' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                             <span class="nav-text">Produk</span>
                         </a>
                     </div>
@@ -205,7 +288,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
 
                 <!-- Manajemen Produksi -->
                 <div>
-                    <div class="nav-parent flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 cursor-pointer transition-all duration-150 select-none hover:bg-primary/5 hover:text-primary <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
+                    <div class="nav-parent flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
                         onclick="toggleGroup('grp-produksi', this)">
                         <i class="ph-bold ph-factory text-[20px] shrink-0"></i>
                         <span class="nav-text whitespace-nowrap">Manajemen Produksi</span>
@@ -215,7 +298,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
                         id="grp-produksi">
                         <a href="batches.php"
-                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'batches' ? '!text-primary font-bold' : ''; ?>">
+                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'batches' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                             <span class="nav-text">Batches</span>
                         </a>
                     </div>
@@ -224,7 +307,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                 <?php if ($isAdminSuperAdmin): ?>
                     <!-- Audit & Log -->
                     <div>
-                        <div class="nav-parent flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 cursor-pointer transition-all duration-150 select-none hover:bg-primary/5 hover:text-primary <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
+                        <div class="nav-parent flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
                             onclick="toggleGroup('grp-audit', this)">
                             <i class="ph-bold ph-shield-check text-[20px] shrink-0"></i>
                             <span class="nav-text whitespace-nowrap">Audit & Log</span>
@@ -234,7 +317,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                         <div class="nav-sub <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
                             id="grp-audit">
                             <a href="activity-log.php"
-                                class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'activity-log' ? '!text-primary font-bold' : ''; ?>">
+                                class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'activity-log' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                                 <span class="nav-text">Log Aktivitas</span>
                             </a>
                         </div>
@@ -242,7 +325,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
 
                     <!-- Pengaturan -->
                     <div>
-                        <div class="nav-parent flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 cursor-pointer transition-all duration-150 select-none hover:bg-primary/5 hover:text-primary <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
+                        <div class="nav-parent flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
                             onclick="toggleGroup('grp-settings', this)">
                             <i class="ph-bold ph-gear text-[20px] shrink-0"></i>
                             <span class="nav-text whitespace-nowrap">Pengaturan</span>
@@ -252,7 +335,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                         <div class="nav-sub <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
                             id="grp-settings">
                             <a href="pengaturan.php"
-                                class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'users' ? '!text-primary font-bold' : ''; ?>">
+                                class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'users' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                                 <span class="nav-text">Pengguna</span>
                             </a>
                         </div>
@@ -267,24 +350,27 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
 
             <!-- Top Bar -->
             <header
-                class="h-[60px] bg-white border-b border-gray-100 flex items-center justify-between px-6 flex-shrink-0 sticky top-0 z-20">
-
-                <!-- <div class="flex items-center gap-3">
-                    <div class="text-[14px] font-semibold text-navy flex items-center gap-2">
-                        <i class="ph-bold ph-clock text-primary"></i>
-                        <span id="realtime-clock">00:00:00</span>
-                    </div>
-                </div> -->
+                class="h-[60px] bg-white dark:bg-[#1e293b] border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-6 flex-shrink-0 sticky top-0 z-20">
 
                 <!-- Right -->
-                <div class="flex items-center gap-3 ml-auto">
+                <div class="flex items-center gap-2 ml-auto">
+                    <!-- Theme Toggle -->
+                    <button onclick="toggleDarkMode()"
+                        class="w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-navy dark:hover:text-white transition-all group"
+                        title="Toggle Light/Dark Mode">
+                        <i class="ph ph-sun-dim text-[20px] dark:hidden"></i>
+                        <i class="ph ph-moon text-[20px] hidden dark:block"></i>
+                    </button>
+
                     <!-- Notification bell -->
                     <button
-                        class="w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-navy transition-all relative group">
+                        class="w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-navy dark:hover:text-white transition-all relative group">
                         <i class="ph ph-bell text-[20px]"></i>
                         <span
-                            class="absolute top-2 right-2.5 w-2 h-2 bg-primary border-2 border-white rounded-full"></span>
+                            class="absolute top-2 right-2.5 w-2 h-2 bg-primary border-2 border-white dark:border-[#1e293b] rounded-full"></span>
                     </button>
+
+                    <div class="h-6 w-px bg-gray-100 dark:bg-gray-800 mx-1"></div>
 
                     <!-- Profile Dropdown -->
                     <div class="relative ml-1" id="profile-dropdown-container">
@@ -302,13 +388,13 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                         }
                         ?>
                         <button onclick="toggleProfileDropdown(event)"
-                            class="flex items-center gap-2 group p-1 rounded-lg hover:bg-gray-50 transition-all cursor-pointer">
+                            class="flex items-center gap-2 group p-1 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all cursor-pointer">
                             <div
-                                class="w-9 h-9 rounded-full bg-navy flex items-center justify-center text-white text-[13px] font-bold shadow-sm group-hover:scale-105 transition-transform">
+                                class="w-9 h-9 rounded-full bg-navy dark:bg-slate-700 flex items-center justify-center text-white text-[13px] font-bold shadow-sm group-hover:scale-105 transition-transform">
                                 <?php echo htmlspecialchars($initials); ?>
                             </div>
                             <div class="hidden md:block text-left mr-1">
-                                <div class="text-[12px] font-bold text-navy leading-none">
+                                <div class="text-[12px] font-bold text-navy dark:text-white leading-none">
                                     <?php echo htmlspecialchars($fullName); ?>
                                 </div>
                                 <div class="text-[10px] text-gray-400 mt-1"><?php echo htmlspecialchars($roleName); ?>
@@ -320,9 +406,9 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
 
                         <!-- Dropdown Menu -->
                         <div id="profile-menu"
-                            class="hidden absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-xl shadow-xl z-[100] py-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                            <div class="px-4 py-3 border-b border-gray-50 mb-1">
-                                <div class="text-[13px] font-bold text-navy"><?php echo htmlspecialchars($fullName); ?>
+                            class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-[#1e293b] border border-gray-100 dark:border-gray-800 rounded-xl shadow-xl z-[100] py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                            <div class="px-4 py-3 border-b border-gray-50 dark:border-gray-800 mb-1">
+                                <div class="text-[13px] font-bold text-navy dark:text-white"><?php echo htmlspecialchars($fullName); ?>
                                 </div>
                                 <div class="text-[11px] text-gray-400 mt-0.5">
                                     <?php echo htmlspecialchars($currentUser['email'] ?? ''); ?>
@@ -330,20 +416,20 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                             </div>
 
                             <a href="pengaturan.php"
-                                class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-gray-600 hover:bg-gray-50 hover:text-navy transition-colors">
+                                class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-navy dark:hover:text-white transition-colors">
                                 <i class="ph ph-user-circle text-[18px] text-gray-400"></i>
                                 Profil Saya
                             </a>
                             <a href="pengaturan.php"
-                                class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-gray-600 hover:bg-gray-50 hover:text-navy transition-colors">
+                                class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-navy dark:hover:text-white transition-colors">
                                 <i class="ph ph-gear text-[18px] text-gray-400"></i>
                                 Pengaturan Akun
                             </a>
 
-                            <div class="h-px bg-gray-50 my-1"></div>
+                            <div class="h-px bg-gray-50 dark:bg-gray-800 my-1"></div>
 
                             <a href="../auth/logout.php?type=admin"
-                                class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-red-500 hover:bg-red-50 font-bold transition-colors">
+                                class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-red-500 hover:bg-red-50 dark:hover:bg-red-950 font-bold transition-colors">
                                 <i class="ph ph-sign-out text-[18px]"></i>
                                 Logout
                             </a>
@@ -353,6 +439,12 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
             </header>
 
             <script>
+                function toggleDarkMode() {
+                    const html = document.documentElement;
+                    const isDark = html.classList.toggle('dark');
+                    localStorage.setItem('admin-theme', isDark ? 'dark' : 'light');
+                }
+
                 function toggleProfileDropdown(e) {
                     e.stopPropagation();
                     document.getElementById('profile-menu').classList.toggle('hidden');

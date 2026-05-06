@@ -84,6 +84,7 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 7. **CSRF token required** in every form: `<?php echo csrfField(); ?>`. Form tanpa ini akan ditolak saat submit.
 8. **Don't duplicate sidebar/navbar.** Already in header includes. Just write page content between header and footer.
 9. **Commit message format:** `feat: [page/feature description]` or `fix: [what fixed]`.
+10. **Dark Mode Awareness**: Selalu gunakan utility class `dark:` untuk elemen baru jika diperlukan, atau pastikan elemen tersebut tercakup dalam sinkronisasi global CSS di `header-admin.php` agar tetap konsisten.
 
 ## Current Implementation Status
 
@@ -149,12 +150,12 @@ Exceptions:
 **Frontend Migration (Native CSS → Tailwind): IN PROGRESS**
 - **Phase 1 (Auth Pages):** ✅ 100% (login-admin, login-customer, register, forgot-password)
 - **Phase 2 (Admin List Pages):** ✅ 100% (orders, products, batches, customers)
-- **Phase 3 (Admin Form Pages):** ✅ 100% (edit-product, create-product, create-batch, edit-batch, edit-customer, create-order, edit-order, view-order)
-- **Phase 4 (Admin Special Pages):** ✅ 100% (dashboard, pengaturan, activity-log)
-- **Phase 5 (Customer Pages):** ✅ 100% (dashboard, preorder, orders, edit-order, profile)
+- **Phase 3 (Admin Form Pages):** ✅ 100% (edit-product, create-product, create-batch, edit-batch, edit-customer, create-order, edit-order, view-order, create-user via create-customer.php)
+- **Phase 4 (Admin Special Pages):** ✅ 100% (dashboard, pengaturan, activity-log, Light/Dark Mode Toggle)
+- **Special Feature (Frontend):** ✅ **Light/Dark Mode Synchronization**. Implemented global theme toggle in `header-admin.php` with automatic synchronization for all dashboard cards, tables, forms, and typography.
 - **Cleanup:** ✅ 100% (dashboard status badges fixed)
 
-**Not yet built:** FonnteService (WhatsApp notifications).
+**Services:** ✅ **FonnteService** (WhatsApp Notifications) implemented.
 
 ## Refactoring Plan — COMPLETE ✅
 
