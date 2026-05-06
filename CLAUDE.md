@@ -124,6 +124,7 @@ Services (extend BaseService):
 - `classes/ActivityLogService.php` — activity log: `log()`, `getAll()`, `countAll()`
 - `classes/OrderAdminService.php` — admin order CRUD: `getAll()`, `getById()`, `getItems()`, `getActiveProducts()`, `getCustomersForDropdown()`, `getOpenBatchesForDropdown()`, `createOrder()`, `updateOrder()`, `deleteOrder()`
 - `classes/PdfService.php` — PDF generation: `generateOrderPdf()`, `download()`
+- `classes/FonnteService.php` — WhatsApp notifications: `sendMessage()`, `sendOrderConfirmation()`, `sendNewOrderToOwner()`, `sendReadyForPickup()`
 
 Auth & Session:
 - `classes/SessionGuard.php` — Interface: `isLoggedIn()`, `getId()`, `login()`, `logout()`, `requireAuth()`
@@ -381,7 +382,7 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 
 | Phase | Description | Owner | Status |
 |-------|-------------|-------|--------|
-| 6.1 | FonnteService (3 WhatsApp triggers) | Ivan | [ ] |
+| 6.1 | FonnteService (3 WhatsApp triggers) | Ivan | [x] |
 | 6.2 | PDF generation (DomPDF) | Ivan | [x] |
 
 #### Priority 7 — Security
