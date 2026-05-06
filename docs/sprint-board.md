@@ -7,28 +7,12 @@
 
 | To Do | Doing | Done |
 |-------|-------|------|
-| Full testing backend (Irfan) | Fix batch CSRF token issue all roles (Irfan) | Project setup & database (Irfan) |
-| Full testing frontend (Alif) | Auto increment product SKU (Irfan) | Core infrastructure (Irfan) |
-| Acceptance testing & stakeholder demo (Rizky) | Add batch date info on customer order page (Irfan) | Landing page (Alif, Irfan) |
-| Requirement validation & final docs (Lily) | Responsive web all pages (Alif) | Auth system (Irfan) |
-| Visual & usability testing (Alfia) | Add clear reason why core products can't be deleted (Alif) | Landing page mockup (Alfia) |
-| Final Figma assets & design docs (Alfia) | | Customer panel pages (Alif, Irfan) |
-| | | Admin panel pages (Alif) |
-| | | Backend wiring (Irfan) |
-| | | Customer & admin mockups (Alfia) |
-| | | Tailwind CSS migration (Irfan) |
-| | | RBAC system (Irfan) |
-| | | Admin DB wiring (Irfan) |
-| | | Dark mode design (Alfia) |
-| | | PDF generation (Irfan) |
-| | | Admin CRUD pages (Irfan) |
-| | | PDF template design (Alfia) |
-| | | OOP refactoring 14 classes (Irfan) |
-| | | OOP architecture docs (Lily) |
-| | | UI consistency audit (Alfia) |
-| | | Stock management & batch filter (Irfan) |
-| | | WhatsApp notifications (Irfan) |
-| | | Bug fixes & merge resolution (Irfan, Alif) |
-| | | Retrospective & presentation (Rizky) |
-| | | Final documentation SRS DFD ERD (Lily) |
-| | | Final Figma polish (Alfia) |
+| Full testing backend (Irfan) | Fix batch CSRF token issue (Irfan) | Project setup & database (Irfan) |
+| Full testing frontend (Alif) | Auto increment product SKU (Irfan) | Landing page (Alif, Irfan, Alfia) |
+| Acceptance testing & demo (Rizky) | Add batch date on customer order (Irfan) | Auth system (Irfan) |
+| Requirement validation & docs (Lily) | Responsive web all pages (Alif) | Frontend customer pages (Alif) |
+| Visual & usability testing (Alfia) | Clear reason for undeletable products (Alif) | Frontend admin pages (Alif) |
+| Final Figma assets & docs (Alfia) | | Backend feature flow (Irfan) |
+| | | UI/UX design system (Alfia) |
+| | | Documentation & analysis (Lily) |
+| | | Sprint management (Rizky) |
