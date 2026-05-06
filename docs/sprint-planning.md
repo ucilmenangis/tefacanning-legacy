@@ -1,9 +1,17 @@
 # Sprint Planning — TEFA Canning SIP Legacy
 
 **Project:** TEFA Canning SIP Legacy (PHP Native)
-**Team:** Ivan (Backend), Alif Taran Ihsan (Frontend)
-**Period:** 25 Februari 2026 – 6 Mei 2026
-**Framework:** Scrum (adaptasi untuk tim 2 orang)
+**Team:**
+| Role | Name |
+|------|------|
+| Project Manager | Rizky |
+| System Analyst | Lily |
+| UI/UX (Figma) | Alfia |
+| Frontend | Alif Taran Ihsan |
+| Backend | Irfan |
+
+**Period:** 25 Februari 2026 – 13 Mei 2026
+**Framework:** Scrum (adaptasi untuk tim 5 orang)
 
 ---
 
@@ -13,10 +21,14 @@
 
 | Task | Assignee | Priority | Status |
 |------|----------|----------|--------|
-| Init repositori git | Ivan | High | Done |
-| Setup database config (.env, PDO) | Ivan | High | Done |
-| Setup README dan dokumentasi dasar | Ivan | Medium | Done |
-| Fix image path pada README | Ivan | Low | Done |
+| Init repositori git | Irfan | High | Done |
+| Setup database config (.env, PDO) | Irfan | High | Done |
+| Setup README dan dokumentasi dasar | Irfan | Medium | Done |
+| Fix image path pada README | Irfan | Low | Done |
+| Project kickoff meeting, define scope & timeline | Rizky | High | Done |
+| Requirements gathering, SRS document draft | Lily | High | Done |
+| Koordinasi kebutuhan data dari stakeholder TEFA | Lily | Medium | Done |
+| Design system setup di Figma (colors, typography, spacing) | Alfia | Medium | Done |
 
 **Commits:**
 - `fbea7df` first commit
@@ -32,16 +44,20 @@
 
 | Task | Assignee | Priority | Status |
 |------|----------|----------|--------|
-| Landing page (hero, catalog, batch, SNI, footer) | Ivan | High | Done |
-| Fix hero section alignment | Ivan | Medium | Done |
-| Fix batch card 3-column layout | Ivan | Medium | Done |
-| Fix logo & footer positioning | Ivan | Medium | Done |
-| Core infrastructure (functions.php, auth.php) | Ivan | High | Done |
-| Auth system (session, guards, CSRF) | Ivan | High | Done |
-| Layout system (header/footer admin + customer) | Ivan | High | Done |
-| Role-based task documentation | Ivan | Medium | Done |
+| Landing page (hero, catalog, batch, SNI, footer) | Irfan | High | Done |
+| Fix hero section alignment | Irfan | Medium | Done |
+| Fix batch card 3-column layout | Irfan | Medium | Done |
+| Fix logo & footer positioning | Irfan | Medium | Done |
+| Core infrastructure (functions.php, auth.php) | Irfan | High | Done |
+| Auth system (session, guards, CSRF) | Irfan | High | Done |
+| Layout system (header/footer admin + customer) | Irfan | High | Done |
+| Role-based task documentation | Irfan | Medium | Done |
 | Convert images to PHP pages | Alif | Medium | Done |
-| Auth login pages (HTML + Tailwind) | Ivan | High | Done |
+| Auth login pages (HTML + Tailwind) | Irfan | High | Done |
+| Sprint planning & review Sprint 2 | Rizky | High | Done |
+| Analisis kebutuhan sistem, use case diagram | Lily | High | Done |
+| Bridge ke stakeholder terkait konten landing page | Lily | Medium | Done |
+| Landing page mockup di Figma (hero, catalog, footer) | Alfia | High | Done |
 
 **Commits:**
 - `2da7123` feat: landing page
@@ -68,16 +84,21 @@
 | Customer riwayat pesanan frontend | Alif | High | Done |
 | Customer profile frontend | Alif | High | Done |
 | Edit order page frontend | Alif | Medium | Done |
-| Sync sidebar/footer/navbar customer | Ivan | Medium | Done |
-| Notification status feature | Ivan | Medium | Done |
-| Convert HTML files to PHP | Ivan | Medium | Done |
-| Logout for customer/admin | Ivan | High | Done |
+| Sync sidebar/footer/navbar customer | Irfan | Medium | Done |
+| Notification status feature | Irfan | Medium | Done |
+| Convert HTML files to PHP | Irfan | Medium | Done |
+| Logout for customer/admin | Irfan | High | Done |
 | Admin panel frontend (all pages) | Alif | High | Done |
 | Pengaturan page frontend | Alif | Medium | Done |
-| Pre-order feature (backend wiring) | Ivan | High | Done |
-| Profile user customer (backend wiring) | Ivan | High | Done |
-| FormatHelper & order limit fix | Ivan | Medium | Done |
-| Chart.js integration (sparklines) | Ivan | Medium | Done |
+| Pre-order feature (backend wiring) | Irfan | High | Done |
+| Profile user customer (backend wiring) | Irfan | High | Done |
+| FormatHelper & order limit fix | Irfan | Medium | Done |
+| Chart.js integration (sparklines) | Irfan | Medium | Done |
+| Koordinasi task frontend-backend, sprint review | Rizky | High | Done |
+| Analisis data kebutuhan customer panel, dokumentasi sistem | Lily | High | Done |
+| Bridge ke stakeholder terkait fitur customer | Lily | Medium | Done |
+| Customer panel mockups di Figma (dashboard, orders, profile) | Alfia | High | Done |
+| Admin panel mockups di Figma | Alfia | High | Done |
 
 **Commits:**
 - `cecfa44` (Alif) membuat frontend halaman dashboard customer
@@ -104,15 +125,20 @@
 
 | Task | Assignee | Priority | Status |
 |------|----------|----------|--------|
-| Refactor CSS native ke Tailwind | Ivan | High | Done |
+| Refactor CSS native ke Tailwind | Irfan | High | Done |
 | Edit customer/order page | Alif | Medium | Done |
-| Sidebar link fix (Windows path) | Ivan | Medium | Done |
-| RBAC (super_admin vs teknisi) | Ivan | High | Done |
-| Price protection | Ivan | High | Done |
-| Core product deletion protection | Ivan | High | Done |
-| Admin panel wiring ke DB (4.1–4.7) | Ivan | High | Done |
-| Logout fix across all pages | Ivan | Medium | Done |
-| SQL escape fix (backslash issue) | Ivan | Medium | Done |
+| Sidebar link fix (Windows path) | Irfan | Medium | Done |
+| RBAC (super_admin vs teknisi) | Irfan | High | Done |
+| Price protection | Irfan | High | Done |
+| Core product deletion protection | Irfan | High | Done |
+| Admin panel wiring ke DB (4.1–4.7) | Irfan | High | Done |
+| Logout fix across all pages | Irfan | Medium | Done |
+| SQL escape fix (backslash issue) | Irfan | Medium | Done |
+| Sprint review & prioritization bug fixes | Rizky | High | Done |
+| Analisis kebutuhan RBAC, dokumentasi sistem keamanan | Lily | High | Done |
+| Laporan progress ke stakeholder | Lily | Medium | Done |
+| Dark mode design variants di Figma | Alfia | Medium | Done |
+| Refinement admin panel mockups | Alfia | Medium | Done |
 
 **Commits:**
 - `91de9da` refactor: from css native to tailwindcss
@@ -133,15 +159,20 @@
 
 | Task | Assignee | Priority | Status |
 |------|----------|----------|--------|
-| PDF download (DomPDF) | Ivan | High | Done |
-| Create order page (admin) | Ivan | High | Done |
-| Edit product page (admin) | Ivan | High | Done |
-| View order page (admin) | Ivan | High | Done |
-| Edit batch page (admin) | Ivan | High | Done |
-| Real data chart (replace dummy) | Ivan | Medium | Done |
-| Multiple UI bug fixes | Ivan | Medium | Done |
+| PDF download (DomPDF) | Irfan | High | Done |
+| Create order page (admin) | Irfan | High | Done |
+| Edit product page (admin) | Irfan | High | Done |
+| View order page (admin) | Irfan | High | Done |
+| Edit batch page (admin) | Irfan | High | Done |
+| Real data chart (replace dummy) | Irfan | Medium | Done |
+| Multiple UI bug fixes | Irfan | Medium | Done |
 | Frontend optimization & cleanup | Alif | Medium | Done |
-| RBAC documentation | Ivan | Low | Done |
+| RBAC documentation | Irfan | Low | Done |
+| Sprint review & sprint planning Sprint 6 | Rizky | High | Done |
+| Laporan sprint 5, dokumentasi CRUD workflow | Lily | High | Done |
+| Analisis data transaksi untuk laporan | Lily | Medium | Done |
+| PDF report template design di Figma | Alfia | High | Done |
+| Icon & button updates di Figma | Alfia | Low | Done |
 
 **Commits:**
 - `94c04dc` feat: PDF download on customer and admin
@@ -162,10 +193,14 @@
 
 | Task | Assignee | Priority | Status |
 |------|----------|----------|--------|
-| OOP refactoring design spec | Ivan | High | Done |
-| Refactor all pages to OOP | Ivan | High | Done |
-| Fix post-refactor access issues | Ivan | Medium | Done |
-| Total profit dashboard feature | Ivan | Medium | Done |
+| OOP refactoring design spec | Irfan | High | Done |
+| Refactor all pages to OOP | Irfan | High | Done |
+| Fix post-refactor access issues | Irfan | Medium | Done |
+| Total profit dashboard feature | Irfan | Medium | Done |
+| Sprint review & risk assessment refactoring | Rizky | High | Done |
+| Review arsitektur OOP, dokumentasi sistem | Lily | High | Done |
+| Laporan progress sprint 6 | Lily | Medium | Done |
+| UI consistency audit di Figma | Alfia | Medium | Done |
 
 **Commits:**
 - `9eade60` docs: add OOP refactoring design spec
@@ -175,20 +210,26 @@
 
 ---
 
-## Sprint 7: OOP Completion & Bug Fixes (4–5 Mei 2026)
+## Sprint 7: OOP Completion, Bug Fixes & Retrospective (4–6 Mei 2026)
 
-**Sprint Goal:** Menyelesaikan refactoring OOP, memperbaiki bug dari merge, dan fitur baru.
+**Sprint Goal:** Menyelesaikan refactoring OOP, memperbaiki bug dari merge, fitur baru, dan retrospective.
 
 | Task | Assignee | Priority | Status |
 |------|----------|----------|--------|
-| Stock management fix | Ivan | High | Done |
-| Order CRUD refactor to OOP | Ivan | High | Done |
-| Batch/Order/Dashboard OOP refactor | Ivan | High | Done |
+| Stock management fix | Irfan | High | Done |
+| Order CRUD refactor to OOP | Irfan | High | Done |
+| Batch/Order/Dashboard OOP refactor | Irfan | High | Done |
 | Fix UI and popup CRUD (Alif's merge) | Alif | Medium | Done |
-| Fix admin page crash (phone column) | Ivan | Critical | Done |
-| Fix create-customer insert to wrong table | Ivan | Critical | Done |
-| Dashboard batch filter | Ivan | Medium | Done |
-| FonnteService (WhatsApp notifications) | Ivan | Medium | Done |
+| Fix admin page crash (phone column) | Irfan | Critical | Done |
+| Fix create-customer insert to wrong table | Irfan | Critical | Done |
+| Dashboard batch filter | Irfan | Medium | Done |
+| FonnteService (WhatsApp notifications) | Irfan | Medium | Done |
+| Koordinasi merge conflict resolution | Rizky | Critical | Done |
+| Sprint review final, retrospective | Rizky | High | Done |
+| Laporan final project, slide presentasi | Rizky | High | Done |
+| Laporan analisis sistem final | Lily | High | Done |
+| Dokumentasi sistem lengkap (SRS, DFD, ERD) | Lily | High | Done |
+| Final Figma polish, export assets presentasi | Alfia | High | Done |
 
 **Commits:**
 - `667661e` fix: method signature, profit calculation, stock management
@@ -204,15 +245,33 @@
 
 ---
 
+## Sprint 8: Full Testing & Final Delivery (Week 13 — Mei 2026)
+
+**Sprint Goal:** Full testing seluruh fitur sistem oleh semua role, perbaikan bug final, dan persiapan delivery.
+
+| Task | Assignee | Priority | Status |
+|------|----------|----------|--------|
+| Full testing backend (semua fitur, semua role, edge cases) | Irfan | High | Pending |
+| Full testing frontend (semua halaman, responsive, browser compat) | Alif | High | Pending |
+| Full testing acceptance (end-to-end flow, stakeholder demo) | Rizky | High | Pending |
+| Koordinasi testing, bug tracking, persiapan demo | Rizky | High | Pending |
+| Full testing data & requirement validation | Lily | High | Pending |
+| Finalisasi laporan & dokumentasi akhir | Lily | High | Pending |
+| Full testing UI/UX review (visual, usability, consistency) | Alfia | High | Pending |
+| Finalisasi Figma assets & desain dokumentasi | Alfia | High | Pending |
+
+---
+
 ## Velocity Summary
 
-| Sprint | Duration | Commits | Ivan | Alif |
-|--------|----------|---------|------|------|
-| 1 | 2 days | 4 | 4 | 0 |
-| 2 | 1 day | 10 | 9 | 1 |
-| 3 | 3 days | 14 | 10 | 4 |
-| 4 | 4 days | 9 | 8 | 1 |
-| 5 | 2 days | 15 | 14 | 1 |
-| 6 | 2 days | 4 | 4 | 0 |
-| 7 | 2 days | 10 | 8 | 3 |
-| **Total** | **16 days** | **66** | **57** | **10** |
+| Sprint | Duration | Commits | Irfan | Alif | Rizky | Lily | Alfia |
+|--------|----------|---------|-------|------|-------|------|-------|
+| 1 | 2 days | 4 | 4 | 0 | 1 | 2 | 1 |
+| 2 | 1 day | 10 | 9 | 1 | 1 | 2 | 1 |
+| 3 | 3 days | 14 | 10 | 4 | 1 | 2 | 2 |
+| 4 | 4 days | 9 | 8 | 1 | 1 | 2 | 2 |
+| 5 | 2 days | 15 | 14 | 1 | 1 | 2 | 2 |
+| 6 | 2 days | 4 | 4 | 0 | 1 | 2 | 1 |
+| 7 | 3 days | 10 | 8 | 3 | 3 | 2 | 1 |
+| 8 | 1 week | - | 1 | 1 | 2 | 2 | 2 |
+| **Total** | **~4 weeks** | **66** | **58** | **11** | **11** | **16** | **12** |
