@@ -48,6 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'order_number' => $order['order_number'],
             'total'        => $order['total_amount'],
         ]);
+
+        // WhatsApp: send confirmation to customer
+        try {
+            require_once __DIR__ . '/../classes/FonnteService.php';
+            (new FonnteService())->sendOrderConfirmation($orderId);
+        } catch (Throwable $fe) {
+            error_log('Fonnte: Failed to send order confirmation - ' . $fe->getMessage());
+        }
+
         FlashMessage::set('success', 'Pesanan berhasil dibuat.');
         header('Location: view-order.php?id=' . $orderId);
         exit;

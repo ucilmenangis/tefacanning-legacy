@@ -93,6 +93,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $pdo->commit();
+
+            // WhatsApp: notify owner about new order
+            try {
+                require_once __DIR__ . '/../classes/FonnteService.php';
+                (new FonnteService())->sendNewOrderToOwner($orderId);
+            } catch (Throwable $fe) {
+                error_log('Fonnte: Failed to notify owner - ' . $fe->getMessage());
+            }
+
             FlashMessage::set('success', 'Pre-Order berhasil dikirim! Order: ' . $orderNumber);
             header('Location: preorder.php');
             exit;

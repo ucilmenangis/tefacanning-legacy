@@ -71,6 +71,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'status' => $status,
     ]);
 
+    // WhatsApp: if status changed to "ready", notify all customers in batch
+    if ($status === 'ready' && $batch['status'] !== 'ready') {
+        try {
+            require_once __DIR__ . '/../classes/FonnteService.php';
+            $sent = (new FonnteService())->sendReadyForPickup($id);
+            if ($sent > 0) {
+                FlashMessage::set('success', "Notifikasi WhatsApp terkirim ke {$sent} pelanggan.");
+            }
+        } catch (Throwable $fe) {
+            error_log('Fonnte: Failed to send ready notifications - ' . $fe->getMessage());
+        }
+    }
+
     $activityLogService->log('updated', 'App\Models\Batch', $id, 'updated', [
         'name' => $name, 'status' => $status,
     ]);
