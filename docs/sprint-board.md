@@ -5,14 +5,14 @@
 
 ---
 
-| To Do | Doing | Done |
-|-------|-------|------|
-| Full testing backend (Irfan) | Fix batch CSRF token issue (Irfan) | Project setup & database (Irfan) |
-| Full testing frontend (Alif) | Auto increment product SKU (Irfan) | Landing page (Alif, Irfan, Alfia) |
-| Acceptance testing & demo (Rizky) | Add batch date on customer order (Irfan) | Auth system (Irfan) |
-| Requirement validation & docs (Lily) | Responsive web all pages (Alif) | Frontend customer pages (Alif) |
-| Visual & usability testing (Alfia) | Clear reason for undeletable products (Alif) | Frontend admin pages (Alif) |
-| Final Figma assets & docs (Alfia) | | Backend feature flow (Irfan) |
-| | | UI/UX design system (Alfia) |
-| | | Documentation & analysis (Lily) |
-| | | Sprint management (Rizky) |
+| To Do (est. Week 13) | Doing | Done |
+|-----------------------|-------|------|
+| Full testing backend (Irfan, est. 13 May) | Fix batch CSRF token issue (Irfan, 11 May) | Project setup & database (Irfan, 26 Feb) |
+| Full testing frontend (Alif, est. 13 May) | Auto increment product SKU (Irfan, 11 May) | Landing page (Alif, Irfan, Alfia, 18 Apr) |
+| Acceptance testing & demo (Rizky, est. 13 May) | Add batch date on customer order (Irfan, 11 May) | Auth system (Irfan, 18 Apr) |
+| Requirement validation & docs (Lily, est. 13 May) | Responsive web all pages (Alif, 11 May) | Frontend customer pages (Alif, 21 Apr) |
+| Visual & usability testing (Alfia, est. 13 May) | Clear reason for undeletable products (Alif, 11 May) | Frontend admin pages (Alif, 21 Apr) |
+| Final Figma assets & docs (Alfia, est. 13 May) | | Backend feature flow (Irfan, 6 May) |
+| | | UI/UX design system (Alfia, 6 May) |
+| | | Documentation & analysis (Lily, 6 May) |
+| | | Sprint management (Rizky, 6 May) |
