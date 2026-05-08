@@ -193,7 +193,7 @@ $statusOptions = [
 
 <!-- Hidden delete form -->
 <form id="delete-form" method="POST" action="edit-batch.php?id=<?php echo $id; ?>">
-    <?php echo CsrfService::field(); ?>
+    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>">
     <input type="hidden" name="_action" value="delete">
 </form>
 
