@@ -1,0 +1,49 @@
+flowchart TD
+    START([Mulai]) --> LANDING[Tampilkan Landing Page]
+    LANDING --> LOGIN_PILIH{Pilih Akses}
+
+    subgraph ADMIN[Admin / Teknisi]
+        LOGIN_PILIH -->|Admin| LOGIN_ADMIN[/Form Login Admin/]
+        LOGIN_ADMIN --> AUTH_ADMIN{Autentikasi Valid?}
+        AUTH_ADMIN -->|Tidak| LOGIN_ADMIN
+        AUTH_ADMIN -->|Ya| CEK_ROLE{Cek Role}
+
+        CEK_ROLE -->|Super Admin| DASHBOARD_ADMIN[Tampilkan Dashboard Admin]
+        CEK_ROLE -->|Teknisi| DASHBOARD_TEKNISI[Tampilkan Dashboard Teknisi]
+
+        DASHBOARD_ADMIN --> KELOLA_ADMIN[Kelola Produk, Batch, Pesanan, Pelanggan]
+        DASHBOARD_TEKNISI --> KELOLA_TEKNISI[Kelola Batch dan Pesanan]
+
+        KELOLA_ADMIN --> UBAH_STATUS[Ubah Status Batch menjadi Siap]
+        KELOLA_TEKNISI --> UBAH_STATUS
+        UBAH_STATUS --> NOTIF_SIAP[Kirim Notifikasi WhatsApp ke Pelanggan]
+    end
+
+    subgraph CUSTOMER[Pelanggan]
+        LOGIN_PILIH -->|Pelanggan| PILIH_AKSI{Sudah Punya Akun?}
+        PILIH_AKSI -->|Belum| REGISTER[/Form Registrasi/]
+        REGISTER --> REG_VALID{Data Valid?}
+        REG_VALID -->|Tidak| REGISTER
+        REG_VALID -->|Ya| LOGIN_CUSTOMER[/Form Login Pelanggan/]
+        PILIH_AKSI -->|Sudah| LOGIN_CUSTOMER
+
+        LOGIN_CUSTOMER --> AUTH_CUST{Autentikasi Valid?}
+        AUTH_CUST -->|Tidak| LOGIN_CUSTOMER
+        AUTH_CUST -->|Ya| DASHBOARD_CUST[Tampilkan Dashboard Pelanggan]
+
+        DASHBOARD_CUST --> BUAT_ORDER[Buat Pre-order]
+        BUAT_ORDER --> PILIH_BATCH[Pilih Batch dan Produk]
+        PILIH_BATCH --> QTY_VALID{Stok Tersedia?}
+        QTY_VALID -->|Tidak| PILIH_BATCH
+        QTY_VALID -->|Ya| SIMPAN_ORDER[Simpan Pesanan]
+        SIMPAN_ORDER --> KURANGI_STOK[Kurangi Stok Produk]
+        KURANGI_STOK --> NOTIF_ORDER[Kirim Notifikasi WhatsApp ke Admin]
+
+        DASHBOARD_CUST --> LIHAT_ORDER[Lihat Riwayat Pesanan]
+        LIHAT_ORDER --> UNDUH_PDF[Unduh PDF Pesanan]
+    end
+
+    NOTIF_SIAP --> AMBIL[Pelanggan Mengambil Pesanan]
+    NOTIF_ORDER --> ADMIN_PROSES[Admin Memproses Pesanan]
+    ADMIN_PROSES --> UBAH_STATUS
+    AMBIL --> SELESAI([Selesai])

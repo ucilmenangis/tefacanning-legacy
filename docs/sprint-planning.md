@@ -245,20 +245,25 @@
 
 ---
 
-## Sprint 8: Full Testing & Final Delivery (Week 13 — Mei 2026)
+## Sprint 8: Bug Fixes, Full Testing & Final Delivery (Week 13 — Mei 2026)
 
-**Sprint Goal:** Full testing seluruh fitur sistem oleh semua role, perbaikan bug final, dan persiapan delivery.
+**Sprint Goal:** Perbaikan bug remaining, full testing seluruh fitur oleh semua role, dan persiapan delivery.
 
 | Task | Assignee | Priority | Status |
 |------|----------|----------|--------|
-| Full testing backend (semua fitur, semua role, edge cases) | Irfan | High | Pending |
-| Full testing frontend (semua halaman, responsive, browser compat) | Alif | High | Pending |
-| Full testing acceptance (end-to-end flow, stakeholder demo) | Rizky | High | Pending |
-| Koordinasi testing, bug tracking, persiapan demo | Rizky | High | Pending |
-| Full testing data & requirement validation | Lily | High | Pending |
-| Finalisasi laporan & dokumentasi akhir | Lily | High | Pending |
-| Full testing UI/UX review (visual, usability, consistency) | Alfia | High | Pending |
-| Finalisasi Figma assets & desain dokumentasi | Alfia | High | Pending |
+| Fix batch CSRF token issue semua role | Irfan | Critical | Pending |
+| Auto increment SKU produk | Irfan | High | Pending |
+| Tambah tanggal batch info saat customer buat order | Irfan | High | Pending |
+| Full testing backend (CRUD, auth, RBAC, stock, profit, PDF, WhatsApp) | Irfan | High | Pending |
+| Responsive web semua pages | Alif | High | Pending |
+| Text alasan jelas kenapa produk utama tidak bisa dihapus | Alif | Medium | Pending |
+| Full testing frontend (responsive, form validation, dark mode) | Alif | High | Pending |
+| Full end-to-end flow testing & stakeholder demo | Rizky | High | Pending |
+| Bug tracking & koordinasi perbaikan | Rizky | High | Pending |
+| Verifikasi semua requirement terpenuhi | Lily | High | Pending |
+| Finalisasi dokumentasi akhir | Lily | High | Pending |
+| Visual & usability testing semua halaman | Alfia | High | Pending |
+| Finalisasi Figma assets & dokumentasi desain | Alfia | High | Pending |
 
 ---
 
@@ -273,5 +278,5 @@
 | 5 | 2 days | 15 | 14 | 1 | 1 | 2 | 2 |
 | 6 | 2 days | 4 | 4 | 0 | 1 | 2 | 1 |
 | 7 | 3 days | 10 | 8 | 3 | 3 | 2 | 1 |
-| 8 | 1 week | - | 1 | 1 | 2 | 2 | 2 |
-| **Total** | **~4 weeks** | **66** | **58** | **11** | **11** | **16** | **12** |
+| 8 | 1 week | - | 4 | 3 | 2 | 2 | 2 |
+| **Total** | **~4 weeks** | **66** | **61** | **13** | **13** | **18** | **14** |

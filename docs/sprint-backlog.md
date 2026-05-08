@@ -190,25 +190,26 @@
 
 ---
 
-## Sprint 8 — Full Testing & Final Delivery (Week 13 — Mei 2026)
+## Sprint 8 — Bug Fixes, Full Testing & Final Delivery (Week 13 — Mei 2026)
 
 ### Product Backlog Items → Sprint Backlog
 
 | PBI | Task | Assignee | Estimate | Status |
 |-----|------|----------|----------|--------|
-| PBI-40: Full testing backend | Test semua fitur backend (CRUD, auth, RBAC) | Irfan | 4h | Pending |
-| | Test edge cases & error handling | Irfan | 2h | Pending |
-| | Test stock management & profit calculation | Irfan | 2h | Pending |
-| | Test PDF generation & WhatsApp notifications | Irfan | 2h | Pending |
-| PBI-41: Full testing frontend | Test semua halaman (responsive, browser compat) | Alif | 4h | Pending |
-| | Test form validation & user interaction | Alif | 2h | Pending |
-| | Test dark mode & UI consistency | Alif | 2h | Pending |
-| PBI-42: Acceptance testing | Full end-to-end flow testing | Rizky | 3h | Pending |
+| PBI-40: Backend bug fixes | Fix batch CSRF token issue semua role | Irfan | 1.5h | Pending |
+| | Auto increment SKU produk | Irfan | 2h | Pending |
+| | Tambah tanggal batch info saat customer buat order | Irfan | 1.5h | Pending |
+| PBI-41: Full testing backend | Test semua fitur backend (CRUD, auth, RBAC) | Irfan | 4h | Pending |
+| | Test stock management, profit calculation, PDF, WhatsApp | Irfan | 3h | Pending |
+| PBI-42: Frontend bug fixes | Responsive web semua pages | Alif | 4h | Pending |
+| | Text alasan jelas kenapa produk utama tidak bisa dihapus | Alif | 0.5h | Pending |
+| PBI-43: Full testing frontend | Test semua halaman (responsive, form validation, dark mode) | Alif | 4h | Pending |
+| PBI-44: Acceptance testing | Full end-to-end flow testing | Rizky | 3h | Pending |
 | | Stakeholder demo preparation | Rizky | 2h | Pending |
 | | Bug tracking & koordinasi perbaikan | Rizky | 2h | Pending |
-| PBI-43: Data & requirement validation | Verifikasi semua requirement terpenuhi | Lily | 3h | Pending |
+| PBI-45: Data & requirement validation | Verifikasi semua requirement terpenuhi | Lily | 3h | Pending |
 | | Validasi data & laporan final | Lily | 2h | Pending |
 | | Finalisasi dokumentasi akhir | Lily | 3h | Pending |
-| PBI-44: UI/UX review | Visual testing semua halaman | Alfia | 3h | Pending |
+| PBI-46: UI/UX review | Visual testing semua halaman | Alfia | 3h | Pending |
 | | Usability testing & feedback | Alfia | 2h | Pending |
 | | Finalisasi Figma assets & dokumentasi desain | Alfia | 2h | Pending |

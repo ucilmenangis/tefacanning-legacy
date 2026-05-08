@@ -319,18 +319,18 @@
 
 ---
 
-## Sprint 8 — Full Testing & Final Delivery (Week 13 — Mei 2026)
+## Sprint 8 — Bug Fixes, Full Testing & Final Delivery (Week 13 — Mei 2026)
 
 ### Day 1
 
 **Irfan:**
 - Done: -
-- Next: Full testing semua fitur backend (CRUD, auth, RBAC, stock management, profit calculation)
+- Next: Fix batch CSRF token issue semua role, auto increment SKU produk, tambah tanggal batch info saat customer buat order
 - Blocker: -
 
 **Alif:**
 - Done: -
-- Next: Full testing semua halaman frontend (responsive, browser compat, form validation)
+- Next: Responsive web semua pages, text alasan jelas kenapa produk utama tidak bisa dihapus
 - Blocker: -
 
 **Rizky:**
