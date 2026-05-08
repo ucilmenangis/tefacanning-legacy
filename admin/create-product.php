@@ -15,6 +15,7 @@ require_once __DIR__ . '/../classes/ActivityLogService.php';
 
 $adminService = new AdminService();
 $productService = new ProductService();
+$nextSku = $productService->getNextSku();
 $activityLogService = new ActivityLogService();
 
 // ── POST Handler ──
@@ -31,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stock = intval($_POST['stock'] ?? 0);
     $isActive = isset($_POST['is_active']) ? 1 : 0;
 
-    if (empty($name) || empty($sku)) {
-        FlashMessage::set('error', 'Nama dan SKU produk wajib diisi.');
+    if (empty($name)) {
+        FlashMessage::set('error', 'Nama produk wajib diisi.');
         header('Location: create-product.php');
         exit;
     }
@@ -92,8 +93,10 @@ include __DIR__ . '/../includes/header-admin.php';
                 <input type="text" name="name" class="w-full border border-gray-200 rounded-lg py-2.5 px-3.5 text-[13px] text-navy bg-white outline-none transition-all focus:border-primary" placeholder="Contoh: Sarden SIP Asin" required>
             </div>
             <div>
-                <label class="block text-[12px] font-semibold text-slate-600 mb-1.5">SKU<span class="text-primary ml-0.5">*</span></label>
-                <input type="text" name="sku" class="w-full border border-gray-200 rounded-lg py-2.5 px-3.5 text-[13px] text-navy bg-white outline-none transition-all focus:border-primary" placeholder="Contoh: TEFA-ASN-001" required>
+                <label class="block text-[12px] font-semibold text-slate-600 mb-1.5">SKU</label>
+                <input type="text" name="sku" class="w-full border border-gray-100 rounded-lg py-2.5 px-3.5 text-[13px] bg-gray-100 text-slate-500 cursor-not-allowed outline-none" value="<?php echo htmlspecialchars($nextSku); ?>" readonly>
+                <input type="hidden" name="sku" value="<?php echo htmlspecialchars($nextSku); ?>">
+                <p class="text-[10px] text-slate-400 mt-1">SKU di-generate otomatis</p>
             </div>
             <div>
                 <label class="block text-[12px] font-semibold text-slate-600 mb-1.5">Harga (Rp)</label>

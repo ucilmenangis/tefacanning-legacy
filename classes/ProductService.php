@@ -43,16 +43,33 @@ class ProductService extends BaseService
     }
 
     /**
+     * Generate next auto-increment SKU.
+     * Format: SKU-XXX (e.g. SKU-004, SKU-005)
+     */
+    public function getNextSku(): string
+    {
+        $row = $this->fetch(
+            "SELECT MAX(CAST(SUBSTRING(sku, 10) AS UNSIGNED)) AS max_num
+             FROM products
+             WHERE sku LIKE 'TEFA-SKU-%'"
+        );
+        $next = ($row && $row['max_num']) ? intval($row['max_num']) + 1 : 1;
+        return 'TEFA-SKU-' . str_pad($next, 3, '0', STR_PAD_LEFT);
+    }
+
+    /**
      * Create new product. Returns new ID.
      */
     public function create(array $data): int
     {
+        $sku = empty($data['sku']) ? $this->getNextSku() : $data['sku'];
+
         return $this->insert(
             "INSERT INTO products (name, sku, price, stock, is_active, created_at, updated_at)
              VALUES (?, ?, ?, ?, ?, NOW(), NOW())",
             [
                 $data['name'],
-                $data['sku'],
+                $sku,
                 $data['price'],
                 $data['stock'],
                 $data['is_active'] ?? 1,
