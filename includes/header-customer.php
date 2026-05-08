@@ -3,29 +3,34 @@
  * Customer layout header — includes <head>, sidebar, opens content area.
  */
 
-require_once __DIR__ . '/auth.php';
+require_once __DIR__ . "/auth.php";
 
 if (!isset($pageTitle)) {
-    $pageTitle = 'Customer Panel';
+  $pageTitle = "Customer Panel";
 }
 if (!isset($currentPage)) {
-    $currentPage = '';
+  $currentPage = "";
 }
 
 $customerId = Auth::customer()->getId();
-$customerData = $customerId ? Database::getInstance()->fetch("SELECT name, email, phone, organization, created_at FROM customers WHERE id = ? AND deleted_at IS NULL", [$customerId]) : null;
-$fullName = $customerData['name'] ?? 'Customer';
-$email = $customerData['email'] ?? '';
-$roleName = 'Customer';
-$words = explode(' ', $fullName);
-$initials = '';
+$customerData = $customerId
+  ? Database::getInstance()->fetch(
+    "SELECT name, email, phone, organization, created_at FROM customers WHERE id = ? AND deleted_at IS NULL",
+    [$customerId],
+  )
+  : null;
+$fullName = $customerData["name"] ?? "Customer";
+$email = $customerData["email"] ?? "";
+$roleName = "Customer";
+$words = explode(" ", $fullName);
+$initials = "";
 if (count($words) >= 2) {
-    $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+  $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
 } else {
-    $initials = strtoupper(substr($words[0], 0, 2));
+  $initials = strtoupper(substr($words[0], 0, 2));
 }
 
-$basePath = dirname($_SERVER['SCRIPT_NAME']);
+$basePath = dirname($_SERVER["SCRIPT_NAME"]);
 ?>
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
@@ -33,7 +38,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($pageTitle); ?> — TEFA Canning SIP</title>
+    <title><?php echo htmlspecialchars(
+      $pageTitle,
+    ); ?> — TEFA Canning SIP</title>
 
     <!-- Theme Detection -->
     <script>
@@ -264,25 +271,37 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
             <nav class="flex-1 py-3 px-3 space-y-1">
 
                 <a href="<?php echo $basePath; ?>/dashboard.php"
-                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage === 'dashboard' ? '!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary' : ''; ?>">
+                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
+                    "dashboard"
+                      ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
+                      : ""; ?>">
                     <i class="ph-bold ph-house-simple text-[20px] shrink-0"></i>
                     <span class="nav-text whitespace-nowrap">Dashboard</span>
                 </a>
 
                 <a href="<?php echo $basePath; ?>/preorder.php"
-                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage === 'preorder' ? '!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary' : ''; ?>">
+                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
+                    "preorder"
+                      ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
+                      : ""; ?>">
                     <i class="ph-bold ph-shopping-cart-simple text-[20px] shrink-0"></i>
                     <span class="nav-text whitespace-nowrap">Pre-Order</span>
                 </a>
 
                 <a href="<?php echo $basePath; ?>/orders.php"
-                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage === 'orders' ? '!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary' : ''; ?>">
+                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
+                    "orders"
+                      ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
+                      : ""; ?>">
                     <i class="ph-bold ph-clock-counter-clockwise text-[20px] shrink-0"></i>
                     <span class="nav-text whitespace-nowrap">Riwayat Pesanan</span>
                 </a>
 
                 <a href="<?php echo $basePath; ?>/profile.php"
-                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage === 'profile' ? '!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary' : ''; ?>">
+                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
+                    "profile"
+                      ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
+                      : ""; ?>">
                     <i class="ph-bold ph-user-circle text-[20px] shrink-0"></i>
                     <span class="nav-text whitespace-nowrap">Profil Saya</span>
                 </a>
@@ -302,7 +321,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
                     class="w-9 h-9 rounded-lg flex md:hidden items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all mr-3">
                     <i class="ph ph-list text-[24px]"></i>
                 </button>
-                
+
                 <div class="flex-1"></div>
 
                 <!-- Right -->
@@ -329,7 +348,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
                                 <div class="text-[12px] font-bold text-navy dark:text-white leading-none">
                                     <?php echo htmlspecialchars($fullName); ?>
                                 </div>
-                                <div class="text-[10px] text-gray-400 mt-1"><?php echo htmlspecialchars($roleName); ?>
+                                <div class="text-[10px] text-gray-400 mt-1"><?php echo htmlspecialchars(
+                                  $roleName,
+                                ); ?>
                                 </div>
                             </div>
                             <i
@@ -382,7 +403,7 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
                                 function toggleMobileSidebar() {
                     const sidebar = document.getElementById('sidebar');
                     const backdrop = document.getElementById('sidebar-backdrop');
-                    
+
                     if (sidebar.classList.contains('-translate-x-full')) {
                         sidebar.classList.remove('-translate-x-full');
                         backdrop.classList.remove('hidden');
@@ -433,10 +454,8 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
 
             <!-- Page Content -->
             <main class="flex-1 p-6">
-                <?php
-                // Render flash messages
-                echo FlashMessage::render();
-                ?>
+                <?php // Render flash messages
+                echo FlashMessage::render(); ?>
                 <script>
                     function toggleGroup(id, btn) {
                         const sub = document.getElementById(id);
