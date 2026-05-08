@@ -8,17 +8,26 @@
  *   $currentPage = 'dashboard';
  *   include __DIR__ . '/../includes/header-customer.php';
  */
-require_once __DIR__ . '/auth.php';
+require_once __DIR__ . "/auth.php";
 
-if (!isset($pageTitle))
-    $pageTitle = 'Customer Panel';
-if (!isset($currentPage))
-    $currentPage = '';
+if (!isset($pageTitle)) {
+  $pageTitle = "Customer Panel";
+}
+if (!isset($currentPage)) {
+  $currentPage = "";
+}
 
 $customerId = Auth::customer()->getId();
-$customerData = $customerId ? Database::getInstance()->fetch("SELECT name, email, phone, organization, created_at FROM customers WHERE id = ? AND deleted_at IS NULL", [$customerId]) : null;
-$customerInitial = $customerData ? strtoupper(substr($customerData['name'], 0, 1)) : 'C';
-$basePath = dirname($_SERVER['SCRIPT_NAME']);
+$customerData = $customerId
+  ? Database::getInstance()->fetch(
+    "SELECT name, email, phone, organization, created_at FROM customers WHERE id = ? AND deleted_at IS NULL",
+    [$customerId],
+  )
+  : null;
+$customerInitial = $customerData
+  ? strtoupper(substr($customerData["name"], 0, 1))
+  : "C";
+$basePath = dirname($_SERVER["SCRIPT_NAME"]);
 ?>
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
@@ -26,7 +35,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($pageTitle); ?> — TEFA Canning SIP</title>
+    <title><?php echo htmlspecialchars(
+      $pageTitle,
+    ); ?> — TEFA Canning SIP</title>
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -159,25 +170,33 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
         <nav class="flex-1 overflow-y-auto py-3 px-2 space-y-0.5">
 
             <a href="<?php echo $basePath; ?>/dashboard.php"
-                class="nav-item <?php echo $currentPage === 'dashboard' ? 'active' : ''; ?> flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer">
+                class="nav-item <?php echo $currentPage === "dashboard"
+                  ? "active"
+                  : ""; ?> flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer">
                 <i class="ph-bold ph-house-simple nav-icon text-base flex-shrink-0"></i>
                 <span class="sidebar-label">Dashboard</span>
             </a>
 
             <a href="<?php echo $basePath; ?>/preorder.php"
-                class="nav-item <?php echo $currentPage === 'preorder' ? 'active' : ''; ?> flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer">
+                class="nav-item <?php echo $currentPage === "preorder"
+                  ? "active"
+                  : ""; ?> flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium cursor-pointer">
                 <i class="ph-bold ph-shopping-cart-simple nav-icon text-base flex-shrink-0"></i>
                 <span class="sidebar-label">Pre-Order</span>
             </a>
 
             <a href="<?php echo $basePath; ?>/orders.php"
-                class="nav-item <?php echo $currentPage === 'orders' ? 'active' : ''; ?> flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-gray-600 cursor-pointer">
+                class="nav-item <?php echo $currentPage === "orders"
+                  ? "active"
+                  : ""; ?> flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-gray-600 cursor-pointer">
                 <i class="ph-bold ph-clock-counter-clockwise nav-icon text-base flex-shrink-0 text-gray-400"></i>
                 <span class="sidebar-label">Riwayat Pesanan</span>
             </a>
 
             <a href="<?php echo $basePath; ?>/profile.php"
-                class="nav-item <?php echo $currentPage === 'profile' ? 'active' : ''; ?> flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-gray-600 cursor-pointer">
+                class="nav-item <?php echo $currentPage === "profile"
+                  ? "active"
+                  : ""; ?> flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium text-gray-600 cursor-pointer">
                 <i class="ph-bold ph-user-circle nav-icon text-base flex-shrink-0 text-gray-400"></i>
                 <span class="sidebar-label">Profil Saya</span>
             </a>
@@ -192,7 +211,9 @@ $basePath = dirname($_SERVER['SCRIPT_NAME']);
                flex items-center justify-end px-6">
         <div class="flex items-center gap-3">
             <span
-                class="text-[12px] font-medium text-navy hidden sm:block"><?php echo $customerData ? htmlspecialchars($customerData['name']) : 'Customer'; ?></span>
+                class="text-[12px] font-medium text-navy hidden sm:block"><?php echo $customerData
+                  ? htmlspecialchars($customerData["name"])
+                  : "Customer"; ?></span>
             <div class="w-8 h-8 rounded-full bg-[#E02424] flex items-center justify-center
                     text-white text-[11px] font-bold select-none">
                 <?php echo $customerInitial; ?>
