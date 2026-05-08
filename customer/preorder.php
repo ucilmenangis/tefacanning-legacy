@@ -216,7 +216,7 @@ include __DIR__ . '/../includes/header-customer.php';
             <option value="" disabled selected>Pilih batch produksi…</option>
             <?php foreach ($batches as $b): ?>
             <option value="<?php echo $b['id']; ?>">
-                <?php echo htmlspecialchars($b['name']); ?> — <?php echo htmlspecialchars($b['event_name']); ?>
+                <?php echo htmlspecialchars($b['name']); ?> — <?php echo htmlspecialchars($b['event_name']); ?> (<?php echo date('d M Y', strtotime($b['event_date'])); ?>)
             </option>
             <?php endforeach; ?>
         </select>
