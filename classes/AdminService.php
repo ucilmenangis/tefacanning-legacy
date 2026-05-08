@@ -258,15 +258,17 @@ class AdminService extends BaseService
   /**
    * Get orders in a specific batch.
    */
-  public function getBatchOrders(int $batchId): array
+  public function getBatchOrders(int $batchId, int $limit = 20): array
   {
+    $limit = (int) $limit;
     return $this->fetchAll(
       "SELECT o.id, o.order_number, o.status, o.pickup_code, o.picked_up_at, o.created_at,
                     c.name AS customer_name
              FROM orders o
              JOIN customers c ON c.id = o.customer_id
              WHERE o.batch_id = ? AND o.deleted_at IS NULL
-             ORDER BY o.created_at DESC",
+             ORDER BY o.created_at DESC
+             LIMIT {$limit}",
       [$batchId],
     );
   }
@@ -285,6 +287,39 @@ class AdminService extends BaseService
              GROUP BY p.id
              ORDER BY p.name ASC",
       [$batchId],
+    );
+  }
+
+  /**
+   * Get all orders across all batches (for "Semua Batch" view).
+   */
+  public function getAllBatchOrders(int $limit = 20): array
+  {
+    $limit = (int) $limit;
+    return $this->fetchAll(
+      "SELECT o.id, o.order_number, o.status, o.pickup_code, o.picked_up_at, o.created_at,
+              c.name AS customer_name
+       FROM orders o
+       JOIN customers c ON c.id = o.customer_id
+       WHERE o.deleted_at IS NULL
+       ORDER BY o.created_at DESC
+       LIMIT {$limit}",
+    );
+  }
+
+  /**
+   * Get product quantity summary across all batches (for "Semua Batch" view).
+   */
+  public function getAllBatchProducts(): array
+  {
+    return $this->fetchAll(
+      "SELECT p.name AS produk, p.sku, SUM(op.quantity) AS qty, 'kaleng' AS satuan
+       FROM order_product op
+       JOIN orders o ON o.id = op.order_id
+       JOIN products p ON p.id = op.product_id
+       WHERE o.deleted_at IS NULL
+       GROUP BY p.id
+       ORDER BY p.name ASC",
     );
   }
 

@@ -36,8 +36,8 @@ if ($selectedBatchId) {
     // All batches (total)
     $activeBatch = $adminService->getActiveBatch();
     $dbStats = $adminService->getDashboardStats();
-    $batch_orders = $activeBatch ? $adminService->getBatchOrders($activeBatch['id']) : [];
-    $batch_products = $activeBatch ? $adminService->getBatchProducts($activeBatch['id']) : [];
+    $batch_orders = $adminService->getAllBatchOrders();
+    $batch_products = $adminService->getAllBatchProducts();
     $recent_orders = $adminService->getRecentOrders(5);
 
     $stats = [
@@ -65,8 +65,8 @@ $statusMap = [
 ];
 
 // Section titles
-$productionTitle = $selectedBatchId ? 'Ringkasan Produksi – ' . ($batchInfo['name'] ?? 'Batch') : 'Ringkasan Produksi Batch Aktif';
-$productTitle = $selectedBatchId ? 'Ringkasan Produk – ' . ($batchInfo['name'] ?? 'Batch') : 'Ringkasan Produk – Batch Aktif';
+$productionTitle = $selectedBatchId ? 'Ringkasan Produksi – ' . ($batchInfo['name'] ?? 'Batch') : 'Ringkasan Produksi – Semua Batch';
+$productTitle = $selectedBatchId ? 'Ringkasan Produk – ' . ($batchInfo['name'] ?? 'Batch') : 'Ringkasan Produk – Semua Batch';
 
 include __DIR__ . '/../includes/header-admin.php';
 ?>
