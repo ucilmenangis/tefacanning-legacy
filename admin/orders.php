@@ -50,14 +50,15 @@ $statusMap = [
 
 <div class="bg-white border border-gray-100 rounded-xl overflow-visible">
     <!-- Toolbar -->
-    <div class="flex items-center justify-end gap-2 px-4 py-3 border-b border-gray-50">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 px-4 py-3 border-b border-gray-50">
         <!-- Search -->
-        <div class="relative group mr-auto">
+        <div class="relative group flex-1 w-full sm:max-w-[240px]">
             <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-[14px]"></i>
             <input type="text" placeholder="Search"
-                class="border border-gray-200 rounded-lg py-2 pl-[34px] pr-3 text-[13px] outline-none bg-white w-[240px] transition-all focus:border-primary focus:ring-4 focus:ring-primary/5"
+                class="border border-gray-200 rounded-lg py-2 pl-[34px] pr-3 text-[13px] outline-none bg-white w-full transition-all focus:border-primary focus:ring-4 focus:ring-primary/5"
                 id="order-search">
         </div>
+        <div class="flex items-center justify-end gap-2">
 
         <!-- Filter Dropdown -->
         <div class="relative">
@@ -85,7 +86,8 @@ $statusMap = [
             title="Toggle Layout" onclick="toggleLayout()">
             <i class="ph ph-squares-four text-[18px]" id="layout-icon"></i>
         </button>
-    </div>
+        </div>
+</div>
 
     <!-- Data Table View -->
     <div id="table-view" class="overflow-x-auto">

@@ -1,16 +1,17 @@
 <?php
 /**
- * Customer layout footer — closes main + sidebar JS.
+ * Customer layout footer — closes content area and HTML.
+ * Include at the bottom of every customer page.
  */
 ?>
-</main>
+        </main>
+    </div><!-- /.flex-1 -->
+</div><!-- /.flex.min-h-screen -->
 
 <script>
     function toggleSidebar() {
-        document.body.classList.toggle('collapsed');
-        const icon = document.getElementById('collapse-icon');
-        icon.style.transform = document.body.classList.contains('collapsed')
-            ? 'rotate(180deg)' : '';
+        const sb = document.getElementById('sidebar');
+        sb.classList.toggle('-translate-x-full');
     }
 </script>
 

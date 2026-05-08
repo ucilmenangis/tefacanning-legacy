@@ -153,6 +153,7 @@ Exceptions:
 - **Phase 3 (Admin Form Pages):** ✅ 100% (edit-product, create-product, create-batch, edit-batch, edit-customer, create-order, edit-order, view-order, create-user via create-customer.php)
 - **Phase 4 (Admin Special Pages):** ✅ 100% (dashboard, pengaturan, activity-log, Light/Dark Mode Toggle)
 - **Special Feature (Frontend):** ✅ **Light/Dark Mode Synchronization**. Implemented global theme toggle in `header-admin.php` with automatic synchronization for all dashboard cards, tables, forms, and typography.
+- **Mobile Optimization (Frontend):** ✅ 100% Implemented responsive off-canvas sidebars, fixed table overflow bugs (`overflow-x-auto`), refactored toolbars (`flex-col sm:flex-row`), and optimized dashboard stat cards (hidden sparklines on mobile) for both Admin and Customer views.
 - **Cleanup:** ✅ 100% (dashboard status badges fixed)
 
 **Services:** ✅ **FonnteService** (WhatsApp Notifications) implemented.

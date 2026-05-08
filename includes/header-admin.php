@@ -82,72 +82,72 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
 
         /* Sidebar Collapse logic */
         #sidebar {
-            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #main-wrapper {
             transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .sidebar-collapsed #sidebar {
-            width: 70px;
+        @media (min-width: 768px) {
+            .sidebar-collapsed #sidebar {
+                width: 70px;
+            }
+
+            .sidebar-collapsed #main-wrapper {
+                margin-left: 70px;
+            }
+
+            .sidebar-collapsed .logo-text,
+            .sidebar-collapsed .nav-text,
+            .sidebar-collapsed .nav-caret,
+            .sidebar-collapsed .nav-sub,
+            .sidebar-collapsed .badge-text {
+                display: none !important;
+            }
+
+            .sidebar-collapsed #sidebar nav {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+
+            .sidebar-collapsed .nav-item-container {
+                justify-content: center;
+            }
+
+            /* Hover expansion when collapsed */
+            .sidebar-collapsed aside:hover {
+                width: 220px !important;
+                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+            }
+
+            .sidebar-collapsed aside:hover .logo-text,
+            .sidebar-collapsed aside:hover .nav-text,
+            .sidebar-collapsed aside:hover .nav-caret,
+            .sidebar-collapsed aside:hover .badge-text,
+            .sidebar-collapsed aside:hover .nav-sub {
+                display: block !important;
+            }
         }
 
-        .sidebar-collapsed #main-wrapper {
-            margin-left: 70px;
-        }
-
-        .sidebar-collapsed .logo-text,
-        .sidebar-collapsed .nav-text,
-        .sidebar-collapsed .nav-caret,
-        .sidebar-collapsed .nav-sub,
-        .sidebar-collapsed .badge-text {
-            display: none !important;
-        }
-
-        .sidebar-collapsed #sidebar nav {
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
-        }
-
-        .sidebar-collapsed .nav-item-container {
-            justify-content: center;
-        }
-
-        /* Hover expansion when collapsed */
-        .sidebar-collapsed aside:hover {
-            width: 220px !important;
-            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
-        }
-
-        .sidebar-collapsed aside:hover .logo-text,
-        .sidebar-collapsed aside:hover .nav-text,
-        .sidebar-collapsed aside:hover .nav-caret,
-        .sidebar-collapsed aside:hover .badge-text {
-            display: block !important;
-        }
-
-        .sidebar-collapsed aside:hover .nav-sub.open,
-        .sidebar-collapsed aside:hover .nav-sub:not(.hidden) {
-            display: block !important;
-            max-height: 400px !important;
-        }
         /* Dark Mode Overrides for global elements */
         .dark .bg-white,
         .dark .bg-slate-50,
         .dark .bg-gray-50 {
             background-color: #1e293b !important;
         }
+
         .dark .bg-[#f8f9fb],
         .dark .bg-gray-100 {
             background-color: #0f172a !important;
         }
+
         .dark .bg-gray-50\/50,
         .dark .hover\:bg-gray-50\/50:hover {
             background-color: #334155 !important;
         }
-        
-        .dark .border-gray-100, 
+
+        .dark .border-gray-100,
         .dark .border-gray-50,
         .dark .border-gray-200 {
             border-color: #334155 !important;
@@ -159,21 +159,28 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
         .dark .text-slate-700,
         .dark .text-gray-800,
         .dark .text-gray-700 {
-            color: #f1f5f9 !important; /* slate-100 */
+            color: #f1f5f9 !important;
+            /* slate-100 */
         }
+
         .dark .text-slate-600,
         .dark .text-slate-500,
         .dark .text-gray-600,
         .dark .text-gray-500 {
-            color: #cbd5e1 !important; /* slate-300 */
+            color: #cbd5e1 !important;
+            /* slate-300 */
         }
+
         .dark .text-slate-400,
         .dark .text-gray-400 {
-            color: #94a3b8 !important; /* slate-400 */
+            color: #94a3b8 !important;
+            /* slate-400 */
         }
+
         .dark .text-gray-300,
         .dark .text-slate-300 {
-            color: #64748b !important; /* slate-500 */
+            color: #64748b !important;
+            /* slate-500 */
         }
 
         /* Table & Specifics */
@@ -181,6 +188,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
             background-color: #1e293b !important;
             color: #94a3b8 !important;
         }
+
         .dark tbody tr {
             border-color: #334155 !important;
         }
@@ -190,18 +198,20 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
             background-color: rgba(16, 185, 129, 0.1) !important;
             color: #34d399 !important;
         }
+
         .dark .bg-primary\/5 {
             background-color: rgba(224, 36, 36, 0.1) !important;
         }
 
         /* Inputs */
-        .dark input, 
-        .dark select, 
+        .dark input,
+        .dark select,
         .dark textarea {
             background-color: #0f172a !important;
             border-color: #334155 !important;
             color: #f1f5f9 !important;
         }
+
         .dark input::placeholder {
             color: #64748b !important;
         }
@@ -216,11 +226,12 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
         }
     </script>
 
+    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity opacity-0 duration-300" onclick="toggleMobileSidebar()"></div>
     <div class="flex min-h-screen">
 
         <!-- ═══ Sidebar ═══ -->
         <aside id="sidebar"
-            class="w-[220px] bg-white dark:bg-[#1e293b] border-r border-gray-100 dark:border-gray-800 flex-shrink-0 flex flex-col fixed top-0 left-0 h-full z-30 overflow-y-auto group/sidebar">
+            class="w-[220px] bg-white dark:bg-[#1e293b] border-r border-gray-100 dark:border-gray-800 flex-shrink-0 flex flex-col fixed top-0 left-0 h-full z-50 overflow-y-auto group/sidebar transform -translate-x-full md:translate-x-0">
 
             <!-- Logo Area -->
             <div class="h-[60px] flex items-center px-4 border-b border-gray-50 dark:border-gray-800 flex-shrink-0">
@@ -231,8 +242,12 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                 </div>
                 <!-- Collapse toggle -->
                 <button onclick="toggleSidebarCollapse()"
-                    class="ml-auto w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-50 hover:text-navy transition-all">
+                    class="ml-auto w-8 h-8 rounded-lg hidden md:flex items-center justify-center text-gray-400 hover:bg-gray-50 hover:text-navy transition-all">
                     <i class="ph-bold ph-caret-left transition-transform duration-300" id="collapse-icon"></i>
+                </button>
+                <button onclick="toggleMobileSidebar()"
+                    class="ml-auto w-8 h-8 rounded-lg flex md:hidden items-center justify-center text-gray-400 hover:bg-gray-50 hover:text-navy transition-all">
+                    <i class="ph-bold ph-x text-lg"></i>
                 </button>
             </div>
 
@@ -346,11 +361,19 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
         </aside>
 
         <!-- ═══ Main Wrapper ═══ -->
-        <div id="main-wrapper" class="flex-1 flex flex-col ml-[220px] min-w-0">
+        <div id="main-wrapper" class="flex-1 flex flex-col ml-0 md:ml-[220px] min-w-0 w-full overflow-hidden">
 
             <!-- Top Bar -->
             <header
-                class="h-[60px] bg-white dark:bg-[#1e293b] border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-6 flex-shrink-0 sticky top-0 z-20">
+                class="h-[60px] bg-white dark:bg-[#1e293b] border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-4 md:px-6 flex-shrink-0 sticky top-0 z-20">
+
+                <!-- Left Mobile Hamburger -->
+                <button onclick="toggleMobileSidebar()"
+                    class="w-9 h-9 rounded-lg flex md:hidden items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all mr-3">
+                    <i class="ph ph-list text-[24px]"></i>
+                </button>
+                
+                <div class="flex-1"></div>
 
                 <!-- Right -->
                 <div class="flex items-center gap-2 ml-auto">
@@ -360,14 +383,6 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                         title="Toggle Light/Dark Mode">
                         <i class="ph ph-sun-dim text-[20px] dark:hidden"></i>
                         <i class="ph ph-moon text-[20px] hidden dark:block"></i>
-                    </button>
-
-                    <!-- Notification bell -->
-                    <button
-                        class="w-9 h-9 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-navy dark:hover:text-white transition-all relative group">
-                        <i class="ph ph-bell text-[20px]"></i>
-                        <span
-                            class="absolute top-2 right-2.5 w-2 h-2 bg-primary border-2 border-white dark:border-[#1e293b] rounded-full"></span>
                     </button>
 
                     <div class="h-6 w-px bg-gray-100 dark:bg-gray-800 mx-1"></div>
@@ -408,18 +423,20 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                         <div id="profile-menu"
                             class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-[#1e293b] border border-gray-100 dark:border-gray-800 rounded-xl shadow-xl z-[100] py-2 animate-in fade-in slide-in-from-top-2 duration-200">
                             <div class="px-4 py-3 border-b border-gray-50 dark:border-gray-800 mb-1">
-                                <div class="text-[13px] font-bold text-navy dark:text-white"><?php echo htmlspecialchars($fullName); ?>
+                                <div class="text-[13px] font-bold text-navy dark:text-white">
+
+                                    <?php echo htmlspecialchars($fullName); ?>
                                 </div>
                                 <div class="text-[11px] text-gray-400 mt-0.5">
                                     <?php echo htmlspecialchars($currentUser['email'] ?? ''); ?>
                                 </div>
                             </div>
 
-                            <a href="pengaturan.php"
+                            <!-- <a href="pengaturan.php"
                                 class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-navy dark:hover:text-white transition-colors">
                                 <i class="ph ph-user-circle text-[18px] text-gray-400"></i>
                                 Profil Saya
-                            </a>
+                            </a> -->
                             <a href="pengaturan.php"
                                 class="flex items-center gap-3 px-4 py-2.5 text-[13px] text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-navy dark:hover:text-white transition-colors">
                                 <i class="ph ph-gear text-[18px] text-gray-400"></i>
@@ -448,6 +465,23 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                 function toggleProfileDropdown(e) {
                     e.stopPropagation();
                     document.getElementById('profile-menu').classList.toggle('hidden');
+                }
+
+                                function toggleMobileSidebar() {
+                    const sidebar = document.getElementById('sidebar');
+                    const backdrop = document.getElementById('sidebar-backdrop');
+                    
+                    if (sidebar.classList.contains('-translate-x-full')) {
+                        sidebar.classList.remove('-translate-x-full');
+                        backdrop.classList.remove('hidden');
+                        setTimeout(() => backdrop.classList.remove('opacity-0'), 10);
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        sidebar.classList.add('-translate-x-full');
+                        backdrop.classList.add('opacity-0');
+                        setTimeout(() => backdrop.classList.add('hidden'), 300);
+                        document.body.style.overflow = '';
+                    }
                 }
 
                 function toggleSidebarCollapse() {
@@ -495,7 +529,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                     function toggleGroup(id, btn) {
                         const sub = document.getElementById(id);
                         const isOpen = sub.classList.contains('open');
-                        
+
                         // Toggle logic
                         sub.classList.toggle('open', !isOpen);
                         btn.classList.toggle('open', !isOpen);
