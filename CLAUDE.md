@@ -48,8 +48,11 @@ Font: **Inter** (Google Fonts). Icons: **Phosphor Icons** (`@phosphor-icons/web`
 
 | Role | Name | Responsibility |
 |------|------|---------------|
-| **Backend** | Ivan | PHP logic, DB queries, auth flow, services, routing |
-| **Frontend** | Alif | HTML/Tailwind pages, UI layout, forms |
+| **Project Manager** | Rizky | Sprint planning, task management, presentation, reports |
+| **System Analyst** | Lily | Requirements, data analysis, stakeholder bridge, system documentation (SRS, DFD, ERD) |
+| **UI/UX (Figma)** | Alfia | Figma design system, mockups, UI consistency |
+| **Frontend** | Alif Taran Ihsan | HTML/Tailwind pages, UI layout, forms |
+| **Backend** | Irfan | PHP logic, DB queries, auth flow, services, routing |
 
 ### Development Workflow
 
@@ -61,7 +64,7 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 2. **Use `$variables` for dynamic data.** Don't hardcode values in HTML body. Put data at top of file:
    ```php
    <?php
-   // Data section (Ivan will wire this to DB later)
+   // Data section (Irfan will wire this to DB later)
    $products = [
        ['name' => 'Sarden Kaleng', 'price' => 25000],
    ];
@@ -224,7 +227,12 @@ tefa-canning-legacy/
 │   ├── 02-session-management.md
 │   ├── 03-layout-system.md
 │   ├── 05-flash-message.md
-│   └── 06-rbac-role-system.md
+│   ├── 06-rbac-role-system.md
+│   ├── sprint-planning.md
+│   ├── sprint-backlog.md
+│   ├── daily-scrum.md
+│   ├── sprint-retrospective.md
+│   └── sprint-review.md
 ├── classes/                 ← OOP business logic
 │   ├── Database.php         ← Singleton PDO wrapper
 │   ├── BaseService.php      ← Abstract base with DB wrappers
@@ -325,23 +333,23 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 
 | Phase | Description | Owner |
 |-------|-------------|-------|
-| 1.1 | Query helpers (`includes/functions.php`) | Ivan |
-| 1.2 | Session + Auth (`includes/auth.php`) | Ivan |
-| 1.3 | Layout system (header/footer admin + customer) | Ivan |
-| 1.4 | CSRF token | Ivan |
-| 1.5 | Flash message | Ivan |
+| 1.1 | Query helpers (`includes/functions.php`) | Irfan |
+| 1.2 | Session + Auth (`includes/auth.php`) | Irfan |
+| 1.3 | Layout system (header/footer admin + customer) | Irfan |
+| 1.4 | CSRF token | Irfan |
+| 1.5 | Flash message | Irfan |
 | 2.1 | Admin login page (`auth/login-admin.php`) | Alif |
 | 2.2 | Customer login page (`auth/login-customer.php`) | Alif |
 | 2.3 | Customer registration (`auth/register.php`) | Alif |
 | 3.1–3.5 | Landing page (hero, catalog, batch, SNI, footer) | Alif |
-| 3.6–3.7 | Landing page dynamic data (products & batches from DB) | Ivan |
-| 5.0 | Dashboard sparkline charts (Chart.js CDN) | Ivan |
+| 3.6–3.7 | Landing page dynamic data (products & batches from DB) | Irfan |
+| 5.0 | Dashboard sparkline charts (Chart.js CDN) | Irfan |
 | 5.1 | Customer dashboard (UI) | Alif |
-| 5.1 | Customer dashboard (wired to DB) | Ivan |
-| 5.2 | Customer preorder submit (wired to DB) | Ivan |
-| 5.3 | Customer order history (wired to DB) | Ivan |
-| 5.4 | Customer edit order (wired to DB) | Ivan |
-| 5.5 | Customer profile (wired to DB) | Ivan |
+| 5.1 | Customer dashboard (wired to DB) | Irfan |
+| 5.2 | Customer preorder submit (wired to DB) | Irfan |
+| 5.3 | Customer order history (wired to DB) | Irfan |
+| 5.4 | Customer edit order (wired to DB) | Irfan |
+| 5.5 | Customer profile (wired to DB) | Irfan |
 | 5.2 | Customer preorder form (UI) | Alif |
 | 5.3 | Customer order history (UI) | Alif |
 | 5.4 | Customer edit order (UI) | Alif |
@@ -360,44 +368,44 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 
 | Phase | Description | Owner | Status |
 |-------|-------------|-------|--------|
-| 4.1 | Dashboard | Alif → Ivan | [x] |
-| 4.2 | CRUD Products (price protection) | Alif → Ivan | [x] |
-| 4.3 | CRUD Batches (status lifecycle) | Alif → Ivan | [x] |
-| 4.4 | CRUD Customers | Alif → Ivan | [x] |
-| 4.5 | CRUD Orders (status, pickup validation) | Alif → Ivan | [x] |
-| 4.6 | User management (super_admin only) | Ivan | [x] |
-| 4.7 | Activity log viewer (super_admin only) | Ivan | [x] |
+| 4.1 | Dashboard | Alif → Irfan | [x] |
+| 4.2 | CRUD Products (price protection) | Alif → Irfan | [x] |
+| 4.3 | CRUD Batches (status lifecycle) | Alif → Irfan | [x] |
+| 4.4 | CRUD Customers | Alif → Irfan | [x] |
+| 4.5 | CRUD Orders (status, pickup validation) | Alif → Irfan | [x] |
+| 4.6 | User management (super_admin only) | Irfan | [x] |
+| 4.7 | Activity log viewer (super_admin only) | Irfan | [x] |
 
 #### Priority 5 — Customer Panel (Backend Wiring)
 
 | Phase | Description | Owner | Status |
 |-------|-------------|-------|--------|
-| 5.1 | Dashboard data from DB | Ivan | [x] |
-| 5.2 | Pre-order submit + price from DB | Ivan | [x] |
-| 5.3 | Order history data + edit/delete | Ivan | [x] |
-| 5.4 | Edit order (pending only, batch locked) | Ivan | [x] |
-| 5.5 | Profile update + active order lock | Ivan | [x] |
-| 5.6 | Download PDF per order | Ivan | [x] |
+| 5.1 | Dashboard data from DB | Irfan | [x] |
+| 5.2 | Pre-order submit + price from DB | Irfan | [x] |
+| 5.3 | Order history data + edit/delete | Irfan | [x] |
+| 5.4 | Edit order (pending only, batch locked) | Irfan | [x] |
+| 5.5 | Profile update + active order lock | Irfan | [x] |
+| 5.6 | Download PDF per order | Irfan | [x] |
 
 #### Priority 6 — Services
 
 | Phase | Description | Owner | Status |
 |-------|-------------|-------|--------|
-| 6.1 | FonnteService (3 WhatsApp triggers) | Ivan | [x] |
-| 6.2 | PDF generation (DomPDF) | Ivan | [x] |
+| 6.1 | FonnteService (3 WhatsApp triggers) | Irfan | [x] |
+| 6.2 | PDF generation (DomPDF) | Irfan | [x] |
 
 #### Priority 7 — Security
 
 | Phase | Description | Owner | Status |
 |-------|-------------|-------|--------|
-| 7.1 | XSS prevention (htmlspecialchars on output) | Ivan | [x] |
-| 7.2 | Role-based access control (super_admin vs teknisi) | Ivan | [x] |
-| 7.3 | Product price protection | Ivan | [x] |
-| 7.4 | Core product deletion protection (3 SKUs) | Ivan | [x] |
-| 7.5 | Stock management (deduct on order, return on cancel/delete) | Ivan | [x] |
-| 7.6 | Profit = total_amount of picked_up orders | Ivan | [x] |
+| 7.1 | XSS prevention (htmlspecialchars on output) | Irfan | [x] |
+| 7.2 | Role-based access control (super_admin vs teknisi) | Irfan | [x] |
+| 7.3 | Product price protection | Irfan | [x] |
+| 7.4 | Core product deletion protection (3 SKUs) | Irfan | [x] |
+| 7.5 | Stock management (deduct on order, return on cancel/delete) | Irfan | [x] |
+| 7.6 | Profit = total_amount of picked_up orders | Irfan | [x] |
 
-**Owner legend:** `Ivan` = backend, `Alif` = frontend UI, `Alif → Ivan` = Alif buat UI dulu, Ivan wiring ke DB.
+**Owner legend:** `Irfan` = backend, `Alif` = frontend UI, `Alif → Irfan` = Alif buat UI dulu, Irfan wiring ke DB.
 
 ## Coding Conventions
 
