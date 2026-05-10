@@ -22,6 +22,7 @@ class FonnteService extends BaseService
 
     public function __construct()
     {
+        parent::__construct();
         $this->token = $_ENV['FONNTE_TOKEN'] ?? '';
         $this->device = $_ENV['FONNTE_DEVICE'] ?? '';
         $this->ownerPhone = $_ENV['FONNTE_OWNER_PHONE'] ?? '';

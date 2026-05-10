@@ -97,9 +97,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // WhatsApp: notify owner about new order
             try {
                 require_once __DIR__ . '/../classes/FonnteService.php';
-                (new FonnteService())->sendNewOrderToOwner($orderId);
+                $fonnteResult = (new FonnteService())->sendNewOrderToOwner($orderId);
+                error_log('Fonnte Trigger 1 result: ' . ($fonnteResult ? 'SUCCESS' : 'FAILED'));
+                error_log('Fonnte ENV token: ' . substr(($_ENV['FONNTE_TOKEN'] ?? 'EMPTY'), 0, 6));
+                error_log('Fonnte ENV owner: ' . ($_ENV['FONNTE_OWNER_PHONE'] ?? 'EMPTY'));
             } catch (Throwable $fe) {
                 error_log('Fonnte: Failed to notify owner - ' . $fe->getMessage());
+                error_log('Fonnte: Trace - ' . $fe->getTraceAsString());
             }
 
             FlashMessage::set('success', 'Pre-Order berhasil dikirim! Order: ' . $orderNumber);
