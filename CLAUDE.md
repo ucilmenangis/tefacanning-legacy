@@ -118,11 +118,11 @@ Core (no parent):
 - `classes/FormatHelper.php` — static helpers: `rupiah()`, `tanggal()`, `orderStatus()`, `batchStatus()`
 
 Services (extend BaseService):
-- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `getAll()`, dashboard methods (profit from picked_up orders), `getDashboardStatsByBatch()`, `getAllBatchesForDropdown()`, `getRecentOrdersByBatch()`
+- `classes/AdminService.php` — admin operations: `getRole()`, `isSuperAdmin()`, `getAll()`, dashboard methods (profit from picked_up orders), `getDashboardStatsByBatch()`, `getAllBatchesForDropdown()`, `getRecentOrdersByBatch()`, `getActiveBatch()`, `getBatchOrders()`, `getBatchProducts()`, `getBatchOrderCount()`, `getAllBatchOrders()`, `getAllBatchProducts()`
 - `classes/OrderService.php` — order operations: `getByCustomer()`, `getById()`, `cancel()` (with stock return), `getStats()`
 - `classes/OrderAdminService.php` — admin order operations: `getAll()`, `getById()`, `getItems()`, `getActiveProducts()`, `getCustomersForDropdown()`, `getOpenBatchesForDropdown()`, `createOrder()`, `updateOrder()`, `deleteOrder()`
 - `classes/CustomerService.php` — customer operations: `getById()`, `updateProfile()`, `changePassword()`, `hasActiveOrders()`
-- `classes/ProductService.php` — product CRUD + stock: `getAll()`, `getById()`, `create()`, `updateById()`, `softDelete()`, `hasStock()`, `deductStock()`, `returnStock()`
+- `classes/ProductService.php` — product CRUD + stock: `getAll()`, `getById()`, `getNextSku()`, `create()` (auto SKU fallback), `updateById()`, `softDelete()`, `hasStock()`, `deductStock()`, `returnStock()`
 - `classes/BatchService.php` — batch CRUD: `getAll()`, `getById()`, `getOpenBatches()`, `create()`, `updateById()`, `softDelete()`
 - `classes/CustomerAdminService.php` — customer admin CRUD: `getAll()`, `getById()`, `getStats()`, `create()`, `updateById()`, `softDelete()`
 - `classes/ActivityLogService.php` — activity log: `log()`, `getAll()`, `countAll()`
@@ -405,6 +405,19 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 7.4 | Core product deletion protection (3 SKUs) | Irfan | [x] |
 | 7.5 | Stock management (deduct on order, return on cancel/delete) | Irfan | [x] |
 | 7.6 | Profit = total_amount of picked_up orders | Irfan | [x] |
+
+#### Sprint 8 — Bug Fixes & Testing
+
+| Phase | Description | Owner | Status |
+|-------|-------------|-------|--------|
+| 8.1 | Fix batch CSRF token (dual form overwrite) | Irfan | [x] |
+| 8.2 | Auto increment SKU produk (TEFA-SKU-XXX) | Irfan | [x] |
+| 8.3 | Tanggal batch di preorder dropdown | Irfan | [x] |
+| 8.4 | Dashboard "Semua Batch" tables empty fix | Irfan | [x] |
+| 8.5 | Dashboard query LIMIT (security hardening) | Irfan | [x] |
+| 8.6 | FonnteService live tested + parent::__construct() fix | Irfan | [x] |
+| 8.7 | Responsive web semua pages | Alif | [x] |
+| 8.8 | Text alasan produk utama tidak bisa dihapus | Alif | [x] |
 
 **Owner legend:** `Irfan` = backend, `Alif` = frontend UI, `Alif → Irfan` = Alif buat UI dulu, Irfan wiring ke DB.
 
