@@ -78,6 +78,30 @@ $productCount = count($products);
                         Login
                     </a>
                 </div>
+
+                <button type="button" id="mobile-menu-button" class="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-lg border border-gray-100 text-navy hover:bg-red-50 hover:text-primary transition-colors" aria-controls="mobile-menu" aria-expanded="false" aria-label="Buka menu navigasi">
+                    <i class="ph-bold ph-list text-[22px]" id="mobile-menu-icon"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden flex-col gap-1 border-t border-red-100 py-4 mt-2 rounded-lg shadow-sm">
+                <a href="#katalog" class="mobile-menu-link flex items-center justify-between rounded-lg px-3 py-3 text-[12px] font-bold uppercase tracking-widest text-gray-500 hover:bg-red-50 hover:text-primary transition-colors">
+                    Produk
+                    <i class="ph-bold ph-arrow-right text-sm"></i>
+                </a>
+                <a href="#tentang" class="mobile-menu-link flex items-center justify-between rounded-lg px-3 py-3 text-[12px] font-bold uppercase tracking-widest text-gray-500 hover:bg-red-50 hover:text-primary transition-colors">
+                    Tentang
+                    <i class="ph-bold ph-arrow-right text-sm"></i>
+                </a>
+                <a href="#batch" class="mobile-menu-link flex items-center justify-between rounded-lg px-3 py-3 text-[12px] font-bold uppercase tracking-widest text-gray-500 hover:bg-red-50 hover:text-primary transition-colors">
+                    Info Batch
+                    <i class="ph-bold ph-arrow-right text-sm"></i>
+                </a>
+                <a href="auth/login-customer.php"
+class="mobile-menu-link mt-2 inline-flex items-center justify-center rounded-lg bg-primary px-4 py-3 text-[12px] font-bold text-white shadow-sm shadow-red-500/20 transition-colors hover:bg-red-100 hover:text-red-500">
+    Login
+</a>
             </div>
         </div>
     </nav>
@@ -109,7 +133,7 @@ $productCount = count($products);
 
                 <!-- Buttons -->
                 <div class="flex w-full max-w-[220px] flex-col items-stretch gap-4 sm:w-auto sm:max-w-none sm:flex-row sm:items-center">
-                    <a href="#katalog" class="inline-flex w-full justify-center items-center px-6 py-3 rounded-lg text-[14px] font-bold text-white bg-[#E02424] hover:bg-dark transition-all shadow-md shadow-red-500/20 sm:w-auto">
+                    <a href="#katalog" class="inline-flex w-full justify-center items-center px-6 py-3 rounded-lg text-[14px] font-bold text-white bg-[#E02424] hover:bg-red-100 hover:text-red-500 transition-all shadow-md shadow-red-500/20 sm:w-auto">
                         Lihat Produk
                         <i class="ph-bold ph-caret-down ml-2"></i>
                     </a>
@@ -253,7 +277,7 @@ $productCount = count($products);
                         </div>
                     </div>
 
-                    <a href="customer/preorder.php" class="mt-auto w-full flex items-center justify-center py-3.5 rounded-xl text-[13px] font-bold text-primary bg-[#FFF5F5] hover:bg-red-50 transition-colors">
+                    <a href="customer/preorder.php" class="mt-auto w-full flex items-center justify-center py-3.5 rounded-xl text-[13px] font-bold text-[#FFFFFF] bg-red-500 hover:bg-red-100 hover:text-red-500 transition-colors">
                         Pre-Order Batch Ini <i class="ph-bold ph-arrow-right ml-1.5 text-sm"></i>
                     </a>
                 </div>
@@ -415,6 +439,34 @@ $productCount = count($products);
             </div>
         </div>
     </footer>
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuIcon = document.getElementById('mobile-menu-icon');
+        const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+
+        function closeMobileMenu() {
+            mobileMenu.classList.add('hidden');
+            mobileMenu.classList.remove('flex');
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+            mobileMenuIcon.classList.add('ph-list');
+            mobileMenuIcon.classList.remove('ph-x');
+        }
+
+        mobileMenuButton.addEventListener('click', function () {
+            const isOpen = !mobileMenu.classList.contains('hidden');
+
+            mobileMenu.classList.toggle('hidden', isOpen);
+            mobileMenu.classList.toggle('flex', !isOpen);
+            mobileMenuButton.setAttribute('aria-expanded', String(!isOpen));
+            mobileMenuIcon.classList.toggle('ph-list', isOpen);
+            mobileMenuIcon.classList.toggle('ph-x', !isOpen);
+        });
+
+        mobileMenuLinks.forEach(function (link) {
+            link.addEventListener('click', closeMobileMenu);
+        });
+    </script>
 
 </body>
 </html>
