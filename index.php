@@ -108,12 +108,12 @@ $productCount = count($products);
                 </p>
 
                 <!-- Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 items-center">
-                    <a href="#katalog" class="inline-flex justify-center items-center px-6 py-3 rounded-lg text-[14px] font-bold text-white bg-[#E02424] hover:bg-dark transition-all shadow-md shadow-red-500/20">
+                <div class="flex w-full max-w-[220px] flex-col items-stretch gap-4 sm:w-auto sm:max-w-none sm:flex-row sm:items-center">
+                    <a href="#katalog" class="inline-flex w-full justify-center items-center px-6 py-3 rounded-lg text-[14px] font-bold text-white bg-[#E02424] hover:bg-dark transition-all shadow-md shadow-red-500/20 sm:w-auto">
                         Lihat Produk
                         <i class="ph-bold ph-caret-down ml-2"></i>
                     </a>
-                    <a href="#batch" class="inline-flex justify-center items-center px-6 py-3 rounded-lg bg-white border border-[#FCA5A5] hover:bg-red-50 transition-all text-primary shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                    <a href="#batch" class="inline-flex w-full justify-center items-center px-6 py-3 rounded-lg bg-white border border-[#FCA5A5] hover:bg-red-50 transition-all text-primary shadow-[0_2px_10px_rgb(0,0,0,0.02)] sm:w-auto">
                         <i class="ph-bold ph-package text-lg mr-2"></i>
                         <span class="text-[14px] font-bold leading-tight whitespace-nowrap">Pre-Order Sekarang</span>
                     </a>

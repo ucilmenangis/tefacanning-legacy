@@ -147,7 +147,7 @@ include __DIR__ . '/../includes/header-customer.php';
     #catatan-caret { transition: transform 0.2s ease; }
     #catatan-caret.open { transform: rotate(180deg); }
     /* KEEP — JS-toggled selected state */
-    .product-row.selected { outline: 2px solid #E02424; outline-offset: -2px; background-color: #fef2f2; }
+    .product-row.selected { outline: 2px solid #E02424; outline-offset: -2px; background-color: transparent; }
 </style>
 
 
@@ -270,7 +270,7 @@ include __DIR__ . '/../includes/header-customer.php';
         </div>
 
         <div id="product-rows" class="space-y-2">
-            <div class="product-row grid grid-cols-12 gap-3 items-start" onclick="selectRow(this)">
+            <div class="product-row grid grid-cols-12 gap-3 items-start px-4 py-3 border border-transparent rounded-lg cursor-pointer transition-colors" onclick="selectRow(this)">
                 <div class="col-span-5">
                     <select class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none appearance-none cursor-pointer focus:border-primary prod-select" onchange="recalc(this)">
                         <option value="" disabled selected>Pilih produk…</option>
@@ -419,15 +419,15 @@ include __DIR__ . '/../includes/header-customer.php';
         ).join('');
 
         const div = document.createElement('div');
-        div.className = 'product-row flex items-center gap-3 px-4 py-3 border border-gray-100 rounded-lg cursor-pointer transition-colors hover:bg-gray-50';
+        div.className = 'product-row grid grid-cols-12 gap-3 items-start px-4 py-3 border border-transparent rounded-lg cursor-pointer transition-colors hover:bg-gray-50';
         div.onclick = function() { selectRow(div); };
-        div.innerHTML = '<div class="col-span-5 flex-1"><select class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none appearance-none cursor-pointer focus:border-primary prod-select" style="background-image:url(\'data:image/svg+xml,%3Csvg xmlns=\\\'http://www.w3.org/2000/svg\\\' viewBox=\\\'0 0 16 16\\\'%3E%3Cpath fill=\\\'none\\\' stroke=\\\'%239ca3af\\\' stroke-linecap=\\\'round\\\' stroke-linejoin=\\\'round\\\' stroke-width=\\\'2\\\' d=\\\'M2 5l6 6 6-6\\\'/%3E%3C/svg%3E\');background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px" onchange="recalc(this)">' +
+        div.innerHTML = '<div class="col-span-5"><select class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none appearance-none cursor-pointer focus:border-primary prod-select" style="background-image:url(\'data:image/svg+xml,%3Csvg xmlns=\\\'http://www.w3.org/2000/svg\\\' viewBox=\\\'0 0 16 16\\\'%3E%3Cpath fill=\\\'none\\\' stroke=\\\'%239ca3af\\\' stroke-linecap=\\\'round\\\' stroke-linejoin=\\\'round\\\' stroke-width=\\\'2\\\' d=\\\'M2 5l6 6 6-6\\\'/%3E%3C/svg%3E\');background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px" onchange="recalc(this)">' +
             '<option value="" disabled selected>Pilih produk…</option>' + optionsHtml + '</select></div>' +
-            '<div class="col-span-4 w-32 shrink-0"><div class="relative">' +
+            '<div class="col-span-4"><div class="relative">' +
             '<input type="number" value="100" min="100" max="3000" class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none focus:border-primary prod-qty pr-14" oninput="recalc(this)">' +
             '<span class="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-gray-400 pointer-events-none">kaleng</span>' +
             '</div></div>' +
-            '<div class="col-span-3 w-32 shrink-0"><div class="relative">' +
+            '<div class="col-span-3"><div class="relative">' +
             '<span class="absolute left-3 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 pointer-events-none">Rp</span>' +
             '<input type="text" class="w-full border border-gray-200 rounded-lg py-2 px-3 pl-8 text-[13px] text-gray-700 bg-white outline-none prod-sub" readonly value="0"></div></div>';
         container.appendChild(div);
