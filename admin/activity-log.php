@@ -220,7 +220,7 @@ function getActionClass($action)
         <div class="flex items-center gap-3">
             <div class="flex items-center gap-2 mr-6">
                 <span class="text-[12px] text-slate-400">Per page</span>
-                <select class="text-[12px] border border-slate-200 rounded px-2 py-1 outline-none bg-white appearance-none cursor-pointer pr-6 relative">
+                <select onchange="changePerPage(this.value)" class="text-[12px] border border-slate-200 rounded px-2 py-1 outline-none bg-white appearance-none cursor-pointer pr-6 relative">
                     <option value="10" <?php echo $perPage == 10 ? 'selected' : ''; ?>>10</option>
                     <option value="25" <?php echo $perPage == 25 ? 'selected' : ''; ?>>25</option>
                     <option value="50" <?php echo $perPage == 50 ? 'selected' : ''; ?>>50</option>
@@ -325,6 +325,13 @@ function getActionClass($action)
             if (currentView === 'table') document.getElementById('table-view').classList.remove('hidden');
             else document.getElementById('cards-view').classList.remove('hidden');
         }
+    }
+
+    function changePerPage(value) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('per_page', value);
+        url.searchParams.set('page', '1');
+        window.location.href = url.toString();
     }
 
     document.getElementById('log-search').addEventListener('input', function() {
