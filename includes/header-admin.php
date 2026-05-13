@@ -5,7 +5,7 @@
  * Variables expected from page:
  *   $pageTitle   — Page title string (required)
  *   $currentPage — Active nav key: dashboard, orders, customers, products, batches, activity-log, users
- *
+ * add the favicon icon logo Politeknik Jember
 */
 
 if (!isset($pageTitle)) {

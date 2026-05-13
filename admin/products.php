@@ -237,11 +237,11 @@ $products = $productService->getAll();
         <div class="flex items-center gap-2">
             <span>Per page</span>
             <div class="relative">
-                <select
+                <select onchange="changePerPage(this.value)"
                     class="border border-gray-200 rounded-md px-2 py-1 text-[12px] outline-none bg-white appearance-none cursor-pointer">
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
+                    <option value="10" <?php echo (int)($_GET['per_page'] ?? 10) === 10 ? 'selected' : ''; ?>>10</option>
+                    <option value="25" <?php echo (int)($_GET['per_page'] ?? 10) === 25 ? 'selected' : ''; ?>>25</option>
+                    <option value="50" <?php echo (int)($_GET['per_page'] ?? 10) === 50 ? 'selected' : ''; ?>>50</option>
                 </select>
                 <i
                     class="ph ph-caret-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 pointer-events-none"></i>
@@ -269,6 +269,7 @@ $products = $productService->getAll();
     let currentView = 'table';
     let currentFilter = 'all';
     let searchQuery = '';
+    let perPage = parseInt(new URLSearchParams(window.location.search).get('per_page') || '10', 10);
 
     function toggleAll(master) {
         document.querySelectorAll('.cb-row').forEach(cb => cb.checked = master.checked);
@@ -316,6 +317,7 @@ $products = $productService->getAll();
 
     function applyFilters() {
         const query = searchQuery.toLowerCase();
+        let matchCount = 0;
         let visibleCount = 0;
         const items = (currentView === 'table') ? document.querySelectorAll('.product-row') : document.querySelectorAll('.product-card');
 
@@ -332,6 +334,8 @@ $products = $productService->getAll();
             );
 
             if (filterMatch && searchMatch) {
+                matchCount++;
+                if (visibleCount >= perPage) return;
                 el.classList.remove('hidden');
                 visibleCount++;
             }
@@ -339,7 +343,7 @@ $products = $productService->getAll();
 
         const emptyState = document.getElementById('empty-state');
         const pagination = document.getElementById('pagination-footer');
-        if (visibleCount === 0) {
+        if (matchCount === 0) {
             emptyState.classList.remove('hidden');
             pagination.classList.add('hidden');
             if (currentView === 'table') document.getElementById('table-view').classList.add('hidden');
@@ -351,13 +355,21 @@ $products = $productService->getAll();
             else document.getElementById('cards-view').classList.remove('hidden');
         }
 
-        document.getElementById('results-count').textContent = `Showing ${visibleCount} results`;
+        document.getElementById('results-count').textContent = `Showing ${visibleCount} of ${matchCount} results`;
+    }
+
+    function changePerPage(value) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('per_page', value);
+        url.searchParams.set('page', '1');
+        window.location.href = url.toString();
     }
 
     document.getElementById('product-search').addEventListener('input', function () {
         searchQuery = this.value;
         applyFilters();
     });
+    applyFilters();
 
     window.onclick = function (event) {
         const filterMenu = document.getElementById('filter-menu');
