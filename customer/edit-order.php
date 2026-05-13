@@ -136,11 +136,6 @@ $currentPage = 'orders';
 include __DIR__ . '/../includes/header-customer.php';
 ?>
 
-<style>
-    /* KEEP — JS-toggled selected state */
-    .product-row.selected { outline: 2px solid #E02424; outline-offset: -2px; background-color: #f8fafc; }
-</style>
-
 <?php echo FlashMessage::render(); ?>
 
 <?php if (!empty($formErrors)): ?>
@@ -252,9 +247,13 @@ include __DIR__ . '/../includes/header-customer.php';
     };
 
     var selectedRow = null;
+    var selectedRowClasses = ['outline', 'outline-2', 'outline-slate-400', '-outline-offset-2', 'bg-slate-50'];
     function selectRow(row) {
-        if (selectedRow) selectedRow.classList.remove('selected');
-        selectedRow = row; row.classList.add('selected');
+        if (selectedRow) {
+            selectedRow.classList.remove.apply(selectedRow.classList, selectedRowClasses);
+        }
+        selectedRow = row;
+        row.classList.add.apply(row.classList, selectedRowClasses);
     }
 
     function recalc(el) {
