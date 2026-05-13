@@ -5,18 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Laporan Pesanan - <?php echo htmlspecialchars(
-      $order["order_number"],
-    ); ?></title>
+    <title>Laporan Pesanan - <?php echo htmlspecialchars($order["order_number"]); ?></title>
     <style>
         @page {
-            margin: 25mm 20mm 25mm 20mm;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 20mm 15mm 20mm 15mm;
         }
 
         body {
@@ -248,15 +240,19 @@
     </style>
 </head>
 
-<body class="p-4">
+<body>
     <!-- Header with Polije logo -->
     <div class="header">
         <table class="header-table">
             <tr>
                 <td style="width: 8%;">
-                    <img src="<?php echo __DIR__ .
-                      "/../../assets/images/politeknik_logo.png"; ?>" alt="Polije"
-                        style="height: 40px; width: auto;">
+                    <?php
+                    $logoPath = __DIR__ . '/../../assets/images/politeknik_logo.png';
+                    if (file_exists($logoPath)) {
+                        $logoData = base64_encode(file_get_contents($logoPath));
+                        echo '<img src="data:image/png;base64,' . $logoData . '" alt="Polije" style="height: 40px; width: auto;">';
+                    }
+                    ?>
                 </td>
                 <td style="width: 52%;">
                     <div class="company-name">TEFA Canning SIP</div>
@@ -265,13 +261,8 @@
                 </td>
                 <td style="width: 40%;">
                     <div class="document-title">LAPORAN PESANAN</div>
-                    <div class="document-number"><?php echo htmlspecialchars(
-                      $order["order_number"],
-                    ); ?></div>
-                    <div class="document-number"><?php echo date(
-                      "d M Y, H:i",
-                      strtotime($order["created_at"]),
-                    ); ?></div>
+                    <div class="document-number"><?php echo htmlspecialchars($order["order_number"]); ?></div>
+                    <div class="document-number"><?php echo date("d M Y, H:i", strtotime($order["created_at"])); ?></div>
                 </td>
             </tr>
         </table>
@@ -456,13 +447,15 @@
     <!-- Footer with 3 logos -->
     <div class="footer">
         <p>Dokumen ini digenerate secara otomatis oleh sistem TEFA Canning SIP — Politeknik Negeri Jember</p>
-        <p>Jl. Mastrip PO BOX 164, Jember, Jawa Timur 68121 — Dicetak: <?php echo date(
-          "d M Y, H:i:s",
-        ); ?></p>
+        <p>Jl. Mastrip PO BOX 164, Jember, Jawa Timur 68121 — Dicetak: <?php echo date("d M Y, H:i:s"); ?></p>
         <div style="margin-top: 10px;">
-            <img src="<?php echo __DIR__ .
-              "/../../assets/images/3_logo_in_1.png"; ?>" alt="Logo"
-                style="height: 35px; width: auto; opacity: 0.7;">
+            <?php
+            $footerLogoPath = __DIR__ . '/../../assets/images/3_logo_in_1.png';
+            if (file_exists($footerLogoPath)) {
+                $footerLogoData = base64_encode(file_get_contents($footerLogoPath));
+                echo '<img src="data:image/png;base64,' . $footerLogoData . '" alt="Logo" style="height: 35px; width: auto; opacity: 0.7;">';
+            }
+            ?>
         </div>
     </div>
 </body>
