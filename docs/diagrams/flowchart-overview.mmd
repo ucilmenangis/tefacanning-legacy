@@ -1,0 +1,20 @@
+flowchart TD
+    START([Mulai]) --> LANDING[Landing Page]
+    LANDING --> LOGIN{Login sebagai?}
+
+    LOGIN -->|Admin| ADMIN[Dashboard Admin]
+    LOGIN -->|Pelanggan| CUST[Dashboard Pelanggan]
+
+    ADMIN --> KELOLA[Kelola Produk dan Batch]
+    KELOLA --> SIAP[Status Batch Siap]
+    SIAP --> NOTIF1[Kirim Notifikasi WA]
+
+    CUST --> ORDER[Buat Pre-order]
+    ORDER --> STOK{Stok Tersedia?}
+    STOK -->|Ya| SIMPAN[Simpan Pesanan]
+    STOK -->|Tidak| ORDER
+    SIMPAN --> NOTIF2[Kirim Notifikasi WA ke Admin]
+
+    NOTIF1 --> AMBIL[Pelanggan Ambil Pesanan]
+    AMBIL --> SELESAI([Selesai])
+    NOTIF2 --> SELESAI

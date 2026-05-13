@@ -10,26 +10,29 @@
 | Frontend | Alif Taran Ihsan |
 | Backend | Irfan |
 
-**Period:** 25 Februari 2026 – 6 Mei 2026 (Sprint 1–7 selesai)
+**Period:** 25 Februari 2026 – 13 Mei 2026 (Sprint 1–9 selesai)
 **Framework:** Scrum (adaptasi untuk tim 5 orang)
 
 ---
 
 ## Project Kanban Board
 
-| To Do (Sprint 8) | Doing (Sprint 8) | Done (Sprint 1–7) |
-|-------------------|-------------------|--------------------|
-| Responsive web semua pages | Fix batch CSRF token issue semua role | Landing page (hero, catalog, batch, SNI, footer) |
-| Text alasan jelas kenapa produk utama tidak bisa dihapus | Auto increment SKU produk | Auth system (dual guard: admin + customer, session, CSRF) |
-| Full testing backend (CRUD, auth, RBAC, stock, profit, PDF, WhatsApp) | Tambah tanggal batch info saat customer buat order | Admin/teknisi pages (dashboard, products, batches, customers, orders, CRUD, activity log) |
-| Full testing frontend (responsive, form validation, dark mode) | | Customer pages (dashboard, preorder, orders, profile, PDF download) |
-| Acceptance testing & stakeholder demo | | PDF generation (DomPDF, branded template) |
-| Requirement validation & final documentation | | WhatsApp notifications (Fonnte API, 4 triggers) |
-| Visual & usability testing | | RBAC & security (role guard, price protection, deletion protection, stock management) |
-| Finalisasi Figma assets & dokumentasi desain | | OOP architecture (15 classes, interfaces, abstract, singleton, exceptions) |
+| To Do | Doing | Done (Sprint 1–9) |
+|-------|-------|--------------------|
+| Phone validation on register | | Landing page (hero, catalog, batch, SNI, footer) |
+| Code audit optimizations (5 items) | | Auth system (dual guard: admin + customer, session, CSRF) |
+| | | Admin/teknisi pages (dashboard, products, batches, customers, orders, CRUD, activity log) |
+| | | Customer pages (dashboard, preorder, orders, profile, PDF download) |
+| | | PDF generation (DomPDF, branded template) |
+| | | WhatsApp notifications (Fonnte API, 4 triggers) |
+| | | Forgot password via WhatsApp OTP (PasswordResetService) |
+| | | RBAC & security (role guard, price protection, deletion protection, stock management) |
+| | | OOP architecture (16 classes, interfaces, abstract, singleton, exceptions) |
 | | | Dark mode (global toggle, synced) |
 | | | Tailwind CSS migration |
-| | | Sprint planning, review & retrospective (7 sprints) |
+| | | Flowchart diagrams (overview, admin, customer) |
+| | | Database analysis documentation (DDL, DML, DQL, Aggregate) |
+| | | Sprint planning, review & retrospective (9 sprints) |
 | | | SRS, use case, DFD, ERD documentation |
 | | | Figma design system & mockups |
 
@@ -154,21 +157,38 @@
 
 ---
 
-### Sprint 8 — Bug Fixes & Full Testing (Week 13)
+### Sprint 8 — Bug Fixes & Full Testing (Week 13 — 10 Mei 2026)
 
 **Sprint Goal:** Perbaikan bug remaining, full testing seluruh fitur, persiapan delivery.
 
 | Deliverable | Assignee | Status |
 |-------------|----------|--------|
-| Bug fixes: batch CSRF, auto increment SKU, tanggal batch di customer order | Irfan | Pending |
-| Full testing backend | Irfan | Pending |
-| Bug fixes: responsive web, text alasan produk utama tidak bisa dihapus | Alif | Pending |
-| Full testing frontend | Alif | Pending |
-| Acceptance testing & stakeholder demo | Rizky | Pending |
-| Requirement validation & final documentation | Lily | Pending |
-| Visual & usability testing | Alfia | Pending |
+| Bug fixes: batch CSRF, auto increment SKU, tanggal batch, dashboard "Semua Batch", query LIMIT, FonnteService live test | Irfan | Done |
+| Full testing backend (CRUD, auth, RBAC, stock, profit, PDF, WhatsApp) | Irfan | Done |
+| Bug fixes: responsive web, text alasan produk, UI fixes (activity log, header, landing page, customer orders), header refactor | Alif | Done |
+| Full testing frontend | Alif | Done |
+| Acceptance testing & stakeholder demo | Rizky | Done |
+| Requirement validation & final documentation | Lily | Done |
+| Visual & usability testing | Alfia | Done |
 
-**Sprint Goal: Pending** | **Commits: -**
+**Sprint Goal: 100%** | **Commits: 12**
+
+---
+
+### Sprint 9 — Feature Completion & Diagrams (Week 14 — 13 Mei 2026)
+
+**Sprint Goal:** Forgot password, cleanup fitur tidak berfungsi, diagram sistem, analisis database.
+
+| Deliverable | Assignee | Status |
+|-------------|----------|--------|
+| Forgot password via WhatsApp OTP (PasswordResetService + FonnteService + reset-password page) | Irfan | Done |
+| Remove Remember Me feature (non-functional, removed from both login pages) | Irfan | Done |
+| Database analysis (DDL, DML, DQL, Aggregate — 99 queries) | Irfan | Done |
+| Flowchart diagrams (overview + admin + customer + documentation) | Irfan | Done |
+| Frontend tech documentation | Alif | Done |
+| Project cleanup (scratch removal, debug cleanup) | Irfan | Done |
+
+**Sprint Goal: 100%** | **Commits: 4**
 
 ---
 
@@ -180,26 +200,28 @@
 |--------|-------|
 | Sprint (development) | 7 |
 | Sprint (testing) | 1 |
-| Total active days | 16 |
-| Total commits | 66 |
-| Sprint goal achievement (dev) | 7/7 (100%) |
+| Sprint (feature completion) | 1 |
+| Total sprints | 9 |
+| Total active days | 18 |
+| Total commits | 82+ |
+| Sprint goal achievement (dev) | 9/9 (100%) |
 
 ### Per-Role Summary
 
 | Role | Name | Contribution |
 |------|------|-------------|
-| Project Manager | Rizky | Sprint planning & review (7x), kickoff, task management, merge coordination, presentation, acceptance testing |
+| Project Manager | Rizky | Sprint planning & review (9x), kickoff, task management, merge coordination, presentation, acceptance testing |
 | System Analyst | Lily | SRS, use case, data analysis, stakeholder bridge, RBAC docs, OOP review, system docs (SRS, DFD, ERD), requirement validation |
 | UI/UX (Figma) | Alfia | Design system, landing page mockup, customer & admin panel mockups, dark mode, PDF template, UI audit, visual testing |
-| Frontend | Alif | Customer pages, admin pages, pengaturan, UI fixes & optimization, responsive web |
-| Backend | Irfan | Core infrastructure, auth, RBAC, all DB wiring, PDF, OOP refactoring, FonnteService, stock management, batch filter |
+| Frontend | Alif | Customer pages, admin pages, pengaturan, UI fixes & optimization, responsive web, frontend tech docs |
+| Backend | Irfan | Core infrastructure, auth, RBAC, all DB wiring, PDF, OOP refactoring, FonnteService, stock management, batch filter, forgot password, database analysis, flowchart diagrams |
 
 ### Product Backlog
 
 | Status | Count |
 |--------|-------|
-| Done (Sprint 1–7) | 45 |
-| Pending (Sprint 8) | 17 |
+| Done (Sprint 1–9) | 59 |
+| Remaining (optimization) | 3 |
 | **Total** | **62** |
 
-**Completion Rate: 72.6%** (remaining = Sprint 8 bug fixes + full testing)
+**Completion Rate: 95.2%** (remaining = phone validation + code audit optimizations)

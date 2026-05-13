@@ -1,0 +1,26 @@
+flowchart TD
+    START([Mulai]) --> LANDING[Tampilkan Landing Page]
+    LANDING --> PILIH_AKSI{Sudah Punya Akun?}
+
+    PILIH_AKSI -->|Belum| REGISTER[/Form Registrasi/]
+    REGISTER --> REG_VALID{Data Valid?}
+    REG_VALID -->|Tidak| REGISTER
+    REG_VALID -->|Ya| LOGIN_CUSTOMER[/Form Login Pelanggan/]
+
+    PILIH_AKSI -->|Sudah| LOGIN_CUSTOMER
+    LOGIN_CUSTOMER --> AUTH_CUST{Autentikasi Valid?}
+    AUTH_CUST -->|Tidak| LOGIN_CUSTOMER
+    AUTH_CUST -->|Ya| DASHBOARD_CUST[Dashboard Pelanggan]
+
+    DASHBOARD_CUST --> BUAT_ORDER[Buat Pre-order]
+    BUAT_ORDER --> PILIH_BATCH[Pilih Batch dan Produk]
+    PILIH_BATCH --> QTY_VALID{Stok Tersedia?}
+    QTY_VALID -->|Tidak| PILIH_BATCH
+    QTY_VALID -->|Ya| SIMPAN_ORDER[Simpan Pesanan]
+    SIMPAN_ORDER --> KURANGI_STOK[Kurangi Stok Produk]
+    KURANGI_STOK --> NOTIF_ORDER[Kirim Notifikasi WA ke Admin]
+
+    DASHBOARD_CUST --> LIHAT_ORDER[Lihat Riwayat Pesanan]
+    LIHAT_ORDER --> UNDUH_PDF[Unduh PDF Pesanan]
+
+    NOTIF_ORDER --> SELESAI([Selesai])
