@@ -7,296 +7,158 @@
 
 ---
 
-## Daftar Modul yang Ditest
-
-| No | Modul | Jumlah Test Case |
-|----|-------|-----------------|
-| 1 | Login Admin | 5 |
-| 2 | Login Customer | 4 |
-| 3 | Registrasi Customer | 7 |
-| 4 | Forgot Password | 4 |
-| 5 | Pre-order Customer | 6 |
-| 6 | Edit Order Customer | 3 |
-| 7 | Cancel Order Customer | 2 |
-| 8 | Profil Customer | 4 |
-| 9 | CRUD Produk (Admin) | 7 |
-| 10 | CRUD Batch (Admin) | 5 |
-| 11 | CRUD Order (Admin) | 5 |
-| 12 | CRUD Customer (Admin) | 3 |
-| 13 | RBAC (Role Access) | 4 |
-| | **Total** | **59** |
-
----
-
 ## 1. Login Admin
 
-**Pre-condition:** Browser terbuka, user sudah di halaman `auth/login-admin.php`
-
-### Equivalence Partitioning
-
-| Kelas | Partisi | Contoh Input |
-|-------|---------|-------------|
-| Email | Valid | `superadmin@tefa.polije.ac.id` |
-| Email | Invalid format | `superadmin` |
-| Email | Kosong | (tidak diisi) |
-| Password | Valid | `password` |
-| Password | Salah | `salah123` |
-| Password | Kosong | (tidik diisi) |
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-01 | Login super_admin valid | 1. Input email `superadmin@tefa.polije.ac.id` 2. Input password `password` 3. Klik Sign in | Redirect ke `admin/dashboard.php`, tampil menu lengkap | | |
-| TC-02 | Login teknisi valid | 1. Input email `teknisi@tefa.polije.ac.id` 2. Input password `password` 3. Klik Sign in | Redirect ke `admin/dashboard.php`, menu terbatas (tanpa financial data, tanpa price editing) | | |
-| TC-03 | Login password salah | 1. Input email `superadmin@tefa.polije.ac.id` 2. Input password `salah123` 3. Klik Sign in | Tampil error "Email atau password tidak valid", tetap di halaman login | | |
-| TC-04 | Login email kosong | 1. Biarkan email kosong 2. Input password `password` 3. Klik Sign in | Form tidak submit (HTML5 required validation) | | |
-| TC-05 | Login password kosong | 1. Input email `superadmin@tefa.polije.ac.id` 2. Biarkan password kosong 3. Klik Sign in | Form tidak submit (HTML5 required validation) | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 1 | Login super_admin dengan kredensial valid | Input email `superadmin@tefa.polije.ac.id` dan password `password`, klik Sign in | Redirect ke dashboard admin, menu lengkap terlihat | | |
+| 2 | Login teknisi dengan kredensial valid | Input email `teknisi@tefa.polije.ac.id` dan password `password`, klik Sign in | Redirect ke dashboard admin, menu terbatas | | |
+| 3 | Login dengan password salah | Input email valid, password `salah123`, klik Sign in | Tampil error "Email atau password tidak valid" | | |
+| 4 | Login dengan email kosong | Biarkan email kosong, isi password, klik Sign in | Form tidak submit (validasi HTML5) | | |
+| 5 | Login dengan password kosong | Isi email valid, biarkan password kosong, klik Sign in | Form tidak submit (validasi HTML5) | | |
 
 ---
 
 ## 2. Login Customer
 
-**Pre-condition:** Browser terbuka, user sudah di halaman `auth/login-customer.php`
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-06 | Login customer valid | 1. Input email `customer@customer.com` 2. Input password `customer` 3. Klik Sign in | Redirect ke `customer/dashboard.php` | | |
-| TC-07 | Login password salah | 1. Input email `customer@customer.com` 2. Input password `salah` 3. Klik Sign in | Tampil error "Email atau password tidak valid" | | |
-| TC-08 | Login email tidak terdaftar | 1. Input email `tidakada@email.com` 2. Input password `apapun` 3. Klik Sign in | Tampil error "Email atau password tidak valid" | | |
-| TC-09 | Akses dashboard tanpa login | 1. Buka langsung `customer/dashboard.php` tanpa login | Redirect ke `auth/login-customer.php` | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 6 | Login customer valid | Input email `customer@customer.com` dan password `customer`, klik Sign in | Redirect ke dashboard customer | | |
+| 7 | Login password salah | Input email valid, password salah, klik Sign in | Tampil error "Email atau password tidak valid" | | |
+| 8 | Login email tidak terdaftar | Input email `tidakada@email.com`, password apapun, klik Sign in | Tampil error "Email atau password tidak valid" | | |
+| 9 | Akses halaman customer tanpa login | Buka langsung URL `customer/dashboard.php` | Redirect ke halaman login customer | | |
 
 ---
 
 ## 3. Registrasi Customer
 
-**Pre-condition:** Browser terbuka, user sudah di halaman `auth/register.php`
-
-### Equivalence Partitioning
-
-| Kelas | Partisi | Contoh Input |
-|-------|---------|-------------|
-| Email | Valid unik | `baru@test.com` |
-| Email | Sudah terdaftar | `customer@customer.com` |
-| Email | Format invalid | `bukanemail` |
-| Password | >= 8 karakter | `password1` |
-| Password | < 8 karakter | `pass` |
-| Konfirmasi password | Cocok | `password1` |
-| Konfirmasi password | Tidak cocok | `beda12345` |
-| Field wajib | Semua terisi | Data lengkap |
-| Field wajib | Ada yang kosong | Name kosong |
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-10 | Registrasi valid | 1. Isi semua field dengan data valid 2. Password >= 8 char, konfirmasi cocok 3. Klik Sign up | Akun dibuat, auto-login, redirect ke `customer/dashboard.php` | | |
-| TC-11 | Email sudah terdaftar | 1. Input email `customer@customer.com` 2. Isi field lain valid 3. Klik Sign up | Tampil error "Email sudah terdaftar" | | |
-| TC-12 | Email format invalid | 1. Input email `bukanemail` 2. Isi field lain valid 3. Klik Sign up | Form tidak submit (HTML5 email validation) | | |
-| TC-13 | Password < 8 karakter | 1. Input password `pass` (4 char) 2. Isi field lain valid 3. Klik Sign up | Tampil error "Password minimal 8 karakter" | | |
-| TC-14 | Konfirmasi password tidak cocok | 1. Input password `password1` 2. Input confirm `beda12345` 3. Klik Sign up | Tampil error "Konfirmasi password tidak cocok" | | |
-| TC-15 | Field wajib kosong | 1. Biarkan nama kosong 2. Isi field lain valid 3. Klik Sign up | Tampil error "Semua field yang bertanda * wajib diisi" | | |
-| TC-16 | Registrasi lalu cek login | 1. Registrasi akun baru 2. Logout 3. Login dengan akun baru | Berhasil login ke dashboard | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 10 | Registrasi dengan data valid | Isi semua field (nama, email baru, phone, alamat, password >= 8 char, konfirmasi cocok), klik Sign up | Akun dibuat, auto-login, redirect dashboard | | |
+| 11 | Registrasi email sudah terdaftar | Input email `customer@customer.com`, field lain valid, klik Sign up | Tampil error "Email sudah terdaftar" | | |
+| 12 | Registrasi email format invalid | Input email `bukanemail`, field lain valid, klik Sign up | Form tidak submit (validasi HTML5) | | |
+| 13 | Registrasi password < 8 karakter | Input password `pass` (4 char), konfirmasi cocok, klik Sign up | Tampil error "Password minimal 8 karakter" | | |
+| 14 | Registrasi konfirmasi password tidak cocok | Input password `password1`, konfirmasi `beda12345`, klik Sign up | Tampil error "Konfirmasi password tidak cocok" | | |
+| 15 | Registrasi field wajib kosong | Biarkan nama kosong, isi field lain, klik Sign up | Tampil error "Semua field bertanda * wajib diisi" | | |
+| 16 | Registrasi lalu login | Registrasi akun baru, logout, login dengan akun tersebut | Berhasil login ke dashboard customer | | |
 
 ---
 
 ## 4. Forgot Password
 
-**Pre-condition:** Browser terbuka, user sudah di halaman `auth/forgot-password.php`, customer punya nomor WhatsApp terdaftar
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-17 | Kirim OTP valid | 1. Input email customer terdaftar 2. Klik "Kirim Kode OTP" | Tampil sukses, link "Masukkan Kode OTP" muncul | | |
-| TC-18 | Kirim OTP email tidak terdaftar | 1. Input email `tidakada@email.com` 2. Klik "Kirim Kode OTP" | Tampil sukses (anti enumeration), tapi tidak ada WA terkirim | | |
-| TC-19 | Reset password OTP valid | 1. Kirim OTP 2. Buka link reset 3. Input OTP yang benar 4. Input password baru 5. Klik Reset Password | Password berhasil diubah, redirect ke login | | |
-| TC-20 | Reset password OTP salah | 1. Buka halaman reset 2. Input OTP salah `000000` 3. Input password baru 4. Klik Reset Password | Tampil error "Kode OTP tidak valid atau sudah kadaluarsa" | | |
-
-### Boundary Value Analysis
-
-| Kelas | Boundary | Expected |
-|-------|----------|---------|
-| OTP | 5 digit (kurang dari 6) | Form tidak submit (maxlength 6, required) |
-| OTP | 6 digit benar | Password berhasil diubah |
-| OTP | 6 digit salah | Error "Kode OTP tidak valid" |
-| OTP expiry | Setelah 15 menit | Error "Kode OTP sudah kadaluarsa" |
-| Password baru | < 6 karakter | Error "Password minimal 6 karakter" |
-| Password baru | 6 karakter | Berhasil |
-| Konfirmasi password | Tidak cocok | Error "Konfirmasi password tidak cocok" |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 17 | Kirim OTP ke email terdaftar | Input email customer yang terdaftar, klik "Kirim Kode OTP" | Tampil sukses, link "Masukkan Kode OTP" muncul | | |
+| 18 | Kirim OTP ke email tidak terdaftar | Input email `tidakada@email.com`, klik "Kirim Kode OTP" | Tampil sukses (anti enumeration) | | |
+| 19 | Reset password dengan OTP valid | Kirim OTP, buka halaman reset, input OTP benar + password baru, klik Reset | Password berhasil diubah, redirect ke login | | |
+| 20 | Reset password dengan OTP salah | Buka halaman reset, input OTP `000000` (salah), password baru, klik Reset | Tampil error "Kode OTP tidak valid atau sudah kadaluarsa" | | |
+| 21 | Reset password OTP kadaluarsa | Kirim OTP, tunggu > 15 menit, input OTP, klik Reset | Tampil error "Kode OTP tidak valid atau sudah kadaluarsa" | | |
+| 22 | Reset password konfirmasi tidak cocok | Input OTP valid, password baru `baru123`, konfirmasi `beda456`, klik Reset | Tampil error "Konfirmasi password tidak cocok" | | |
 
 ---
 
 ## 5. Pre-order Customer
 
-**Pre-condition:** Customer sudah login, ada batch dengan status "open", ada produk dengan stok > 0
-
-### Boundary Value Analysis
-
-| Kelas | Boundary | Expected |
-|-------|----------|---------|
-| Quantity | 0 | Error / tidak bisa submit |
-| Quantity | 1 | Berhasil |
-| Quantity | = stok tersedia | Berhasil, stok habis setelah order |
-| Quantity | > stok tersedia | Error stok tidak cukup |
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-21 | Pre-order valid | 1. Pilih batch open 2. Pilih produk 3. Input quantity 1 4. Klik Submit | Pesanan tersimpan, stok berkurang, tampil di riwayat pesanan | | |
-| TC-22 | Pre-order stok tidak cukup | 1. Pilih produk dengan stok = 2 2. Input quantity = 5 3. Klik Submit | Tampil error stok tidak tersedia | | |
-| TC-23 | Pre-order tanpa pilih batch | 1. Buka halaman preorder 2. Tidak pilih batch 3. Pilih produk 4. Klik Submit | Form tidak submit / error validasi | | |
-| TC-24 | Pre-order batch closed | 1. Buka halaman preorder 2. Tidak ada batch open di dropdown | Dropdown kosong, tidak bisa buat order | | |
-| TC-25 | Pre-order produk stok 0 | 1. Pilih batch open 2. Produk dengan stok 0 tidak muncul / tidak bisa dipilih | Produk stok 0 tidak bisa dipesan | | |
-| TC-26 | Cek notifikasi WA ke admin | 1. Submit pre-order sukses 2. Cek WhatsApp admin | Admin menerima pesan WA "Pesanan Baru Masuk" | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 23 | Pre-order dengan data valid | Pilih batch open, pilih produk, input quantity 1, klik Submit | Pesanan tersimpan, stok berkurang | | |
+| 24 | Pre-order quantity melebihi stok | Pilih produk stok = 2, input quantity = 5, klik Submit | Tampil error stok tidak tersedia | | |
+| 25 | Pre-order tanpa pilih batch | Buka halaman preorder, tidak pilih batch, klik Submit | Form tidak submit / error validasi | | |
+| 26 | Pre-order batch closed (tidak ada batch open) | Buka halaman preorder saat semua batch closed | Dropdown batch kosong, tidak bisa buat order | | |
+| 27 | Pre-order produk stok 0 | Coba pesan produk dengan stok 0 | Produk tidak bisa dipesan / tidak muncul | | |
+| 28 | Notifikasi WA ke admin setelah pre-order | Submit pre-order sukses, cek WhatsApp admin | Admin menerima WA "Pesanan Baru Masuk" | | |
 
 ---
 
-## 6. Edit Order Customer
+## 6. Edit & Cancel Order Customer
 
-**Pre-condition:** Customer punya order dengan status "pending"
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-27 | Edit order pending | 1. Buka order pending 2. Ubah quantity 3. Klik Simpan | Order terupdate, total amount berubah | | |
-| TC-28 | Edit order menambah melebihi stok | 1. Edit quantity ke > stok tersedia 2. Klik Simpan | Tampil error stok tidak cukup | | |
-| TC-29 | Edit order status bukan pending | 1. Coba akses edit order dengan status "processing" | Tidak bisa edit (redirect atau error) | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 29 | Edit order pending | Buka order pending, ubah quantity, klik Simpan | Order terupdate, total amount berubah | | |
+| 30 | Edit order melebihi stok | Edit quantity ke > stok tersedia, klik Simpan | Tampil error stok tidak cukup | | |
+| 31 | Edit order status bukan pending | Coba akses edit order dengan status "processing" | Tidak bisa edit (redirect / error) | | |
+| 32 | Cancel order pending | Buka order pending, klik Batalkan, konfirmasi | Order status jadi cancelled, stok dikembalikan | | |
+| 33 | Cancel order processing | Coba cancel order status "processing" | Tombol cancel tidak muncul / tidak bisa diklik | | |
 
 ---
 
-## 7. Cancel Order Customer
+## 7. Profil Customer
 
-**Pre-condition:** Customer punya order dengan status "pending"
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-30 | Cancel order pending | 1. Buka order pending 2. Klik Batalkan 3. Konfirmasi | Order status jadi "cancelled", stok dikembalikan | | |
-| TC-31 | Cancel order processing | 1. Coba cancel order status "processing" | Tombol cancel tidak muncul / tidak bisa diklik | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 34 | Edit profil valid | Ubah nama / organisasi / alamat, klik Simpan | Data terupdate di halaman profil | | |
+| 35 | Ganti password valid | Input password lama benar, password baru, konfirmasi cocok, klik Simpan | Password berhasil diubah | | |
+| 36 | Ganti password lama salah | Input password lama salah, password baru, klik Simpan | Tampil error "Password lama tidak sesuai" | | |
+| 37 | Ganti password saat punya order aktif | Buat order pending, coba ganti password | Gagal, tampil error "Tidak dapat mengubah password saat masih memiliki pesanan aktif" | | |
 
 ---
 
-## 8. Profil Customer
+## 8. CRUD Produk (Admin)
 
-**Pre-condition:** Customer sudah login
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-32 | Edit profil valid | 1. Ubah nama / organisasi / alamat 2. Klik Simpan | Data terupdate, tampil di halaman profil | | |
-| TC-33 | Ganti password valid | 1. Input password lama benar 2. Input password baru 3. Konfirmasi cocok 4. Klik Simpan | Password berhasil diubah | | |
-| TC-34 | Ganti password lama salah | 1. Input password lama salah 2. Input password baru 3. Klik Simpan | Tampil error "Password lama tidak sesuai" | | |
-| TC-35 | Edit profil saat punya order aktif | 1. Buat order pending 2. Coba ganti password | Gagal, tampil error "Tidak dapat mengubah password saat masih memiliki pesanan aktif" | | |
-
----
-
-## 9. CRUD Produk (Admin)
-
-**Pre-condition:** Admin sudah login sebagai super_admin
-
-### Boundary Value Analysis
-
-| Kelas | Boundary | Expected |
-|-------|----------|---------|
-| Harga | 0 | Error / tidak valid |
-| Harga | 1 | Berhasil |
-| Harga | 99999999.99 | Berhasil |
-| Stok | 0 | Berhasil ( produk tersedia tapi habis) |
-| Stok | 1 | Berhasil |
-| Stok | -1 | Error / tidak valid |
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-36 | Create produk valid | 1. Isi nama, harga, stok 2. SKU auto-generate 3. Klik Simpan | Produk tersimpan, SKU format TEFA-SKU-XXX | | |
-| TC-37 | Create produk tanpa nama | 1. Biarkan nama kosong 2. Isi harga, stok 3. Klik Simpan | Tampil error validasi | | |
-| TC-38 | Edit produk (super_admin) | 1. Buka edit produk 2. Ubah harga 3. Klik Simpan | Harga terupdate | | |
-| TC-39 | Edit produk (teknisi) | 1. Login teknisi 2. Coba edit harga produk | Tombol/field harga disabled atau tidak bisa akses halaman edit | | |
-| TC-40 | Hapus produk biasa | 1. Pilih produk non-core 2. Klik Hapus 3. Konfirmasi | Produk soft-delete, tidak muncul di list | | |
-| TC-41 | Hapus produk core (protected) | 1. Coba hapus produk dengan SKU core (Sarden, etc) 2. Klik Hapus | Gagal, tampil pesan alasan produk tidak bisa dihapus | | |
-| TC-42 | Hapus produk yang punya order | 1. Coba hapus produk yang sudah ada di order | Gagal, tampil pesan "Produk tidak bisa dihapus karena sudah memiliki pesanan" | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 38 | Create produk valid | Isi nama, harga, stok, SKU auto-generate, klik Simpan | Produk tersimpan, SKU format TEFA-SKU-XXX | | |
+| 39 | Create produk tanpa nama | Biarkan nama kosong, isi harga dan stok, klik Simpan | Tampil error validasi | | |
+| 40 | Edit produk oleh super_admin | Buka edit produk, ubah harga, klik Simpan | Harga terupdate | | |
+| 41 | Edit produk oleh teknisi | Login teknisi, buka edit produk, coba ubah harga | Field harga disabled / read-only | | |
+| 42 | Hapus produk non-core | Pilih produk non-core, klik Hapus, konfirmasi | Produk soft-delete, hilang dari list | | |
+| 43 | Hapus produk core (protected) | Coba hapus produk core (Sarden, dll) | Gagal, tampil pesan alasan produk tidak bisa dihapus | | |
+| 44 | Hapus produk yang punya order | Coba hapus produk yang sudah ada di order | Gagal, tampil pesan produk memiliki pesanan | | |
 
 ---
 
-## 10. CRUD Batch (Admin)
+## 9. CRUD Batch (Admin)
 
-**Pre-condition:** Admin sudah login sebagai super_admin
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-43 | Create batch valid | 1. Isi nama, event, tanggal, status 2. Klik Simpan | Batch tersimpan | | |
-| TC-44 | Edit batch status lifecycle | 1. Ubah status open → processing 2. Ubah processing → ready 3. Ubah ready → closed | Status berubah sesuai urutan | | |
-| TC-45 | Batch ready → notifikasi WA | 1. Ubah batch status ke "ready" 2. Cek WhatsApp customer | Semua customer di batch menerima WA "Pesanan Siap Diambil" | | |
-| TC-46 | Hapus batch tanpa order | 1. Hapus batch yang belum punya order | Batch soft-delete | | |
-| TC-47 | Hapus batch dengan order | 1. Hapus batch yang sudah punya order | Gagal, tampil error | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 45 | Create batch valid | Isi nama, event, tanggal, klik Simpan | Batch tersimpan | | |
+| 46 | Edit batch status lifecycle | Ubah status open → processing → ready → closed | Status berubah sesuai urutan | | |
+| 47 | Batch ready → notifikasi WA | Ubah batch status ke "ready", cek WhatsApp customer | Customer di batch menerima WA "Pesanan Siap Diambil" | | |
+| 48 | Hapus batch tanpa order | Hapus batch yang belum punya order, konfirmasi | Batch soft-delete | | |
+| 49 | Hapus batch dengan order | Coba hapus batch yang sudah punya order | Gagal, tampil error | | |
 
 ---
 
-## 11. CRUD Order (Admin)
+## 10. CRUD Order (Admin)
 
-**Pre-condition:** Admin sudah login, ada customer terdaftar, ada batch open, ada produk
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-48 | Create order admin | 1. Pilih customer 2. Pilih batch 3. Tambah produk + quantity 4. Klik Simpan | Order terbuat, stok berkurang, WA terkirim ke customer | | |
-| TC-49 | Edit order admin | 1. Buka edit order 2. Ubah quantity produk 3. Klik Simpan | Order terupdate, stok disesuaikan | | |
-| TC-50 | Delete order admin | 1. Hapus order 2. Konfirmasi | Order terhapus, stok dikembalikan | | |
-| TC-51 | Update status ke picked_up | 1. Ubah status order ke picked_up 2. Input pickup code | Status berubah, picked_up_at terisi, profit terhitung | | |
-| TC-52 | Download PDF order | 1. Buka view order 2. Klik Download PDF | File PDF terdownload dengan data order lengkap | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 50 | Create order oleh admin | Pilih customer, batch, tambah produk + quantity, klik Simpan | Order terbuat, stok berkurang, WA terkirim ke customer | | |
+| 51 | Edit order oleh admin | Buka edit order, ubah quantity produk, klik Simpan | Order terupdate, stok disesuaikan | | |
+| 52 | Delete order oleh admin | Hapus order, konfirmasi | Order terhapus, stok dikembalikan | | |
+| 53 | Update status ke picked_up | Ubah status order ke picked_up, input pickup code | Status berubah, picked_up_at terisi, profit terhitung | | |
+| 54 | Download PDF order | Buka view order, klik Download PDF | File PDF terdownload dengan data order lengkap | | |
 
 ---
 
-## 12. CRUD Customer (Admin)
+## 11. CRUD Customer (Admin)
 
-**Pre-condition:** Admin sudah login sebagai super_admin
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-53 | Edit customer | 1. Buka edit customer 2. Ubah nama/phone/organisasi 3. Klik Simpan | Data customer terupdate | | |
-| TC-54 | Hapus customer tanpa order aktif | 1. Hapus customer tanpa order aktif 2. Konfirmasi | Customer soft-delete | | |
-| TC-55 | Hapus customer dengan order aktif | 1. Coba hapus customer yang punya order aktif | Gagal, tampil error | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 55 | Edit customer oleh admin | Buka edit customer, ubah nama/phone/organisasi, klik Simpan | Data customer terupdate | | |
+| 56 | Hapus customer tanpa order aktif | Hapus customer tanpa order aktif, konfirmasi | Customer soft-delete | | |
+| 57 | Hapus customer dengan order aktif | Coba hapus customer yang punya order aktif | Gagal, tampil error | | |
 
 ---
 
-## 13. RBAC (Role-Based Access Control)
+## 12. RBAC (Role-Based Access Control)
 
-**Pre-condition:** Memiliki akun super_admin dan teknisi
-
-### Test Cases
-
-| TC ID | Skenario | Langkah | Expected Result | Actual | Status |
-|-------|----------|---------|-----------------|--------|--------|
-| TC-56 | Teknisi akses halaman user management | 1. Login teknisi 2. Coba akses create-user / manage users | Akses ditolak / redirect / menu tidak muncul | | |
-| TC-57 | Teknisi edit harga produk | 1. Login teknisi 2. Buka edit produk 3. Coba ubah harga | Field harga disabled / read-only | | |
-| TC-58 | Teknisi akses activity log | 1. Login teknisi 2. Coba akses activity-log.php | Akses ditolak / menu tidak muncul | | |
-| TC-59 | Super_admin akses semua fitur | 1. Login super_admin 2. Cek semua menu dan fitur | Semua menu dan fitur bisa diakses | | |
+| No | Skenario Pengujian | Test Case | Hasil yang Diharapkan | Hasil Pengujian | Kesimpulan |
+|----|--------------------|-----------|-----------------------|-----------------|------------|
+| 58 | Teknisi akses user management | Login teknisi, coba akses create-user / manage users | Akses ditolak / menu tidak muncul | | |
+| 59 | Teknisi akses activity log | Login teknisi, coba akses activity-log.php | Akses ditolak / menu tidak muncul | | |
+| 60 | Super_admin akses semua fitur | Login super_admin, cek semua menu dan fitur | Semua menu dan fitur bisa diakses | | |
 
 ---
 
 ## Ringkasan
 
-### Statistik
-
 | Metrik | Nilai |
 |--------|-------|
-| Total modul ditest | 13 |
-| Total test case | 59 |
+| Total modul | 12 |
+| Total test case | 60 |
 | Metode | Equivalence Partitioning + Boundary Value Analysis |
-| Status keseluruhan | Pending testing |
+| Status | Pending testing |
 
 ### Kredensial Testing
 
