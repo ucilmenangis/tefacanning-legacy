@@ -138,7 +138,7 @@ include __DIR__ . '/../includes/header-customer.php';
 
 <style>
     /* KEEP — JS-toggled selected state */
-    .product-row.selected { outline: 2px solid #E02424; outline-offset: -2px; background-color: #fef2f2; }
+    .product-row.selected { outline: 2px solid #E02424; outline-offset: -2px; background-color: #f8fafc; }
 </style>
 
 <?php echo FlashMessage::render(); ?>
@@ -194,7 +194,7 @@ include __DIR__ . '/../includes/header-customer.php';
 
         <div id="product-rows" class="space-y-2">
             <?php foreach ($order['items'] as $item): ?>
-            <div class="product-row grid grid-cols-12 gap-3 items-start" onclick="selectRow(this)">
+            <div class="product-row grid grid-cols-12 gap-3 items-start px-4 py-3 border border-transparent rounded-lg cursor-pointer transition-colors hover:bg-gray-50" onclick="selectRow(this)">
                 <div class="col-span-5">
                     <select class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[13px] text-gray-700 bg-white outline-none appearance-none cursor-pointer focus:border-primary prod-select" style="background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px" onchange="recalc(this)">
                         <option value="" disabled>Select an option</option>
@@ -269,7 +269,7 @@ include __DIR__ . '/../includes/header-customer.php';
     function addRow() {
         var container = document.getElementById('product-rows');
         var div = document.createElement('div');
-        div.className = 'product-row grid grid-cols-12 gap-3 items-start';
+        div.className = 'product-row grid grid-cols-12 gap-3 items-start px-4 py-3 border border-transparent rounded-lg cursor-pointer transition-colors hover:bg-gray-50';
         div.onclick = function() { selectRow(div); };
 
         var col5 = document.createElement('div');
@@ -323,7 +323,7 @@ include __DIR__ . '/../includes/header-customer.php';
         rpSpan.className = 'absolute left-3 top-1/2 -translate-y-1/2 text-[12px] text-gray-400 pointer-events-none';
         rpSpan.textContent = 'Rp';
         var subInput = document.createElement('input');
-        subInput.type = 'text'; subInput.className = 'w-full border border-gray-200 rounded-lg py-2 px-3 pl-8 text-[13px] text-gray-700 bg-white outline-none prod-sub';
+        subInput.type = 'text'; subInput.className = 'w-full border border-gray-200 rounded-lg py-2 px-3 pl-8 text-[13px] text-gray-700 bg-white outline-none focus:border-primary prod-sub';
         subInput.readOnly = true; subInput.value = '0';
         subWrap.appendChild(rpSpan);
         subWrap.appendChild(subInput);
