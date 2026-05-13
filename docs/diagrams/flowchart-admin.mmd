@@ -1,0 +1,18 @@
+flowchart TD
+    START([Mulai]) --> LANDING[Tampilkan Landing Page]
+    LANDING --> LOGIN_ADMIN[/Form Login Admin/]
+    LOGIN_ADMIN --> AUTH_ADMIN{Autentikasi Valid?}
+    AUTH_ADMIN -->|Tidak| LOGIN_ADMIN
+    AUTH_ADMIN -->|Ya| CEK_ROLE{Cek Role}
+
+    CEK_ROLE -->|Super Admin| DASHBOARD_ADMIN[Dashboard Super Admin]
+    CEK_ROLE -->|Teknisi| DASHBOARD_TEKNISI[Dashboard Teknisi]
+
+    DASHBOARD_ADMIN --> KELOLA_ADMIN[Kelola Produk, Batch, Pesanan, Pelanggan]
+    DASHBOARD_TEKNISI --> KELOLA_TEKNISI[Kelola Batch dan Pesanan]
+
+    KELOLA_ADMIN --> UBAH_STATUS[Ubah Status Batch menjadi Siap]
+    KELOLA_TEKNISI --> UBAH_STATUS
+    UBAH_STATUS --> NOTIF_SIAP[Kirim Notifikasi WA ke Pelanggan]
+    NOTIF_SIAP --> AMBIL[Pelanggan Mengambil Pesanan]
+    AMBIL --> SELESAI([Selesai])

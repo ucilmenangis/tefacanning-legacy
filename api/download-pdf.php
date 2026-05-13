@@ -1,9 +1,11 @@
 <?php
 /**
- * PDF Download Endpoint
+ * PDF Download/Preview Endpoint
  *
  * Dual auth: admin can download any order, customer can only download their own.
- * Usage: api/download-pdf.php?id=5
+ * Usage:
+ *   api/download-pdf.php?id=5              → download PDF
+ *   api/download-pdf.php?id=5&mode=preview → preview PDF inline
  */
 
 require_once __DIR__ . '/../includes/auth.php';
@@ -40,9 +42,15 @@ if ($adminId) {
 
 require_once __DIR__ . '/../classes/PdfService.php';
 
+$mode = $_GET['mode'] ?? 'download';
+
 try {
     $pdfService = new PdfService();
-    $pdfService->download($orderId);
+    if ($mode === 'preview') {
+        $pdfService->preview($orderId);
+    } else {
+        $pdfService->download($orderId);
+    }
 } catch (InvalidArgumentException $e) {
     http_response_code(404);
     die($e->getMessage());

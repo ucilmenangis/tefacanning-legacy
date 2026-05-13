@@ -91,8 +91,11 @@ include __DIR__ . '/../includes/header-customer.php';
                     </td>
                     <td class="px-6 py-5 text-right whitespace-nowrap">
                         <div class="flex items-center gap-4 justify-end">
+                            <a href="../api/download-pdf.php?id=<?php echo $order['id']; ?>&mode=preview" target="_blank" class="inline-flex items-center gap-1 transition-colors text-blue-600 hover:text-blue-700" title="Preview PDF">
+                                <i class="ph ph-eye text-base"></i> Preview
+                            </a>
                             <a href="../api/download-pdf.php?id=<?php echo $order['id']; ?>" class="inline-flex items-center gap-1 transition-colors text-emerald-600 hover:text-emerald-700" title="Download PDF">
-                                <i class="ph ph-file-pdf text-base"></i> PDF
+                                <i class="ph ph-file-pdf text-base"></i> Download
                             </a>
                             <?php if ($order['status'] === 'pending'): ?>
                             <a href="edit-order.php?id=<?php echo $order['id']; ?>" class="inline-flex items-center gap-1 transition-colors text-amber-600 hover:text-amber-700">

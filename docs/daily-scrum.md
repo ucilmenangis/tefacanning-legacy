@@ -319,67 +319,75 @@
 
 ---
 
-## Sprint 8 — Bug Fixes, Full Testing & Final Delivery (Week 13 — Mei 2026)
+## Sprint 8 — Bug Fixes, Full Testing & Final Delivery (Week 13 — 10 Mei 2026)
 
-### Day 1
+### Day 1 — Sabtu, 10 Mei 2026
 
 **Irfan:**
-- Done: -
-- Next: Fix batch CSRF token issue semua role, auto increment SKU produk, tambah tanggal batch info saat customer buat order
+- Done: Fix batch CSRF token (dual form overwrite), auto increment SKU produk (TEFA-SKU-XXX), tambah tanggal batch di preorder dropdown, dashboard "Semua Batch" data fix, dashboard query LIMIT, FonnteService live tested + parent::__construct() fix
+- Next: Full testing backend
 - Blocker: -
 
 **Alif:**
-- Done: -
-- Next: Responsive web semua pages, text alasan jelas kenapa produk utama tidak bisa dihapus
+- Done: Responsive web semua pages, text alasan produk utama tidak bisa dihapus
+- Next: Full testing frontend
 - Blocker: -
 
 **Rizky:**
-- Done: -
-- Next: Full end-to-end flow testing, stakeholder demo preparation, bug tracking
-- Blocker: -
-
-**Lily:**
-- Done: -
-- Next: Verifikasi semua requirement terpenuhi, validasi data & laporan final
-- Blocker: -
-
-**Alfia:**
-- Done: -
-- Next: Visual testing semua halaman, usability testing & feedback
-- Blocker: -
-
-### Day 2
-
-**Irfan:**
-- Done: Full testing backend fase 1
-- Next: Test edge cases, error handling, PDF generation, WhatsApp notifications
-- Blocker: -
-
-**Alif:**
-- Done: Full testing frontend fase 1
-- Next: Test dark mode & UI consistency, bug report
-- Blocker: -
-
-**Rizky:**
-- Done: End-to-end testing fase 1
-- Next: Stakeholder demo, koordinasi perbaikan bug
+- Done: End-to-end testing fase 1, bug tracking
+- Next: Stakeholder demo
 - Blocker: -
 
 **Lily:**
 - Done: Requirement validation fase 1
-- Next: Finalisasi dokumentasi akhir
+- Next: Finalisasi dokumentasi
 - Blocker: -
 
 **Alfia:**
 - Done: Visual & usability testing fase 1
-- Next: Finalisasi Figma assets & dokumentasi desain
+- Next: Finalisasi Figma assets
 - Blocker: -
 
-### Day 3
+### Day 2 — Minggu, 11 Mei 2026
+
+**Alif:**
+- Done: Fix UI activity log & header admin, fix bug UI landing page & customer orders, clean up & fix hover UI index.php, header code refactor with formatter, frontend tech documentation
+- Next: -
+
+**Rizky:**
+- Done: Acceptance testing, stakeholder demo preparation
+- Next: Project delivery
+
+**Lily:**
+- Done: Finalisasi dokumentasi akhir
+- Next: -
+
+**Alfia:**
+- Done: Finalisasi Figma assets & dokumentasi desain
+- Next: -
+
+### Day 3 — Senin, 12 Mei 2026
+
+**Irfan:**
+- Done: Full testing backend (CRUD, auth, RBAC, stock, profit, PDF, WhatsApp), database analysis documentation
+- Next: Forgot password feature, cleanup
 
 **All:**
-- Done: Full testing selesai, bug fixes final
-- Next: Project delivery & presentasi
+- Done: Full testing selesai
+
+---
+
+## Sprint 9 — Feature Completion & Diagrams (Week 14 — 13 Mei 2026)
+
+### Day 1 — Selasa, 13 Mei 2026
+
+**Irfan:**
+- Done: Forgot password via WhatsApp OTP (PasswordResetService, FonnteService sendResetCode, reset-password.php page, forgot-password.php wiring), remove Remember Me feature from both login pages, flowchart diagrams (overview + admin + customer + markdown doc), remove scratch directory, update sprint documentation
+- Next: Phone validation, code audit optimizations
+
+**Alif:**
+- Done: Sprint 9 review
+- Next: -
 
 ---
 
@@ -391,15 +399,21 @@
 - OOP refactoring improved code maintainability significantly
 - Git commit history well-documented
 - Figma design system konsisten dari awal sampai akhir
+- Sprint 8 bug fixes selesai cepat berkat dokumentasi yang baik
+- Forgot password feature selesai 1 hari penuh termasuk testing
 
 ### What could be improved
 - Gap 7 minggu antara Sprint 1 dan 2 (jadwal kuliah)
 - Merge conflict pada Sprint 7 — bisa dicegah dengan komunikasi lebih baik
 - Alif perlu menjalankan `php artisan migrate` sebelum mulai coding
 - Beberapa commit tidak mengikuti conventional commit format
+- Alif push file scratch (Python) tanpa review — harus selalu review sebelum push
+- Phone validation belum diimplementasi di register — perlu ditambahkan
 
 ### Action items for future
 - Selalu pull & migrate sebelum mulai coding
 - Konsisten gunakan conventional commit format
 - Komunikasi aktif ketika ada perubahan schema database
 - Sinkronisasi antar role (PM, SA, UI/UX, dev) lebih sering di luar sprint
+- Selalu review code sebelum push ke repository
+- Validasi input format (phone, email) di semua form

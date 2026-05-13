@@ -196,20 +196,49 @@
 
 | PBI | Task | Assignee | Estimate | Status |
 |-----|------|----------|----------|--------|
-| PBI-40: Backend bug fixes | Fix batch CSRF token issue semua role | Irfan | 1.5h | Pending |
-| | Auto increment SKU produk | Irfan | 2h | Pending |
-| | Tambah tanggal batch info saat customer buat order | Irfan | 1.5h | Pending |
-| PBI-41: Full testing backend | Test semua fitur backend (CRUD, auth, RBAC) | Irfan | 4h | Pending |
-| | Test stock management, profit calculation, PDF, WhatsApp | Irfan | 3h | Pending |
-| PBI-42: Frontend bug fixes | Responsive web semua pages | Alif | 4h | Pending |
-| | Text alasan jelas kenapa produk utama tidak bisa dihapus | Alif | 0.5h | Pending |
-| PBI-43: Full testing frontend | Test semua halaman (responsive, form validation, dark mode) | Alif | 4h | Pending |
-| PBI-44: Acceptance testing | Full end-to-end flow testing | Rizky | 3h | Pending |
-| | Stakeholder demo preparation | Rizky | 2h | Pending |
-| | Bug tracking & koordinasi perbaikan | Rizky | 2h | Pending |
-| PBI-45: Data & requirement validation | Verifikasi semua requirement terpenuhi | Lily | 3h | Pending |
-| | Validasi data & laporan final | Lily | 2h | Pending |
-| | Finalisasi dokumentasi akhir | Lily | 3h | Pending |
-| PBI-46: UI/UX review | Visual testing semua halaman | Alfia | 3h | Pending |
-| | Usability testing & feedback | Alfia | 2h | Pending |
-| | Finalisasi Figma assets & dokumentasi desain | Alfia | 2h | Pending |
+| PBI-40: Backend bug fixes | Fix batch CSRF token issue (dual form overwrite) | Irfan | 1.5h | Done |
+| | Auto increment SKU produk (TEFA-SKU-XXX) | Irfan | 2h | Done |
+| | Tambah tanggal batch info saat customer buat order | Irfan | 1.5h | Done |
+| | Dashboard "Semua Batch" data missing fix | Irfan | 1.5h | Done |
+| | Dashboard query LIMIT security hardening | Irfan | 1h | Done |
+| | FonnteService live tested + parent::__construct() fix | Irfan | 2h | Done |
+| PBI-41: Full testing backend | Test semua fitur backend (CRUD, auth, RBAC) | Irfan | 4h | Done |
+| | Test stock management, profit calculation, PDF, WhatsApp | Irfan | 3h | Done |
+| PBI-42: Frontend bug fixes | Responsive web semua pages | Alif | 4h | Done |
+| | Text alasan jelas kenapa produk utama tidak bisa dihapus | Alif | 0.5h | Done |
+| | Fix UI activity log dan header admin | Alif | 1h | Done |
+| | Fix bug UI landing page & customer orders | Alif | 1h | Done |
+| | Clean up dan fix hover UI in index.php | Alif | 0.5h | Done |
+| | Header code refactor with formatter plugin | Alif | 1h | Done |
+| PBI-43: Full testing frontend | Test semua halaman (responsive, form validation, dark mode) | Alif | 4h | Done |
+| PBI-44: Acceptance testing | Full end-to-end flow testing | Rizky | 3h | Done |
+| | Stakeholder demo preparation | Rizky | 2h | Done |
+| | Bug tracking & koordinasi perbaikan | Rizky | 2h | Done |
+| PBI-45: Data & requirement validation | Verifikasi semua requirement terpenuhi | Lily | 3h | Done |
+| | Validasi data & laporan final | Lily | 2h | Done |
+| | Finalisasi dokumentasi akhir | Lily | 3h | Done |
+| PBI-46: UI/UX review | Visual testing semua halaman | Alfia | 3h | Done |
+| | Usability testing & feedback | Alfia | 2h | Done |
+| | Finalisasi Figma assets & dokumentasi desain | Alfia | 2h | Done |
+
+---
+
+## Sprint 9 — Feature Completion & Diagrams (Week 14 — 10–13 Mei 2026)
+
+### Product Backlog Items → Sprint Backlog
+
+| PBI | Task | Assignee | Estimate | Status |
+|-----|------|----------|----------|--------|
+| PBI-47: Forgot password feature | PasswordResetService (OOP, 6-digit OTP, 15min expiry) | Irfan | 2h | Done |
+| | FonnteService sendResetCode() method | Irfan | 1h | Done |
+| | auth/reset-password.php page (OTP input + new password) | Irfan | 2h | Done |
+| | auth/forgot-password.php wiring to PasswordResetService + Fonnte | Irfan | 1h | Done |
+| PBI-48: UI cleanup | Remove Remember Me feature (non-functional, removed from both login pages) | Irfan | 0.5h | Done |
+| PBI-49: Database analysis | Analisis SQL (DDL, DML, DQL, Aggregate) — 99 queries dari 11 service classes | Irfan | 3h | Done |
+| PBI-50: System diagrams | Flowchart overview (ringkas, 14 node) | Irfan | 1h | Done |
+| | Flowchart detail Admin (13 node) | Irfan | 1h | Done |
+| | Flowchart detail Customer (17 node) | Irfan | 1h | Done |
+| | Diagram documentation (flowchart.md + symbol reference) | Irfan | 1h | Done |
+| PBI-51: Frontend tech docs | Menjelaskan teknologi pada frontend | Alif | 1.5h | Done |
+| PBI-52: Project cleanup | Remove scratch directory, add to .gitignore | Irfan | 0.5h | Done |
+| | Remove debug logging | Irfan | 0.5h | Done |

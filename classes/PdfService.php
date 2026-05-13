@@ -101,4 +101,27 @@ class PdfService extends BaseService
         echo $pdf;
         exit;
     }
+
+    /**
+     * Stream PDF inline to browser (preview mode).
+     */
+    public function preview(int $orderId, string $filename = ''): void
+    {
+        $order = $this->getOrderData($orderId);
+        if (!$order) {
+            throw new InvalidArgumentException('Pesanan tidak ditemukan.');
+        }
+
+        if (empty($filename)) {
+            $filename = 'pesanan-' . $order['order_number'] . '.pdf';
+        }
+
+        $pdf = $this->generateOrderPdf($orderId);
+
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename="' . $filename . '"');
+        header('Content-Length: ' . strlen($pdf));
+        echo $pdf;
+        exit;
+    }
 }

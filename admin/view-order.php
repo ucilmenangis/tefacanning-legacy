@@ -61,8 +61,11 @@ include __DIR__ . '/../includes/header-admin.php';
         </h1>
     </div>
     <div class="flex items-center gap-2">
+        <a href="../api/download-pdf.php?id=<?php echo $id; ?>&mode=preview" target="_blank" class="inline-flex items-center gap-1 bg-white border border-blue-500 text-blue-600 text-[12px] font-semibold px-4 py-2 rounded-lg transition-colors hover:bg-blue-50">
+            <i class="ph ph-eye"></i> Preview
+        </a>
         <a href="../api/download-pdf.php?id=<?php echo $id; ?>" class="inline-flex items-center gap-1 bg-white border border-emerald-500 text-emerald-600 text-[12px] font-semibold px-4 py-2 rounded-lg transition-colors hover:bg-emerald-50">
-            <i class="ph ph-file-pdf"></i> PDF
+            <i class="ph ph-file-pdf"></i> Download
         </a>
         <a href="edit-order.php?id=<?php echo $id; ?>" class="inline-flex items-center gap-1 bg-primary text-white text-[12px] font-bold px-4 py-2 rounded-lg transition-colors hover:bg-dark">
             <i class="ph ph-note-pencil"></i> Edit
