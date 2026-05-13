@@ -6,28 +6,28 @@
 require_once __DIR__ . "/auth.php";
 
 if (!isset($pageTitle)) {
-  $pageTitle = "Customer Panel";
+    $pageTitle = "Customer Panel";
 }
 if (!isset($currentPage)) {
-  $currentPage = "";
+    $currentPage = "";
 }
 
 $customerId = Auth::customer()->getId();
 $customerData = $customerId
-  ? Database::getInstance()->fetch(
-    "SELECT name, email, phone, organization, created_at FROM customers WHERE id = ? AND deleted_at IS NULL",
-    [$customerId],
-  )
-  : null;
+    ? Database::getInstance()->fetch(
+        "SELECT name, email, phone, organization, created_at FROM customers WHERE id = ? AND deleted_at IS NULL",
+        [$customerId],
+    )
+    : null;
 $fullName = $customerData["name"] ?? "Customer";
 $email = $customerData["email"] ?? "";
 $roleName = "Customer";
 $words = explode(" ", $fullName);
 $initials = "";
 if (count($words) >= 2) {
-  $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+    $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
 } else {
-  $initials = strtoupper(substr($words[0], 0, 2));
+    $initials = strtoupper(substr($words[0], 0, 2));
 }
 
 $basePath = dirname($_SERVER["SCRIPT_NAME"]);
@@ -39,8 +39,9 @@ $basePath = dirname($_SERVER["SCRIPT_NAME"]);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars(
-      $pageTitle,
+        $pageTitle,
     ); ?> — TEFA Canning SIP</title>
+    <link rel="icon" type="image/png" href="/assets/images/politeknik_logo_red.png">
 
     <!-- Theme Detection -->
     <script>
@@ -242,7 +243,9 @@ $basePath = dirname($_SERVER["SCRIPT_NAME"]);
         }
     </script>
 
-    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity opacity-0 duration-300" onclick="toggleMobileSidebar()"></div>
+    <div id="sidebar-backdrop"
+        class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity opacity-0 duration-300"
+        onclick="toggleMobileSidebar()"></div>
     <div class="flex min-h-screen">
 
         <!-- ═══ Sidebar ═══ -->
@@ -270,38 +273,34 @@ $basePath = dirname($_SERVER["SCRIPT_NAME"]);
             <!-- Navigation -->
             <nav class="flex-1 py-3 px-3 space-y-1">
 
-                <a href="<?php echo $basePath; ?>/dashboard.php"
-                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
-                    "dashboard"
-                      ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
-                      : ""; ?>">
+                <a href="<?php echo $basePath; ?>/dashboard.php" class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
+                       "dashboard"
+                       ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
+                       : ""; ?>">
                     <i class="ph-bold ph-house-simple text-[20px] shrink-0"></i>
                     <span class="nav-text whitespace-nowrap">Dashboard</span>
                 </a>
 
-                <a href="<?php echo $basePath; ?>/preorder.php"
-                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
-                    "preorder"
-                      ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
-                      : ""; ?>">
+                <a href="<?php echo $basePath; ?>/preorder.php" class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
+                       "preorder"
+                       ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
+                       : ""; ?>">
                     <i class="ph-bold ph-shopping-cart-simple text-[20px] shrink-0"></i>
                     <span class="nav-text whitespace-nowrap">Pre-Order</span>
                 </a>
 
-                <a href="<?php echo $basePath; ?>/orders.php"
-                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
-                    "orders"
-                      ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
-                      : ""; ?>">
+                <a href="<?php echo $basePath; ?>/orders.php" class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
+                       "orders"
+                       ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
+                       : ""; ?>">
                     <i class="ph-bold ph-clock-counter-clockwise text-[20px] shrink-0"></i>
                     <span class="nav-text whitespace-nowrap">Riwayat Pesanan</span>
                 </a>
 
-                <a href="<?php echo $basePath; ?>/profile.php"
-                    class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
-                    "profile"
-                      ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
-                      : ""; ?>">
+                <a href="<?php echo $basePath; ?>/profile.php" class="flex items-center gap-[12px] py-[10px] px-3 rounded-xl text-[13px] font-medium text-slate-500 dark:text-gray-400 cursor-pointer transition-all duration-150 select-none no-underline hover:bg-primary/5 dark:hover:bg-primary/10 hover:text-primary dark:hover:text-primary <?php echo $currentPage ===
+                       "profile"
+                       ? "!text-primary bg-primary/10 dark:bg-primary/20 [&_i]:text-primary"
+                       : ""; ?>">
                     <i class="ph-bold ph-user-circle text-[20px] shrink-0"></i>
                     <span class="nav-text whitespace-nowrap">Profil Saya</span>
                 </a>
@@ -349,7 +348,7 @@ $basePath = dirname($_SERVER["SCRIPT_NAME"]);
                                     <?php echo htmlspecialchars($fullName); ?>
                                 </div>
                                 <div class="text-[10px] text-gray-400 mt-1"><?php echo htmlspecialchars(
-                                  $roleName,
+                                    $roleName,
                                 ); ?>
                                 </div>
                             </div>
@@ -400,7 +399,7 @@ $basePath = dirname($_SERVER["SCRIPT_NAME"]);
                     document.getElementById('profile-menu').classList.toggle('hidden');
                 }
 
-                                function toggleMobileSidebar() {
+                function toggleMobileSidebar() {
                     const sidebar = document.getElementById('sidebar');
                     const backdrop = document.getElementById('sidebar-backdrop');
 

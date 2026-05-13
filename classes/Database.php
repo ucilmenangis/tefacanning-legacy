@@ -21,20 +21,20 @@ class Database
         $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
         $dotenv->load();
 
-        $host = $_ENV['DB_HOST'];
-        $port = $_ENV['DB_PORT'];
+        $host = $_ENV['DB_HOST'] ?? '127.0.0.1';
+        $port = $_ENV['DB_PORT'] ?? '3306';
         $database = $_ENV['DB_DATABASE'];
         $username = $_ENV['DB_USERNAME'];
-        $password = $_ENV['DB_PASSWORD'];
+        $password = $_ENV['DB_PASSWORD'] ?? '';
+        $socket = $_ENV['DB_SOCKET'] ?? null;
+
+        $dsn = $socket
+            ? "mysql:unix_socket={$socket};dbname={$database};charset=utf8mb4"
+            : "mysql:host={$host};port={$port};dbname={$database};charset=utf8mb4";
 
         try {
-            // $this->pdo = new PDO(
-            //     "mysql:host=$host;port=$port;dbname=$database",
-            //     $username,
-            //     $password
-            // );
             $this->pdo = new PDO(
-                "mysql:host={$host};port={$port};dbname={$database};charset=utf8mb4",
+                $dsn,
                 $username,
                 $password,
                 [
@@ -43,8 +43,6 @@ class Database
                     PDO::ATTR_EMULATE_PREPARES => false,
                 ]
             );
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             throw new DatabaseException("Database connection failed: " . $e->getMessage());
         }

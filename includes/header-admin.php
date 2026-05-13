@@ -25,6 +25,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?> — TEFA Canning Admin</title>
+    <link rel="icon" type="image/png" href="/assets/images/politeknik_logo_red.png">
 
     <!-- Theme Detection -->
     <script>
@@ -226,7 +227,9 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
         }
     </script>
 
-    <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity opacity-0 duration-300" onclick="toggleMobileSidebar()"></div>
+    <div id="sidebar-backdrop"
+        class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity opacity-0 duration-300"
+        onclick="toggleMobileSidebar()"></div>
     <div class="flex min-h-screen">
 
         <!-- ═══ Sidebar ═══ -->
@@ -372,7 +375,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                     class="w-9 h-9 rounded-lg flex md:hidden items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all mr-3">
                     <i class="ph ph-list text-[24px]"></i>
                 </button>
-                
+
                 <div class="flex-1"></div>
 
                 <!-- Right -->
@@ -467,10 +470,10 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                     document.getElementById('profile-menu').classList.toggle('hidden');
                 }
 
-                                function toggleMobileSidebar() {
+                function toggleMobileSidebar() {
                     const sidebar = document.getElementById('sidebar');
                     const backdrop = document.getElementById('sidebar-backdrop');
-                    
+
                     if (sidebar.classList.contains('-translate-x-full')) {
                         sidebar.classList.remove('-translate-x-full');
                         backdrop.classList.remove('hidden');
