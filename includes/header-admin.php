@@ -5,7 +5,8 @@
  * Variables expected from page:
  *   $pageTitle   — Page title string (required)
  *   $currentPage — Active nav key: dashboard, orders, customers, products, batches, activity-log, users
- */
+ *
+*/
 
 if (!isset($pageTitle)) {
     $pageTitle = 'Admin Panel';

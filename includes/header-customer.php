@@ -1,6 +1,6 @@
 <?php
 /**
- * Customer layout header — includes <head>, sidebar, opens content area.
+ * Customer layout header — includes <head>, sidebar, opens content area. add the favicon icon logo Politeknik Jember
  */
 
 require_once __DIR__ . "/auth.php";

@@ -1,3 +1,4 @@
+// add the favicon icon logo Politeknik Jember
 <?php
 // Tefa Canning SIP Legacy - Landing Page
 require_once __DIR__ . "/includes/functions.php";
@@ -172,7 +173,8 @@ $productCount = count($products);
                 <div class="mt-14 flex items-center gap-16 sm:gap-24">
                     <div>
                         <div class="text-[26px] font-extrabold text-navy leading-none mb-1.5">
-                            <?php echo $productCount; ?></div>
+                            <?php echo $productCount; ?>
+                        </div>
                         <div class="text-[12px] font-medium text-gray-400 capitalize">Varian Produk</div>
                     </div>
                     <div>
