@@ -98,7 +98,7 @@ Every phase follows: **Plan → Execute → Verify → Show changes → Update d
 - `includes/header-customer.php` + `footer-customer.php` — Customer layout
 
 **Priority 2 (Auth Pages): DONE (UI only — backend wiring pending)**
-- `auth/login-admin.php`, `auth/login-customer.php`, `auth/register.php`, `auth/forgot-password.php`
+- `auth/login-admin.php`, `auth/login-customer.php`, `auth/register.php`, `auth/forgot-password.php`, `auth/reset-password.php`
 
 **Priority 3 (Landing Page): DONE**
 - `index.php` — Hero, product catalog, batch info, SNI disclaimer, footer with Google Maps
@@ -128,7 +128,8 @@ Services (extend BaseService):
 - `classes/ActivityLogService.php` — activity log: `log()`, `getAll()`, `countAll()`
 - `classes/OrderAdminService.php` — admin order CRUD: `getAll()`, `getById()`, `getItems()`, `getActiveProducts()`, `getCustomersForDropdown()`, `getOpenBatchesForDropdown()`, `createOrder()`, `updateOrder()`, `deleteOrder()`
 - `classes/PdfService.php` — PDF generation: `generateOrderPdf()`, `download()`
-- `classes/FonnteService.php` — WhatsApp notifications: `sendMessage()`, `sendOrderConfirmation()`, `sendNewOrderToOwner()`, `sendReadyForPickup()`
+- `classes/FonnteService.php` — WhatsApp notifications: `sendMessage()`, `sendOrderConfirmation()`, `sendNewOrderToOwner()`, `sendReadyForPickup()`, `sendResetCode()`
+- `classes/PasswordResetService.php` — Password reset OTP: `generateToken()`, `verifyToken()`, `resetPassword()`, `cleanExpired()`
 
 Auth & Session:
 - `classes/SessionGuard.php` — Interface: `isLoggedIn()`, `getId()`, `login()`, `logout()`, `requireAuth()`
@@ -217,7 +218,8 @@ tefa-canning-legacy/
 │   ├── login-customer.php
 │   ├── register.php
 │   ├── logout.php
-│   └── forgot-password.php
+│   ├── forgot-password.php
+│   └── reset-password.php
 ├── assets/
 │   ├── css/                 ← Empty (using CDN)
 │   ├── js/                  ← Empty
@@ -253,6 +255,8 @@ tefa-canning-legacy/
 │   ├── CustomerAdminService.php ← Customer admin CRUD
 │   ├── ActivityLogService.php   ← Activity log read/write
 │   ├── PdfService.php           ← PDF generation (DomPDF)
+│   ├── FonnteService.php        ← WhatsApp notifications (Fonnte API)
+│   ├── PasswordResetService.php ← Password reset OTP (6-digit, 15min expiry)
 │   └── exceptions/          ← Custom exception hierarchy
 │       ├── AppException.php
 │       ├── DatabaseException.php
@@ -418,6 +422,14 @@ Shared database with Laravel version. 17 tables total. **Core business tables:**
 | 8.6 | FonnteService live tested + parent::__construct() fix | Irfan | [x] |
 | 8.7 | Responsive web semua pages | Alif | [x] |
 | 8.8 | Text alasan produk utama tidak bisa dihapus | Alif | [x] |
+
+#### Sprint 9 — Forgot Password & Cleanup
+
+| Phase | Description | Owner | Status |
+|-------|-------------|-------|--------|
+| 9.1 | Forgot password via WhatsApp OTP (PasswordResetService + FonnteService) | Irfan | [x] |
+| 9.2 | Reset password page (OTP input + new password) | Irfan | [x] |
+| 9.3 | Remove Remember Me feature (non-functional, removed from both login pages) | Irfan | [x] |
 
 **Owner legend:** `Irfan` = backend, `Alif` = frontend UI, `Alif → Irfan` = Alif buat UI dulu, Irfan wiring ke DB.
 
