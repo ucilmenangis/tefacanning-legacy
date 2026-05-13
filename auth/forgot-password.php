@@ -1,8 +1,16 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../classes/PasswordResetService.php';
+require_once __DIR__ . '/../classes/FonnteService.php';
+
+$resetService = new PasswordResetService();
+$fonnteService = new FonnteService();
 
 $error   = '';
 $success = '';
+
+// Clean expired tokens (housekeeping)
+$resetService->cleanExpired();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
@@ -13,15 +21,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Format email tidak valid.';
     } else {
         $customer = Database::getInstance()->fetch(
-            "SELECT id, name, email FROM customers WHERE email = ? AND deleted_at IS NULL LIMIT 1",
+            "SELECT id, name, email, phone FROM customers WHERE email = ? AND deleted_at IS NULL LIMIT 1",
             [$email]
         );
 
-        // Always show success to prevent email enumeration
-        $success = 'Jika email terdaftar, kami telah mengirimkan instruksi reset password ke ' . htmlspecialchars($email) . '.';
+        if ($customer && !empty($customer['phone'])) {
+            // Generate OTP
+            $code = $resetService->generateToken($email);
 
-        // TODO: integrate with Fonnte / email service to send reset link
-        // if ($customer) { ... send reset email ... }
+            // Send via WhatsApp
+            $sent = $fonnteService->sendResetCode($customer['phone'], $code);
+
+            if (!$sent) {
+                error_log("Fonnte: Failed to send reset code to {$customer['phone']}");
+            }
+        }
+
+        // Always show success to prevent email enumeration
+        $success = 'Jika email terdaftar dan memiliki nomor WhatsApp, kami telah mengirimkan kode OTP ke nomor WhatsApp Anda.';
     }
 }
 ?>
@@ -98,9 +115,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <i class="ph-fill ph-check-circle text-green-600 text-[16px] shrink-0"></i>
                 <?php echo $success; ?>
             </div>
+
+            <!-- Link to reset-password page -->
+            <div class="mt-4 text-center">
+                <a href="reset-password.php?email=<?php echo urlencode($email); ?>" class="inline-flex items-center gap-2 bg-primary text-white font-bold py-3 px-6 rounded-lg transition-all hover:bg-dark active:scale-[0.98] text-[13px]">
+                    <i class="ph ph-key text-[14px]"></i>
+                    Masukkan Kode OTP
+                </a>
+            </div>
             <?php endif; ?>
 
-            <!-- Form -->
+            <!-- Form (only show when no success message) -->
             <?php if (!$success): ?>
             <form id="forgot-form" method="POST" action="">
 
@@ -123,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <!-- Submit -->
                 <button type="submit" id="send-btn" class="w-full bg-primary text-white font-bold py-3 rounded-lg transition-all hover:bg-dark active:scale-[0.98]">
-                    Send email
+                    Kirim Kode OTP
                 </button>
             </form>
             <?php endif; ?>

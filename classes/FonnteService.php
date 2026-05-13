@@ -8,6 +8,7 @@
  *   sendOrderConfirmation($orderId)                  — trigger 2: admin creates order -> WA to customer
  *   sendNewOrderToOwner($orderId)                    — trigger 1: customer pre-orders -> WA to owner
  *   sendReadyForPickup(int $batchId)                 — trigger 3: batch -> ready -> WA to all customers in batch
+ *   sendResetCode(string $phone, string $code, int $minutes) — send password reset OTP via WA
  */
 
 require_once __DIR__ . '/Database.php';
@@ -209,5 +210,20 @@ class FonnteService extends BaseService
         }
 
         return $sent;
+    }
+
+    /**
+     * Send password reset OTP code via WhatsApp.
+     */
+    public function sendResetCode(string $phone, string $code, int $minutes = 15): bool
+    {
+        $message = "🔑 *Reset Password TEFA Canning*\n\n"
+            . "Kode OTP Anda: *{$code}*\n\n"
+            . "Kode berlaku selama {$minutes} menit.\n"
+            . "Jangan bagikan kode ini kepada siapapun.\n\n"
+            . "Jika Anda tidak meminta reset password, abaikan pesan ini.\n\n"
+            . "— TEFA Canning Polije";
+
+        return $this->sendMessage($phone, $message);
     }
 }
