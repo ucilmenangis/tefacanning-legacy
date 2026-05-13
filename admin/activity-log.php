@@ -164,7 +164,7 @@ function getActionClass($action)
     </div>
 
     <!-- Cards View -->
-    <div id="cards-view" class="hidden p-6 bg-gray-50/30">
+    <div id="cards-view" class="hidden p-6 bg-gray-50/30 dark:bg-slate-900/40">
         <div class="space-y-4 max-w-3xl mx-auto relative before:absolute before:left-[17px] before:top-2 before:bottom-2 before:w-px before:bg-gray-200">
             <?php foreach ($logs as $log): ?>
                 <div class="log-card relative pl-10 transition-all" data-event="<?php echo $log['aksi']; ?>" data-aktor="<?php echo strtolower($log['aktor']); ?>" data-target="<?php echo strtolower($log['target_type']); ?>" data-desc="<?php echo strtolower($log['deskripsi']); ?>">
@@ -192,7 +192,7 @@ function getActionClass($action)
                             <div class="flex items-center gap-2">
                                 <span class="font-bold text-navy text-[13px]"><?php echo $log['aktor']; ?></span>
                                 <span class="text-gray-400 text-[12px]"><?php echo $log['aksi']; ?></span>
-                                <span class="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-bold text-gray-500 uppercase tracking-tighter"><?php echo $log['target_type']; ?> #<?php echo $log['target_id']; ?></span>
+                                <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-red-500 text-white uppercase tracking-tighter"><?php echo $log['target_type']; ?> #<?php echo $log['target_id']; ?></span>
                             </div>
                             <span class="text-[11px] text-gray-400"><?php echo $log['waktu']; ?></span>
                         </div>

@@ -184,19 +184,24 @@ $products = $productService->getAll();
                                 <span class="bg-gray-800 text-white text-[10px] font-bold px-2 py-1 rounded">INACTIVE</span>
                             </div>
                         <?php endif; ?>
-                        <div class="absolute top-2 right-2">
-                            <span
-                                class="bg-white/90 backdrop-blur shadow-sm px-2 py-1 rounded-lg text-[11px] font-bold <?php echo $prod['stock'] > 10 ? 'text-emerald-600' : 'text-red-500'; ?>">
-                                Stok: <?php echo $prod['stock']; ?>
-                            </span>
-                        </div>
+                        
                     </div>
 
                     <div class="mb-4">
-                        <div class="text-[14px] font-bold text-navy mb-0.5 line-clamp-1">
-                            <?php echo htmlspecialchars($prod['name']); ?></div>
-                        <div class="text-[11px] text-gray-400"><?php echo htmlspecialchars($prod['sku']); ?></div>
-                    </div>
+    <div class="flex items-center justify-between gap-2 mb-0.5">
+        <div class="text-[14px] font-bold text-navy line-clamp-1">
+            <?php echo htmlspecialchars($prod['name']); ?>
+        </div>
+
+        <span class="shrink-0 backdrop-blur shadow-sm px-2 py-1 rounded-lg text-[11px] font-bold <?php echo $prod['stock'] > 10 ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'; ?>">
+            Stok: <?php echo $prod['stock']; ?>
+        </span>
+    </div>
+
+    <div class="text-[11px] text-gray-400">
+        <?php echo htmlspecialchars($prod['sku']); ?>
+    </div>
+</div>
 
                     <div class="flex items-center justify-between mb-4">
                         <div class="text-[15px] font-extrabold text-primary">
@@ -206,7 +211,7 @@ $products = $productService->getAll();
 
                     <div class="flex items-center gap-2">
                         <a href="edit-product.php?id=<?php echo $prod['id']; ?>"
-                            class="flex-1 h-9 rounded-lg bg-gray-50 text-slate-600 text-[12px] font-bold flex items-center justify-center hover:bg-primary hover:text-white transition-all">Edit</a>
+                            class="flex-1 h-9 rounded-lg bg-gray-200 text-slate-600 text-[12px] font-bold flex items-center justify-center hover:bg-primary hover:text-white dark:hover:!bg-red-300 dark:!bg-red-500 dark:!text-white transition-all">Edit</a>
                         <button onclick="confirmDelete(<?php echo $prod['id']; ?>)"
                             class="w-9 h-9 rounded-lg bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors"><i
                                 class="ph ph-trash"></i></button>

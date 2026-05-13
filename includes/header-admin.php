@@ -242,11 +242,11 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                 </div>
                 <!-- Collapse toggle -->
                 <button onclick="toggleSidebarCollapse()"
-                    class="ml-auto w-8 h-8 rounded-lg hidden md:flex items-center justify-center text-gray-400 hover:bg-gray-50 hover:text-navy transition-all">
+                    class="ml-auto w-8 h-8 rounded-lg hidden md:flex items-center justify-center text-gray-400 hover:text-navy dark:hover:!text-red-500 transition-all">
                     <i class="ph-bold ph-caret-left transition-transform duration-300" id="collapse-icon"></i>
                 </button>
                 <button onclick="toggleMobileSidebar()"
-                    class="ml-auto w-8 h-8 rounded-lg flex md:hidden items-center justify-center text-gray-400 hover:bg-gray-50 hover:text-navy transition-all">
+                    class="ml-auto w-8 h-8 rounded-lg flex md:hidden items-center justify-center text-gray-400 hover:text-navy dark:hover:!text-red-500 transition-all">
                     <i class="ph-bold ph-x text-lg"></i>
                 </button>
             </div>
@@ -273,7 +273,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['orders']) ? 'open' : ''; ?>"
                         id="grp-transaksi">
                         <a href="orders.php"
-                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'orders' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
+                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary dark:hover:!text-red-500 <?php echo $currentPage === 'orders' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                             <span class="nav-text">Pesanan</span>
                         </a>
                     </div>
@@ -291,11 +291,11 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['customers', 'products']) ? 'open' : ''; ?>"
                         id="grp-master">
                         <a href="customers.php"
-                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'customers' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
+                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary dark:hover:!text-red-500 <?php echo $currentPage === 'customers' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                             <span class="nav-text">Pelanggan</span>
                         </a>
                         <a href="products.php"
-                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'products' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
+                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary dark:hover:!text-red-500 <?php echo $currentPage === 'products' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                             <span class="nav-text">Produk</span>
                         </a>
                     </div>
@@ -313,7 +313,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                     <div class="nav-sub <?php echo in_array($currentPage, ['batches']) ? 'open' : ''; ?>"
                         id="grp-produksi">
                         <a href="batches.php"
-                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'batches' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
+                            class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary dark:hover:!text-red-500 <?php echo $currentPage === 'batches' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                             <span class="nav-text">Batches</span>
                         </a>
                     </div>
@@ -332,7 +332,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                         <div class="nav-sub <?php echo in_array($currentPage, ['activity-log']) ? 'open' : ''; ?>"
                             id="grp-audit">
                             <a href="activity-log.php"
-                                class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'activity-log' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
+                                class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary dark:hover:!text-red-500 <?php echo $currentPage === 'activity-log' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                                 <span class="nav-text">Log Aktivitas</span>
                             </a>
                         </div>
@@ -350,7 +350,7 @@ $isAdminSuperAdmin = Auth::admin()->isSuperAdmin();
                         <div class="nav-sub <?php echo in_array($currentPage, ['users']) ? 'open' : ''; ?>"
                             id="grp-settings">
                             <a href="pengaturan.php"
-                                class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary <?php echo $currentPage === 'users' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
+                                class="flex items-center gap-3 py-2 px-3 pl-11 rounded-lg text-[13px] font-medium text-slate-400 dark:text-gray-500 cursor-pointer transition-colors duration-150 no-underline hover:text-primary dark:hover:!text-red-500 <?php echo $currentPage === 'users' ? '!text-primary font-bold dark:!text-primary' : ''; ?>">
                                 <span class="nav-text">Pengguna</span>
                             </a>
                         </div>
