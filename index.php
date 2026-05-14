@@ -145,7 +145,7 @@ $productCount = count($products);
                 <h1
                     class="text-4xl sm:text-5xl md:text-[60px] font-extrabold tracking-tight text-navy leading-[1.05] mb-6">
                     Canning SIP<br>
-                    <span class="lg:text-6xl md:text-5xl sm:text-3xl text-primary whitespace-nowrap">Sehat,
+                    <span class="lg:text-6xl md:text-4xl sm:text-3xl text-3xl text-primary whitespace-nowrap">Sehat,
                         Lezat &
                         Bergizi</span>
                 </h1>
