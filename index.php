@@ -6,12 +6,12 @@ require_once __DIR__ . "/classes/FormatHelper.php";
 
 // Active products from DB
 $products = Database::getInstance()->fetchAll(
-  "SELECT id, name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name",
+    "SELECT id, name, sku, price FROM products WHERE is_active = 1 AND deleted_at IS NULL ORDER BY name",
 );
 
 // Open batches from DB with order counts
 $batches = Database::getInstance()->fetchAll(
-  "SELECT b.id, b.name, b.event_name, b.event_date, b.status,
+    "SELECT b.id, b.name, b.event_name, b.event_date, b.status,
             (SELECT COUNT(*) FROM orders WHERE batch_id = b.id AND deleted_at IS NULL) as order_count
      FROM batches b
      WHERE b.deleted_at IS NULL AND b.status = 'open'
@@ -145,7 +145,9 @@ $productCount = count($products);
                 <h1
                     class="text-4xl sm:text-5xl md:text-[60px] font-extrabold tracking-tight text-navy leading-[1.05] mb-6">
                     Canning SIP<br>
-                    <span class="text-primary whitespace-nowrap">Sehat, Lezat & Bergizi</span>
+                    <span class="lg:text-6xl md:text-5xl sm:text-3xl text-primary whitespace-nowrap">Sehat,
+                        Lezat &
+                        Bergizi</span>
                 </h1>
 
                 <!-- Subhead -->
@@ -206,13 +208,13 @@ $productCount = count($products);
                 <?php
                 $bgColors = ["#FEF2F2", "#F0FDF4", "#FFFBEB"];
                 foreach ($products as $i => $product):
-                  $bg = $bgColors[$i % count($bgColors)]; ?>
+                    $bg = $bgColors[$i % count($bgColors)]; ?>
                     <div
                         class="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300">
                         <div class="h-[280px] flex items-center justify-center relative"
                             style="background:<?php echo $bg; ?>">
                             <img src="assets/images/product.jpeg" alt="<?php echo htmlspecialchars(
-                              $product["name"],
+                                $product["name"],
                             ); ?>" class="h-full w-full object-cover shadow-sm">
                         </div>
                         <div class="p-8">
@@ -227,11 +229,11 @@ $productCount = count($products);
                                     class="text-[10px] font-medium text-gray-400 border border-gray-200 px-2 py-0.5 rounded">425gr</span>
                             </div>
                             <h4 class="text-lg font-bold text-navy mb-2"><?php echo htmlspecialchars(
-                              $product["name"],
+                                $product["name"],
                             ); ?></h4>
                             <p class="text-[13px] text-gray-500 mb-6 leading-relaxed">
                                 <?php echo FormatHelper::rupiah(
-                                  $product["price"],
+                                    $product["price"],
                                 ); ?> per kaleng. Minimum order 100 kaleng.
                             </p>
                             <div class="flex items-center gap-4 pt-2">
@@ -287,22 +289,22 @@ $productCount = count($products);
                         </div>
 
                         <h4 class="text-lg font-bold text-navy mb-1"><?php echo htmlspecialchars(
-                          $batch["name"],
+                            $batch["name"],
                         ); ?></h4>
                         <p class="text-[13px] text-primary font-semibold mb-2"><?php echo htmlspecialchars(
-                          $batch["event_name"],
+                            $batch["event_name"],
                         ); ?></p>
                         <p class="text-[12px] text-gray-400 mb-6 font-medium"><?php echo date(
-                          "d M Y",
-                          strtotime($batch["event_date"]),
+                            "d M Y",
+                            strtotime($batch["event_date"]),
                         ); ?></p>
 
                         <div class="flex items-center gap-6 mb-8 text-[12px] font-medium text-gray-500">
                             <div class="flex items-center">
                                 <i class="ph-bold ph-calendar text-gray-400 text-sm mr-2"></i>
                                 <?php echo date(
-                                  "d M Y",
-                                  strtotime($batch["event_date"]),
+                                    "d M Y",
+                                    strtotime($batch["event_date"]),
                                 ); ?>
                             </div>
                             <div class="flex items-center">
@@ -486,7 +488,7 @@ $productCount = count($products);
             <div
                 class="border-t border-[#1E293B] pt-6 flex flex-col md:flex-row justify-between items-center text-[#64748B] text-[11px]">
                 <p>&copy; <?php echo date(
-                  "Y",
+                    "Y",
                 ); ?> Teaching Factory Tefa Canning Politeknik Negeri Jember.</p>
                 <div class="flex space-x-4 mt-4 md:mt-0">
                     <a href="#" class="hover:text-white"><i class="ph-fill ph-facebook-logo text-lg"></i></a>
