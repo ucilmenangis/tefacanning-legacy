@@ -66,6 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'passw
 $customer = $service->getById($customerId);
 $hasActive = $service->hasActiveOrders($customerId);
 
+// Generate CSRF token once — reuse in both forms to avoid overwrite
+$csrfField = CsrfService::field();
+
 $pageTitle = 'Edit Profil';
 $currentPage = 'profile';
 include __DIR__ . '/../includes/header-customer.php';
@@ -96,7 +99,7 @@ include __DIR__ . '/../includes/header-customer.php';
 <!-- Informasi Pribadi -->
 <div class="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden mb-6">
     <form method="POST" action="">
-        <?php echo CsrfService::field(); ?>
+        <?php echo $csrfField; ?>
         <input type="hidden" name="action" value="profile">
 
         <div class="px-5 py-4 border-b border-gray-50 flex items-center gap-2.5 mb-2">
@@ -175,7 +178,7 @@ include __DIR__ . '/../includes/header-customer.php';
 <!-- Ubah Password -->
 <div class="bg-white border border-gray-100 rounded-xl shadow-sm mb-6">
     <form method="POST" action="">
-        <?php echo CsrfService::field(); ?>
+        <?php echo $csrfField; ?>
         <input type="hidden" name="action" value="password">
 
         <div class="px-5 py-4 border-b border-gray-50 mb-2 flex items-center gap-2.5">
