@@ -23,6 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Semua field yang bertanda * wajib diisi.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Format email tidak valid.';
+    } elseif (!preg_match('/^(08|62)\d{8,12}$/', $phone)) {
+        $error = 'No. telepon tidak valid. Gunakan format 08xxxxxxxxxx atau 628xxxxxxxxxx (10-14 digit).';
     } elseif (strlen($password) < 8) {
         $error = 'Password minimal 8 karakter.';
     } elseif ($password !== $confirm) {
@@ -38,6 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Email sudah terdaftar. Silakan gunakan email lain atau masuk.';
         } else {
             $hashed = password_hash($password, PASSWORD_BCRYPT);
+
+            // Auto-convert 08xxx → 628xxx for Fonnte compatibility
+            if (str_starts_with($phone, '08')) {
+                $phone = '62' . substr($phone, 1);
+            }
 
             $newId = Database::getInstance()->insert(
                 "INSERT INTO customers (name, email, password, phone, organization, address, created_at, updated_at)

@@ -51,6 +51,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    if ($action === 'reset-password') {
+        $newPass = trim($_POST['new_password'] ?? '');
+        $confirmPass = trim($_POST['confirm_password'] ?? '');
+
+        if (empty($newPass) || empty($confirmPass)) {
+            FlashMessage::set('error', 'Password baru dan konfirmasi wajib diisi.');
+        } elseif (strlen($newPass) < 8) {
+            FlashMessage::set('error', 'Password baru minimal 8 karakter.');
+        } elseif ($newPass !== $confirmPass) {
+            FlashMessage::set('error', 'Konfirmasi password tidak cocok.');
+        } else {
+            $customerAdminService->resetPassword($id, $newPass);
+            $activityLogService->log('updated', 'App\Models\Customer', $id, 'admin reset password');
+            FlashMessage::set('success', 'Password pelanggan berhasil direset.');
+        }
+        header('Location: edit-customer.php?id=' . $id);
+        exit;
+    }
+
     // Update customer
     $data = [
         'name'         => trim($_POST['name'] ?? ''),
@@ -64,6 +83,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         FlashMessage::set('error', 'Nama pelanggan wajib diisi.');
         header('Location: edit-customer.php?id=' . $id);
         exit;
+    }
+
+    // Auto-convert 08xxx → 628xxx for Fonnte compatibility
+    if (!empty($data['phone']) && str_starts_with($data['phone'], '08')) {
+        $data['phone'] = '62' . substr($data['phone'], 1);
     }
 
     $customerAdminService->updateById($id, $data);
@@ -89,6 +113,9 @@ $customer = [
     ]
 ];
 
+// Generate CSRF token once — reuse in edit form + reset password form
+$csrfField = CsrfService::field();
+
 include __DIR__ . '/../includes/header-admin.php';
 ?>
 
@@ -112,7 +139,7 @@ include __DIR__ . '/../includes/header-admin.php';
 </div>
 
 <form action="edit-customer.php?id=<?php echo $id; ?>" method="POST" id="edit-customer-form">
-    <?php echo CsrfService::field(); ?>
+    <?php echo $csrfField; ?>
     <input type="hidden" name="customer_id" value="<?php echo $id; ?>">
 
     <div class="grid grid-cols-[1fr_300px] gap-6 items-start">
@@ -192,6 +219,37 @@ include __DIR__ . '/../includes/header-admin.php';
                     <div class="text-[13px] font-medium text-navy"><?php echo $customer['stats']['joined_at']; ?></div>
                 </div>
             </div>
+
+            <!-- Reset Password -->
+            <form action="edit-customer.php?action=reset-password&id=<?php echo $id; ?>" method="POST" class="mt-6">
+                <?php echo $csrfField; ?>
+                <div class="bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
+                    <div class="font-bold text-[13px] text-slate-800 mb-1 flex items-center gap-2">
+                        <i class="ph ph-lock-key text-slate-400"></i>
+                        Reset Password
+                    </div>
+                    <span class="text-[11px] text-gray-400 font-medium block mb-4">Atur password baru untuk pelanggan ini</span>
+
+                    <div class="mb-3">
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Password Baru</label>
+                        <input type="password" name="new_password" minlength="8" required
+                               class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[12px] bg-white outline-none transition-all focus:border-primary"
+                               placeholder="Min. 8 karakter">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Konfirmasi Password</label>
+                        <input type="password" name="confirm_password" minlength="8" required
+                               class="w-full border border-gray-200 rounded-lg py-2 px-3 text-[12px] bg-white outline-none transition-all focus:border-primary"
+                               placeholder="Ulangi password">
+                    </div>
+                    <button type="submit"
+                            class="w-full bg-amber-500 text-white text-[12px] font-bold py-2 rounded-lg transition-colors hover:bg-amber-600"
+                            onclick="return confirm('Reset password pelanggan ini?')">
+                        <i class="ph ph-key text-sm"></i>
+                        Reset Password
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </form>

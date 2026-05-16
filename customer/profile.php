@@ -21,9 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'profi
 
     if (empty($name)) {
         FlashMessage::set('error', 'Nama wajib diisi.');
+    } elseif (!empty($phone) && !preg_match('/^(08|62)\d{8,12}$/', $phone)) {
+        FlashMessage::set('error', 'No. telepon tidak valid. Gunakan format 08xxxxxxxxxx atau 628xxxxxxxxxx.');
     } elseif ($service->hasActiveOrders($customerId)) {
         FlashMessage::set('error', 'Profil tidak dapat diubah karena ada pesanan yang sedang diproses.');
     } else {
+        // Auto-convert 08xxx → 628xxx for Fonnte compatibility
+        if (!empty($phone) && str_starts_with($phone, '08')) {
+            $phone = '62' . substr($phone, 1);
+        }
         $service->updateProfile($customerId, [
             'name'         => $name,
             'phone'        => $phone,

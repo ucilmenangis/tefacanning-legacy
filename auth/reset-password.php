@@ -198,6 +198,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <i class="ph ph-arrow-left text-[12px]"></i> Kirim ulang kode OTP
                     </a>
                 </div>
+
+                <!-- Help: contact admin if OTP not received -->
+                <div class="mt-5 pt-4 border-t border-gray-100">
+                    <p class="text-[11px] text-gray-400 text-center mb-2">Tidak menerima kode OTP?</p>
+                    <p class="text-[11px] text-gray-400 text-center mb-3">Nomor WhatsApp mungkin salah. Hubungi admin untuk reset password.</p>
+                    <?php
+                    $ownerPhone = preg_replace('/[^0-9]/', '', $_ENV['FONNTE_OWNER_PHONE'] ?? '');
+                    if (!empty($ownerPhone)):
+                    ?>
+                    <a href="https://wa.me/<?php echo $ownerPhone; ?>?text=<?php echo urlencode('Halo admin, saya lupa password dan tidak bisa menerima OTP karena nomor WhatsApp salah/belum terdaftar. Mohon bantuan reset password. Email saya: '); ?>" target="_blank" class="flex items-center justify-center gap-2 w-full border border-green-300 text-green-700 bg-green-50 font-semibold py-2.5 rounded-lg transition-all hover:bg-green-100 text-[12px]">
+                        <i class="ph ph-whatsapp-logo text-[16px]"></i>
+                        Hubungi Admin via WhatsApp
+                    </a>
+                    <?php else: ?>
+                    <p class="text-[11px] text-gray-500 text-center">Hubungi admin sistem untuk bantuan reset password.</p>
+                    <?php endif; ?>
+                </div>
             </form>
             <?php endif; ?>
 

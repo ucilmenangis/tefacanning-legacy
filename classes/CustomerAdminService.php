@@ -106,6 +106,23 @@ class CustomerAdminService extends BaseService
     }
 
     /**
+     * Reset customer password (admin action).
+     */
+    public function resetPassword(int $id, string $newPassword): bool
+    {
+        $customer = $this->getById($id);
+        if (!$customer) {
+            return false;
+        }
+
+        $this->db->update(
+            "UPDATE customers SET password = ?, updated_at = NOW() WHERE id = ? AND deleted_at IS NULL",
+            [password_hash($newPassword, PASSWORD_BCRYPT), $id]
+        );
+        return true;
+    }
+
+    /**
      * Soft delete customer.
      */
     public function softDelete(int $id): void
