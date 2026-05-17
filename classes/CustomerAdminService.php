@@ -23,11 +23,12 @@ class CustomerAdminService extends BaseService
     {
         return $this->fetchAll(
             "SELECT c.id, c.name, c.organization, c.phone, c.email, c.address, c.created_at,
-                    COUNT(DISTINCT o.id) AS order_count
+                    COUNT(DISTINCT o.id) AS order_count,
+                    COALESCE(SUM(o.total_amount), 0) AS total_spent
              FROM customers c
              LEFT JOIN orders o ON o.customer_id = c.id AND o.deleted_at IS NULL
              WHERE c.deleted_at IS NULL
-             GROUP BY c.id
+             GROUP BY c.id, c.name, c.organization, c.phone, c.email, c.address, c.created_at
              ORDER BY c.name ASC"
         );
     }

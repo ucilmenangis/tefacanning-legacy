@@ -25,6 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_GET['action'] ?? '') === 'delete
 include __DIR__ . '/../includes/header-admin.php';
 
 $customers = $customerAdminService->getAll();
+$customerModalData = [];
+foreach ($customers as $customer) {
+    $customerModalData[(string) $customer['id']] = [
+        'name' => $customer['name'] ?: '-',
+        'organization' => $customer['organization'] ?: '-',
+        'phone' => $customer['phone'] ?: '-',
+        'email' => $customer['email'] ?: '-',
+        'address' => $customer['address'] ?: '-',
+        'orderCount' => (int) ($customer['order_count'] ?? 0),
+        'totalSpent' => 'Rp ' . number_format((float) ($customer['total_spent'] ?? 0), 0, ',', '.'),
+        'createdAt' => !empty($customer['created_at']) ? date('d M Y', strtotime($customer['created_at'])) : '-',
+    ];
+}
 ?>
 
 
@@ -195,9 +208,93 @@ $customers = $customerAdminService->getAll();
     </div>
 </div>
 
+<!-- View Customer Modal -->
+<div id="customer-view-modal" class="hidden fixed inset-0 z-[1000] bg-slate-950/70 px-4 py-8 backdrop-blur-sm overflow-y-auto" onclick="closeCustomerModal(event)">
+    <div class="mx-auto w-full max-w-5xl rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900" onclick="event.stopPropagation()">
+        <div class="flex items-center justify-between px-6 py-5">
+            <h2 class="text-[16px] font-extrabold text-navy dark:text-white">View Customer</h2>
+            <button type="button" onclick="closeCustomerModal()" class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-navy dark:hover:bg-slate-800 dark:hover:text-white" aria-label="Close customer detail">
+                <i class="ph ph-x text-[22px]"></i>
+            </button>
+        </div>
+
+        <div class="grid gap-6 px-6 pb-6 lg:grid-cols-[1fr_270px]">
+            <div class="space-y-6">
+                <section class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
+                    <div class="flex items-start gap-4 border-b border-slate-200 px-6 py-5 dark:border-slate-700">
+                        <i class="ph ph-user text-[24px] text-slate-400"></i>
+                        <div>
+                            <h3 class="text-[16px] font-extrabold text-navy dark:text-white">Informasi Pelanggan</h3>
+                            <p class="mt-1 text-[13px] font-medium text-slate-400">Data identitas pelanggan</p>
+                        </div>
+                    </div>
+                    <div class="grid gap-5 p-6 sm:grid-cols-2">
+                        <div>
+                            <label class="mb-2 block text-[13px] font-bold text-navy dark:text-white">Nama Lengkap</label>
+                            <div id="modal-customer-name" class="min-h-[38px] rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300">-</div>
+                        </div>
+                        <div>
+                            <label class="mb-2 block text-[13px] font-bold text-navy dark:text-white">Organisasi / Instansi</label>
+                            <div id="modal-customer-organization" class="min-h-[38px] rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300">-</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
+                    <div class="flex items-start gap-4 border-b border-slate-200 px-6 py-5 dark:border-slate-700">
+                        <i class="ph ph-phone text-[24px] text-slate-400"></i>
+                        <div>
+                            <h3 class="text-[16px] font-extrabold text-navy dark:text-white">Kontak</h3>
+                            <p class="mt-1 text-[13px] font-medium text-slate-400">Informasi kontak untuk notifikasi</p>
+                        </div>
+                    </div>
+                    <div class="grid gap-5 p-6 sm:grid-cols-2">
+                        <div>
+                            <label class="mb-2 block text-[13px] font-bold text-navy dark:text-white">No. WhatsApp</label>
+                            <div id="modal-customer-phone" class="min-h-[38px] rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300">-</div>
+                            <p class="mt-2 text-[12px] font-medium text-slate-400">Format: 628xxxxxxxxxx (tanpa + atau spasi)</p>
+                        </div>
+                        <div>
+                            <label class="mb-2 block text-[13px] font-bold text-navy dark:text-white">Email</label>
+                            <div id="modal-customer-email" class="min-h-[38px] rounded-lg border border-slate-200 px-3 py-2 text-[13px] font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300">-</div>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="mb-2 block text-[13px] font-bold text-navy dark:text-white">Alamat</label>
+                            <div id="modal-customer-address" class="min-h-[86px] rounded-lg border border-slate-200 px-3 py-3 text-[13px] font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300">-</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <aside class="h-fit rounded-xl border border-slate-200 p-6 dark:border-slate-700">
+                <h3 class="mb-8 text-[16px] font-extrabold text-navy dark:text-white">Statistik</h3>
+                <div class="space-y-8">
+                    <div>
+                        <div class="text-[13px] font-extrabold text-navy dark:text-white">Total Pesanan</div>
+                        <div id="modal-customer-orders" class="mt-3 text-[14px] font-bold text-slate-700 dark:text-slate-200">0 pesanan</div>
+                    </div>
+                    <div>
+                        <div class="text-[13px] font-extrabold text-navy dark:text-white">Total Transaksi</div>
+                        <div id="modal-customer-spent" class="mt-3 text-[14px] font-bold text-slate-700 dark:text-slate-200">Rp 0</div>
+                    </div>
+                    <div>
+                        <div class="text-[13px] font-extrabold text-navy dark:text-white">Terdaftar sejak</div>
+                        <div id="modal-customer-created" class="mt-3 text-[14px] font-bold text-slate-700 dark:text-slate-200">-</div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <div class="px-6 pb-6">
+            <button type="button" onclick="closeCustomerModal()" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2 text-[13px] font-bold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:text-white dark:hover:bg-slate-800">Close</button>
+        </div>
+    </div>
+</div>
+
 <div class="hidden"><?php echo CsrfService::field(); ?></div>
 
 <script>
+    const customerDetails = <?php echo json_encode($customerModalData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
     let currentView = 'table';
     let currentFilter = 'all';
     let searchQuery = '';
@@ -297,6 +394,36 @@ $customers = $customerAdminService->getAll();
         window.location.href = url.toString();
     }
 
+    function setModalText(id, value) {
+        document.getElementById(id).textContent = value || '-';
+    }
+
+    function openCustomerModal(id) {
+        const customer = customerDetails[id];
+        const dropdownGlobal = document.getElementById('dropdown-menu-global');
+        if (!customer) return;
+
+        setModalText('modal-customer-name', customer.name);
+        setModalText('modal-customer-organization', customer.organization);
+        setModalText('modal-customer-phone', customer.phone);
+        setModalText('modal-customer-email', customer.email);
+        setModalText('modal-customer-address', customer.address);
+        setModalText('modal-customer-orders', customer.orderCount + ' pesanan');
+        setModalText('modal-customer-spent', customer.totalSpent);
+        setModalText('modal-customer-created', customer.createdAt);
+
+        dropdownGlobal.classList.add('hidden');
+        document.getElementById('customer-view-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCustomerModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+
+        document.getElementById('customer-view-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
     document.getElementById('customer-search').addEventListener('input', function() {
         searchQuery = this.value;
         applyFilters();
@@ -328,7 +455,11 @@ $customers = $customerAdminService->getAll();
             return;
         }
 
-        viewLink.href = 'view-customer.php?id=' + id;
+        viewLink.href = '#';
+        viewLink.onclick = function(event) {
+            event.preventDefault();
+            openCustomerModal(id);
+        };
         editLink.href = 'edit-customer.php?id=' + id;
         deleteBtn.onclick = function() { confirmDelete(id); };
 
@@ -353,6 +484,12 @@ $customers = $customerAdminService->getAll();
             form.submit();
         }
     }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeCustomerModal();
+        }
+    });
 </script>
 
 <?php include __DIR__ . '/../includes/footer-admin.php'; ?>
