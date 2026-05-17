@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1.4 Waktu Pengerjaan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#E02424',
+                        accent: '#F05252',
+                        dark: '#9B1C1C',
+                        navy: '#111827',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none; }
+        }
+
+        td.bar { background-color: #E02424; }
+    </style>
+</head>
+<body class="bg-white font-sans text-navy p-6 md:p-10 max-w-5xl mx-auto">
+
+    <h1 class="text-2xl font-bold text-navy mb-1">1.4 Waktu Pengerjaan</h1>
+    <p class="text-sm text-gray-500 mb-6">Timeline pengerjaan proyek TEFA Canning SIP — 4 bulan × 4 minggu per bulan</p>
+
+    <div class="overflow-x-auto">
+        <table class="w-full border-collapse text-sm">
+            <thead>
+                <!-- Bulan headers -->
+                <tr>
+                    <th rowspan="2" class="border border-gray-400 bg-navy text-white px-3 py-2 text-left align-middle font-semibold w-48">Fase</th>
+                    <th colspan="4" class="border border-gray-400 bg-primary text-white px-2 py-2 text-center font-semibold">Bulan 1</th>
+                    <th colspan="4" class="border border-gray-400 bg-primary text-white px-2 py-2 text-center font-semibold">Bulan 2</th>
+                    <th colspan="4" class="border border-gray-400 bg-primary text-white px-2 py-2 text-center font-semibold">Bulan 3</th>
+                    <th colspan="4" class="border border-gray-400 bg-primary text-white px-2 py-2 text-center font-semibold">Bulan 4</th>
+                </tr>
+                <!-- Minggu headers -->
+                <tr>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W1</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W2</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W3</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W4</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W1</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W2</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W3</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W4</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W1</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W2</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W3</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W4</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W1</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W2</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W3</th>
+                    <th class="border border-gray-400 bg-dark text-white px-1 py-1 text-center font-medium w-12">W4</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Analisis Kebutuhan: B1 W1-W3 -->
+                <tr>
+                    <td class="border border-gray-400 px-3 py-2 font-medium bg-gray-50">Analisis Kebutuhan</td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                </tr>
+                <!-- Perancangan: B1 W2-W4, B2 W1-W3 -->
+                <tr>
+                    <td class="border border-gray-400 px-3 py-2 font-medium bg-gray-50">Perancangan</td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                </tr>
+                <!-- Pengembangan Aplikasi: B2 W2-W4, B3 W1-W4, B4 W1 -->
+                <tr>
+                    <td class="border border-gray-400 px-3 py-2 font-medium bg-gray-50">Pengembangan Aplikasi</td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                </tr>
+                <!-- Implementasi: B3 W3-W4, B4 W1-W2 -->
+                <tr>
+                    <td class="border border-gray-400 px-3 py-2 font-medium bg-gray-50">Implementasi</td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                </tr>
+                <!-- Pengujian: B4 W3 -->
+                <tr>
+                    <td class="border border-gray-400 px-3 py-2 font-medium bg-gray-50">Pengujian</td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400 bar"></td>
+                    <td class="border border-gray-400"></td>
+                </tr>
+                <!-- Pemeliharaan: B4 W4 -->
+                <tr>
+                    <td class="border border-gray-400 px-3 py-2 font-medium bg-gray-50">Pemeliharaan</td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400"></td>
+                    <td class="border border-gray-400 bar"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4 flex items-center gap-3 text-xs text-gray-500">
+        <span class="inline-block w-4 h-3 bg-primary border border-gray-300"></span>
+        <span>Waktu pengerjaan aktif</span>
+    </div>
+
+</body>
+</html>
