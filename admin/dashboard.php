@@ -255,7 +255,10 @@ include __DIR__ . '/../includes/header-admin.php';
                     <div class="text-[11px] text-gray-400"><?php echo htmlspecialchars($row['customer_phone'] ?? '-'); ?></div>
                 </td>
                 <td class="px-3.5 py-3 border-b border-gray-50 align-middle">
-                    <span class="text-[11px] bg-blue-50 text-blue-600 border border-blue-100 px-2 py-0.5 rounded font-semibold"><?php echo htmlspecialchars($row['batch_name']); ?></span>
+                    <span
+    class="inline-flex items-center whitespace-nowrap text-1xl bg-blue-50 text-blue-600 border border-blue-100 px-2.5 py-1 rounded-md font-semibold">
+    <?php echo htmlspecialchars($row['batch_name']); ?>
+<!-- </span> fix it for small text responsive -->
                 </td>
                 <td class="px-3.5 py-3 border-b border-gray-50 align-middle">
                     <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold <?php echo $st['class']; ?>">
