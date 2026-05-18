@@ -471,7 +471,8 @@ foreach ($customers as $customer) {
     }
 
     function confirmDelete(id) {
-        if (confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
+        showConfirm('Apakah Anda yakin ingin menghapus pelanggan ini?').then(function(confirmed) {
+            if (!confirmed) return;
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = 'customers.php?action=delete&id=' + id;
@@ -482,7 +483,7 @@ foreach ($customers as $customer) {
             form.appendChild(csrf);
             document.body.appendChild(form);
             form.submit();
-        }
+        });
     }
 
     document.addEventListener('keydown', function(event) {

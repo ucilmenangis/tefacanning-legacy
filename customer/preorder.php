@@ -452,7 +452,7 @@ include __DIR__ . '/../includes/header-customer.php';
     function submitOrder() {
         const batchSel = document.getElementById('batch-select');
         if (!batchSel.value) {
-            alert('Silakan pilih batch produksi terlebih dahulu.');
+            showAlert('Silakan pilih batch produksi terlebih dahulu.');
             return;
         }
         const rows = document.querySelectorAll('.product-row');
@@ -464,12 +464,12 @@ include __DIR__ . '/../includes/header-customer.php';
             const qty = parseInt(row.querySelector('.prod-qty').value) || 0;
             const prod = PRODUCTS[sel.value];
             if (prod && qty > prod.stock) {
-                alert('Stok ' + prod.name + ' tidak cukup (sisa: ' + prod.stock + ' kaleng).');
+                showAlert('Stok ' + prod.name + ' tidak cukup (sisa: ' + prod.stock + ' kaleng).');
                 stockOk = false;
             }
         });
         if (!valid) {
-            alert('Silakan pilih produk untuk semua baris.');
+            showAlert('Silakan pilih produk untuk semua baris.');
             return;
         }
         if (!stockOk) return;

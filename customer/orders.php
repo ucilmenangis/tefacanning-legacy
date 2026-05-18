@@ -101,7 +101,7 @@ include __DIR__ . '/../includes/header-customer.php';
                             <a href="edit-order.php?id=<?php echo $order['id']; ?>" class="inline-flex items-center gap-1 transition-colors text-amber-600 hover:text-amber-700">
                                 <i class="ph ph-note-pencil text-base"></i> Edit
                             </a>
-                            <form method="POST" action="" onsubmit="return confirm('Batalkan pesanan ini?')">
+                            <form method="POST" action="" onsubmit="confirmCancelOrder(event, this)">
                                 <input type="hidden" name="action" value="cancel">
                                 <input type="hidden" name="order_id" value="<?php echo $order['id']; ?>">
                                 <?php echo CsrfService::field(); ?>
@@ -149,6 +149,14 @@ include __DIR__ . '/../includes/header-customer.php';
             visible === rows.length
                 ? 'Menampilkan <?php echo $totalOrders; ?> pesanan'
                 : 'Menampilkan ' + visible + ' dari <?php echo $totalOrders; ?> pesanan';
+    }
+
+    function confirmCancelOrder(event, form) {
+        event.preventDefault();
+        showConfirm('Batalkan pesanan ini?').then(function(confirmed) {
+            if (!confirmed) return;
+            form.submit();
+        });
     }
 </script>
 

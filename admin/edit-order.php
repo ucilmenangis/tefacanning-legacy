@@ -335,12 +335,13 @@ include __DIR__ . '/../includes/header-admin.php';
         if (document.querySelectorAll('#product-tbody tr').length > 1) {
             btn.closest('tr').remove();
         } else {
-            alert('Pesanan harus memiliki minimal satu produk.');
+            showAlert('Pesanan harus memiliki minimal satu produk.');
         }
     }
 
     function confirmDelete(id) {
-        if (confirm('Apakah Anda yakin ingin menghapus pesanan ini?')) {
+        showConfirm('Apakah Anda yakin ingin menghapus pesanan ini?').then(function(confirmed) {
+            if (!confirmed) return;
             var form = document.createElement('form');
             form.method = 'POST';
             form.action = 'edit-order.php?action=delete&id=' + id;
@@ -351,7 +352,7 @@ include __DIR__ . '/../includes/header-admin.php';
             form.appendChild(csrf);
             document.body.appendChild(form);
             form.submit();
-        }
+        });
     }
 
     document.getElementById('add-product-btn').addEventListener('click', function() {

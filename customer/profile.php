@@ -145,7 +145,7 @@ include __DIR__ . '/../includes/header-customer.php';
                 <label class="text-[12px] font-semibold text-gray-600 mb-1.5 block">No. Telepon</label>
                 <div class="relative">
                     <i class="ph ph-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                    <input type="text" name="phone" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 pl-[42px] text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
+                    <input type="number" name="phone" class="w-full border border-gray-200 rounded-lg px-3.5 py-2.5 pl-[42px] text-[13px] text-gray-800 bg-white transition-all outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/5 disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed"
                            value="<?php echo htmlspecialchars($customer['phone'] ?? ''); ?>"
                            <?php echo $hasActive ? 'disabled' : ''; ?>>
                 </div>

@@ -80,6 +80,34 @@ $basePath = dirname($_SERVER["SCRIPT_NAME"]);
 
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function showAlert(message, icon = 'warning', title = 'Perhatian') {
+            return Swal.fire({
+                icon: icon,
+                title: title,
+                text: message,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#E02424'
+            });
+        }
+
+        function showConfirm(message, title = 'Konfirmasi') {
+            return Swal.fire({
+                icon: 'warning',
+                title: title,
+                text: message,
+                showCancelButton: true,
+                confirmButtonText: 'Ya, lanjutkan',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#E02424',
+                cancelButtonColor: '#64748b',
+                reverseButtons: true
+            }).then(function(result) {
+                return result.isConfirmed;
+            });
+        }
+    </script>
 
     <style>
         /* Accordion + dynamic states */

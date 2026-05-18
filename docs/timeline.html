@@ -33,9 +33,56 @@
         td.bar { background-color: #E02424; }
     </style>
 </head>
-<body class="bg-white font-sans text-navy p-6 md:p-10 max-w-5xl mx-auto">
+<div class="flex items-center justify-center">
 
-    <h1 class="text-2xl font-bold text-navy mb-1">1.4 Waktu Pengerjaan</h1>
+    <body class="bg-white font-sans text-navy p-6 md:p-10 max-w-5xl mx-auto">
+        
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 text-center border border-slate-200">
+            <p class="text-sm font-semibold text-red-500 mb-2">
+                Bersiaplah
+            </p>
+            
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-1">
+      Waktunya Ujiann....
+    </h1>
+    
+    <p class="text-sm text-slate-500 mb-6">
+        Menuju 18/05/2026 pukul 12.00 WIB
+    </p>
+    
+    <div class="grid grid-cols-4 gap-3">
+        <div class="bg-red-50 rounded-xl p-3 border border-red-100">
+            <div id="days" class="text-2xl font-bold text-red-600">00</div>
+            <div class="text-xs text-slate-500">Hari</div>
+        </div>
+        
+        <div class="bg-red-50 rounded-xl p-3 border border-red-100">
+            <div id="hours" class="text-2xl font-bold text-red-600">00</div>
+            <div class="text-xs text-slate-500">Jam</div>
+        </div>
+        
+        <div class="bg-red-50 rounded-xl p-3 border border-red-100">
+            <div id="minutes" class="text-2xl font-bold text-red-600">00</div>
+            <div class="text-xs text-slate-500">Menit</div>
+        </div>
+        
+        <div class="bg-red-50 rounded-xl p-3 border border-red-100">
+            <div id="seconds" class="text-2xl font-bold text-red-600">00</div>
+            <div class="text-xs text-slate-500">Detik</div>
+      </div>
+    </div>
+    
+    <p id="message" class="mt-6 text-sm font-semibold text-slate-600">
+        Tetap semangat dan persiapkan diri terbaikmu!
+    </p>
+  </div>
+</div>
+
+  <br>
+  
+  <hr class="text-primary">
+  <h1 class="text-2xl font-bold text-navy mb-1">Waktu Pengerjaan</h1>
+
     <p class="text-sm text-gray-500 mb-6">Timeline pengerjaan proyek TEFA Canning SIP — 4 bulan × 4 minggu per bulan</p>
 
     <div class="overflow-x-auto">
@@ -198,6 +245,35 @@
         <span class="inline-block w-4 h-3 bg-primary border border-gray-300"></span>
         <span>Waktu pengerjaan aktif</span>
     </div>
+<script>
+    const targetTime = new Date("2026-05-18T12:00:00+07:00").getTime();
 
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetTime - now;
+
+      if (distance <= 0) {
+        document.getElementById("days").textContent = "00";
+        document.getElementById("hours").textContent = "00";
+        document.getElementById("minutes").textContent = "00";
+        document.getElementById("seconds").textContent = "00";
+        document.getElementById("message").textContent = "Ujian telah dimulai. Semangat!";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((distance / (1000 * 60)) % 60);
+      const seconds = Math.floor((distance / 1000) % 60);
+
+      document.getElementById("days").textContent = String(days).padStart(2, "0");
+      document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
 </body>
 </html>

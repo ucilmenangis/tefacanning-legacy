@@ -105,6 +105,7 @@ $old = [
 
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 <body class="font-sans antialiased min-h-screen flex items-center justify-center p-4 py-10 bg-[#f8f9fb]">
@@ -180,7 +181,7 @@ $old = [
                     <div class="relative">
                         <i class="ph ph-phone-call absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-base pointer-events-none"></i>
                         <input
-                            type="tel"
+                            type="number"
                             id="phone"
                             name="phone"
                             class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[13px] text-gray-700 bg-gray-50 outline-none transition-all focus:border-primary focus:ring-[3px] focus:ring-primary/10 focus:bg-white placeholder:text-gray-400 pl-[38px]"
@@ -293,7 +294,13 @@ $old = [
             const cpw = document.getElementById('confirm_password').value;
             if (pw !== cpw) {
                 e.preventDefault();
-                alert('Konfirmasi password tidak cocok!');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Konfirmasi Password',
+                    text: 'Konfirmasi password tidak cocok!',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#E02424'
+                });
                 return false;
             }
             const btn = document.getElementById('register-btn');

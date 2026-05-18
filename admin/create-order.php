@@ -314,7 +314,7 @@ include __DIR__ . '/../includes/header-admin.php';
         if (document.querySelectorAll('#product-tbody tr').length > 1) {
             btn.closest('tr').remove();
         } else {
-            alert('Pesanan harus memiliki minimal satu produk.');
+            showAlert('Pesanan harus memiliki minimal satu produk.');
         }
     }
 

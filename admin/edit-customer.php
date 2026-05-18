@@ -176,7 +176,7 @@ include __DIR__ . '/../includes/header-admin.php';
                 <div class="grid grid-cols-2 gap-x-6 gap-y-5 mb-5">
                     <div>
                         <label class="block text-[12px] font-semibold text-slate-600 mb-1.5">No. WhatsApp</label>
-                        <input type="text" name="phone" class="w-full border border-gray-200 rounded-lg py-2.5 px-3.5 text-[13px] text-navy bg-white outline-none transition-all focus:border-primary" value="<?php echo $customer['phone']; ?>">
+                        <input type="number" name="phone" class="w-full border border-gray-200 rounded-lg py-2.5 px-3.5 text-[13px] text-navy bg-white outline-none transition-all focus:border-primary" value="<?php echo $customer['phone']; ?>">
                         <p class="text-[10px] text-slate-400 mt-1.5">Format: 628xxxxxxxxxx (tanpa + atau spasi)</p>
                     </div>
                     <div>
@@ -244,7 +244,7 @@ include __DIR__ . '/../includes/header-admin.php';
                     </div>
                     <button type="submit"
                             class="w-full bg-amber-500 text-white text-[12px] font-bold py-2 rounded-lg transition-colors hover:bg-amber-600"
-                            onclick="return confirm('Reset password pelanggan ini?')">
+                            onclick="confirmResetPassword(event, this)">
                         <i class="ph ph-key text-sm"></i>
                         Reset Password
                     </button>
@@ -255,8 +255,17 @@ include __DIR__ . '/../includes/header-admin.php';
 </form>
 
 <script>
+    function confirmResetPassword(event, button) {
+        event.preventDefault();
+        showConfirm('Reset password pelanggan ini?').then(function(confirmed) {
+            if (!confirmed) return;
+            button.closest('form').submit();
+        });
+    }
+
     function confirmDelete(id) {
-        if (confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
+        showConfirm('Apakah Anda yakin ingin menghapus pelanggan ini?').then(function(confirmed) {
+            if (!confirmed) return;
             var form = document.createElement('form');
             form.method = 'POST';
             form.action = 'edit-customer.php?action=delete&id=' + id;
@@ -267,7 +276,7 @@ include __DIR__ . '/../includes/header-admin.php';
             form.appendChild(csrf);
             document.body.appendChild(form);
             form.submit();
-        }
+        });
     }
 </script>
 

@@ -350,7 +350,8 @@ include __DIR__ . '/../includes/header-admin.php';
     }
 
     function confirmDelete(id) {
-        if (confirm('Apakah Anda yakin ingin menghapus pengguna ini?')) {
+        showConfirm('Apakah Anda yakin ingin menghapus pengguna ini?').then(function(confirmed) {
+            if (!confirmed) return;
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = 'pengaturan.php?action=delete&id=' + id;
@@ -361,7 +362,7 @@ include __DIR__ . '/../includes/header-admin.php';
             form.appendChild(csrf);
             document.body.appendChild(form);
             form.submit();
-        }
+        });
     }
 </script>
 

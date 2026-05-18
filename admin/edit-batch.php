@@ -199,9 +199,10 @@ $statusOptions = [
 
 <script>
 function confirmDelete() {
-    if (confirm('Apakah Anda yakin ingin menghapus batch ini?')) {
+    showConfirm('Apakah Anda yakin ingin menghapus batch ini?').then(function(confirmed) {
+        if (!confirmed) return;
         document.getElementById('delete-form').submit();
-    }
+    });
 }
 </script>
 

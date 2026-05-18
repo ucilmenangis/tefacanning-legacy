@@ -406,7 +406,8 @@ $products = $productService->getAll();
     }
 
     function confirmDelete(id) {
-        if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+        showConfirm('Apakah Anda yakin ingin menghapus produk ini?').then(function(confirmed) {
+            if (!confirmed) return;
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = 'products.php?action=delete&id=' + id;
@@ -417,7 +418,7 @@ $products = $productService->getAll();
             form.appendChild(csrf);
             document.body.appendChild(form);
             form.submit();
-        }
+        });
     }
 </script>
 

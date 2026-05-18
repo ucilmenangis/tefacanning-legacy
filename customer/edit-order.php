@@ -344,7 +344,7 @@ include __DIR__ . '/../includes/header-customer.php';
         rows.forEach(function(row) {
             if (!row.querySelector('.prod-select').value) valid = false;
         });
-        if (!valid) { alert('Silakan pilih produk untuk semua baris.'); return; }
+        if (!valid) { showAlert('Silakan pilih produk untuk semua baris.'); return; }
 
         var container = document.getElementById('form-items-container');
         container.textContent = '';

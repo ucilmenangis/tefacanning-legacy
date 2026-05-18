@@ -146,7 +146,8 @@ include __DIR__ . '/../includes/header-admin.php';
 
 <script>
 function confirmDelete(id) {
-    if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+    showConfirm('Apakah Anda yakin ingin menghapus produk ini?').then(function(confirmed) {
+        if (!confirmed) return;
         var form = document.createElement('form');
         form.method = 'POST';
         form.action = 'products.php?action=delete&id=' + id;
@@ -157,7 +158,7 @@ function confirmDelete(id) {
         form.appendChild(csrf);
         document.body.appendChild(form);
         form.submit();
-    }
+    });
 }
 </script>
 

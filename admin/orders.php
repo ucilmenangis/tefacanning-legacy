@@ -367,7 +367,8 @@ $statusMap = [
     }
 
     function confirmDelete(id) {
-        if (confirm('Apakah Anda yakin ingin menghapus pesanan ini?')) {
+        showConfirm('Apakah Anda yakin ingin menghapus pesanan ini?').then(function(confirmed) {
+            if (!confirmed) return;
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = 'orders.php?action=delete&id=' + id;
@@ -378,7 +379,7 @@ $statusMap = [
             form.appendChild(csrf);
             document.body.appendChild(form);
             form.submit();
-        }
+        });
     }
 </script>
 

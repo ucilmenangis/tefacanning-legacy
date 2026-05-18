@@ -99,7 +99,7 @@ include __DIR__ . '/../includes/header-admin.php';
             <!-- No WhatsApp -->
             <div class="space-y-1.5">
                 <label class="block text-[12px] font-semibold text-slate-700">No. WhatsApp</label>
-                <input type="text" name="phone"
+                <input type="number" name="phone"
                     class="w-full border border-gray-200 rounded-lg py-2.5 px-3.5 text-[13px] text-navy bg-white outline-none transition-all focus:border-primary"
                     placeholder="628xxxxxxxxxx">
                 <p class="text-[10px] text-slate-400 mt-1">Format: 628xxxxxxxxxx</p>
